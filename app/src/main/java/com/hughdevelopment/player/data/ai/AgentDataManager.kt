@@ -25,7 +25,7 @@ class AgentDataManager(
      * Ideal for feeding an AI agent's context or system prompt.
      */
     suspend fun getLibraryContextForAgent(): String = withContext(Dispatchers.Default) {
-        val songs = repository.songs.value
+        val songs: List<Song> = repository.getCurrentSongs()
         val root = JSONObject()
         val songsArray = JSONArray()
 
@@ -37,7 +37,7 @@ class AgentDataManager(
                 put("album", song.album)
                 put("duration_sec", song.durationMs / 1000)
                 put("path", song.dataPath)
-                put("parent_dir", File(song.dataPath).parent ?: "Unknown")
+                put("parent_dir", File(song.dataPath).parentFile?.name ?: "Unknown")
             }
             songsArray.put(item)
         }
@@ -52,12 +52,12 @@ class AgentDataManager(
      * Enables an AI agent to see how the user's storage is partitioned.
      */
     suspend fun inspectFolderTree(): Map<String, List<String>> = withContext(Dispatchers.IO) {
-        val songs = repository.songs.value
+        val songs: List<Song> = repository.getCurrentSongs()
         val folderMap = mutableMapOf<String, MutableList<String>>()
 
         for (song in songs) {
             val file = File(song.dataPath)
-            val parentFolder = file.parent ?: "Root"
+            val parentFolder = file.parentFile?.name ?: "Root"
             val list = folderMap.getOrPut(parentFolder) { mutableListOf() }
             list.add(song.title)
         }

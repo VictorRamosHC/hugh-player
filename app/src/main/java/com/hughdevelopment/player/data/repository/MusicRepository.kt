@@ -17,6 +17,8 @@ class MusicRepository(
 ) {
     private val _rawSongs = MutableStateFlow<List<Song>>(emptyList())
 
+    fun getCurrentSongs(): List<Song> = _rawSongs.value
+
     // Combine scanned songs with favorites from Room DB
     val songs: Flow<List<Song>> = combine(_rawSongs, statsDao.getFavoriteStatsFlow()) { songList, favEntities ->
         val favIdSet = favEntities.map { it.songId }.toSet()
