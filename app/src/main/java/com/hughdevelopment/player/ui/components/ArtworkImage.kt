@@ -1,6 +1,7 @@
 package com.hughdevelopment.player.ui.components
 
 import android.net.Uri
+import androidx.compose.foundation.Image
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.shape.RoundedCornerShape
@@ -14,10 +15,12 @@ import androidx.compose.ui.draw.clip
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.platform.LocalContext
+import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.unit.Dp
 import androidx.compose.ui.unit.dp
 import coil.compose.AsyncImage
 import coil.request.ImageRequest
+import com.hughdevelopment.player.R
 import com.hughdevelopment.player.ui.theme.CyberAmber
 
 @Composable
@@ -45,9 +48,12 @@ fun ArtworkImage(
                 modifier = Modifier.fillMaxSize()
             )
         } else {
-            StatueGlyphView(
-                modifier = Modifier.fillMaxSize(),
-                accentColor = accentColor
+            // High-contrast neoclassical dithered bust fallback
+            Image(
+                painter = painterResource(id = R.drawable.placeholder_statue),
+                contentDescription = "Placeholder Neoclássico",
+                contentScale = ContentScale.Crop,
+                modifier = Modifier.fillMaxSize()
             )
         }
     }

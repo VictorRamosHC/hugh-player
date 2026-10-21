@@ -3,7 +3,7 @@
 > **Empresa:** Hugh Development  
 > **Liderança:** Hugh (Fundador) & Atom (Co-fundador)  
 > **Projeto:** Hugh Player (Offline Vault)  
-> **Data de Criação:** 21 de Outubro de 2026  
+> **Data de Atualização:** 21 de Outubro de 2026  
 
 ---
 
@@ -37,39 +37,60 @@ Na reunião inicial da diretoria, foram avaliados 4 pilares:
 
 ### Pilar 4: Praticidade & Usabilidade (A Experiência Spotify)
 * **Decisão:** Fluxo de dois níveis:
-  1. [`MiniPlayerBar.kt`](../app/src/main/java/com/hughdevelopment/player/ui/components/MiniPlayerBar.kt): Barra fixa na parte inferior da biblioteca com linha de progresso milimétrica, título, miniatura e botão de play/pause com fade.
-  2. [`ExpandedPlayerSheet.kt`](../app/src/main/java/com/hughdevelopment/player/ui/components/ExpandedPlayerSheet.kt): Modal fullscreen deslizante com scrubber de alta precisão, tempo decorrido/restante e controles ampliados.
+  1. [`MiniPlayerBar.kt`](../app/src/main/java/com/hughdevelopment/player/ui/components/MiniPlayerBar.kt): Barra fixa na parte inferior da biblioteca com linha de progresso milimétrica, título, miniatura e controles rápidos (Play/Pause, Skip Next, Skip Previous, Favorito).
+  2. [`ExpandedPlayerSheet.kt`](../app/src/main/java/com/hughdevelopment/player/ui/components/ExpandedPlayerSheet.kt): Modal fullscreen deslizante com scrubber de alta precisão com arrasto local, visualizador em tempo real, tempo decorrido/restante, botões de shuffle, repetição e favorito.
 
 ---
 
-## 3. Identidade Visual: Cybersigilism Neoclássico
+## 3. Identidade Visual: Cybersigilism Neoclássico & Assets Híbridos (v1.2.0)
 * **Paleta de Cores:**
   * Fundo: `VoidBlack` (`#070709`)
   * Superfícies: `CharcoalSurface` (`#111116`)
-  * Linhas & Acentos: `SigilWhite` (`#FDFDFD`), `SigilSilver` (`#E4E4E7`), `CyberAmber` (`#F59E0B`) e `HermeticCyan` (`#06B6D4`).
-* **Canvas Hardware-Accelerated:** O componente [`CybersigilBackground.kt`](../app/src/main/java/com/hughdevelopment/player/ui/components/CybersigilBackground.kt) desenha micropontos de meio-tom (*halftone stippling*) e cantos de mira cibernética via GPU sem instanciar imagens PNG pesadas.
-* **Busto Neoclássico Procedural:** O componente [`StatueGlyphView.kt`](../app/src/main/java/com/hughdevelopment/player/ui/components/StatueGlyphView.kt) atua como placeholder para faixas locais sem capa oficial, desenhando um busto esculpido com auréola geométrica e miras vetoriais.
+  * Linhas & Acentos: `SigilWhite` (`#FDFDFD`), `SigilSilver` (`#E4E4E7`), `CyberAmber` (`#F59E0B`), `HermeticCyan` (`#06B6D4`) e `Klein Blue` (`#0022FF`).
+* **Assets Híbridos (Raster + Vector):**
+  * `icon_launcher`: Ícone adaptativo nativo de alta densidade (mipmap mdpi a xxxhdpi) com zona de proteção de 66% para launchers circulares/squircle.
+  * `placeholder_statue`: Busto neoclássico de dither 1-bit estilizado para faixas sem arte embutida.
+  * `bg_library`: Textura sutil de fundo para a biblioteca com baixa opacidade para legibilidade máxima da lista.
+  * `bg_expanded_player`: Atmosfera profunda com anéis Klein Blue e padrões moiré.
+  * `bg_splash`: Tela de carregamento imponente com busto de Hermes e halo sagrado dourado.
+  * `bg_dashboard`: Textura para o painel de estatísticas offline.
+* **Otimização de Memória:** Imagens renderizadas originalmente em 2048x2048 foram reamostradas e otimizadas em pipeline local com interpolação bicúbica, reduzindo o peso médio de ~2.5 MB para ~90-110 KB por asset, eliminando qualquer risco de OutOfMemory (OOM) e travamento de rolagem.
 
 ---
 
 ## 4. O Dashboard "Offline Wrapped" (Telemetria 100% Local)
-* Implementado com banco **Room (SQLite local)**:
+* Implementado com banco **Room 2.0 (SQLite local)**:
   * [`StatsEntity.kt`](../app/src/main/java/com/hughdevelopment/player/data/db/StatsEntity.kt) e [`StatsDao.kt`](../app/src/main/java/com/hughdevelopment/player/data/db/StatsDao.kt).
-  * Registra minutos ouvidos por faixa, total de reproduções e data do último play.
-  * Tela [`StatsDashboardScreen.kt`](../app/src/main/java/com/hughdevelopment/player/ui/screens/StatsDashboardScreen.kt) com cards cibernéticos: Minutos Totais, Quantidade de Plays, Faixas Únicas e Ranking #1 ao #10 das músicas mais repetidas.
+  * Auto-flush periódico a cada 5 segundos de escuta contínua + gravação imediata ao iniciar faixas.
+  * Suporte a faixas favoritas com coluna `isFavorite`.
+  * Grid 2x2 de métricas: Tempo Ouvido, Total de Plays, Faixas Únicas, Total de Favoritas.
+  * Ranking Top faixas com barras proporcionais baseadas no líder de reproduções.
   * **Privacidade:** 100% dos dados permanecem no disco do celular; zero tráfego de rede.
 
 ---
 
 ## 5. Preparação para Futura IA (Agent-Ready Bridge)
-* A classe [`AgentDataManager.kt`](../app/src/main/java/com/hughdevelopment/player/data/ai/AgentDataManager.kt) foi estruturada no formato de ferramentas (*tool calling*) para futuras integrações com modelos on-device (ex: Gemini Nano / LLMs locais):
+* A classe [`AgentDataManager.kt`](../app/src/main/java/com/hughdevelopment/player/data/ai/AgentDataManager.kt) expõe ferramentas (*tool calling*) para futuras integrações com modelos on-device (ex: Gemini Nano / LLMs locais):
   * `getLibraryContextForAgent()`: Serializa a biblioteca musical completa em JSON estruturado para contexto de IA.
   * `inspectFolderTree()`: Mapeia fisicamente as pastas do celular onde as músicas estão alocadas.
   * `proposeStandardizedPaths()`: Fornece regras automáticas para agentes renomearem e reorganizarem pastas bagunçadas no padrão `Música/Artista/Álbum/Faixa.mp3`.
 
 ---
 
-## 6. Incidente Técnico & Soluções (21/10/2026)
-* **Diagnóstico da Máquina Corporativa:** A unidade `C:` estava com apenas **~160 MB livres**, inviabilizando a instalação local do Android Studio (que requer 15 a 25 GB).
-* **Contramedida 1 (Nuvem):** Criado pipeline CI/CD [`.github/workflows/build-apk.yml`](../.github/workflows/build-apk.yml) para compilar o APK via GitHub Actions sem gastar RAM ou disco local.
-* **Contramedida 2 (Backup & Setup Doméstico):** Criação deste backup integral para retomada dos trabalhos na máquina pessoal de Hugh (com hardware dedicado e espaço em disco).
+## 6. Histórico de Versões & Validações
+
+### v1.0.0 (Release Inicial)
+* Primeira compilação bem-sucedida via GitHub Actions.
+* Testado no celular por Hugh: identificados gargalos de estatísticas (dados não persistiam), falta de controles avançados (shuffle/repeat/prev) e necessidade de enriquecimento visual.
+
+### v1.1.0 (Correções Estruturais e Performance)
+* **Correção no Room:** Registro imediato de reproduções e auto-flush de segundos a cada 5s.
+* **Controles:** Adição de Shuffle, Repeat, Favorite e Skip Previous.
+* **Performance:** CybersigilBackground reescrito sem loops excessivos de Canvas; Coil integrado com fallback protegido em `ArtworkImage.kt`; Scrubber com estado local sem engasgo de áudio.
+* **Visualizador:** Novo componente `AudioVisualizerBars.kt`.
+
+### v1.2.0 (Kit Visual de Alta Fidelidade com Assets Gemini)
+* Integração de 6 assets artísticos de alta resolução gerados com Gemini (Hermes Neoclássico × High Contrast).
+* Nova Splash Screen cinematográfica com transição fade-out suave na inicialização.
+* Ícone de aplicativo em alta definição com suporte completo a Adaptive Icons do Android 8+.
+* Fallbacks de álbuns locais com gravura 1-bit dither.

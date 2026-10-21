@@ -1,5 +1,6 @@
 package com.hughdevelopment.player.ui.screens
 
+import androidx.compose.foundation.Image
 import androidx.compose.foundation.background
 import androidx.compose.foundation.border
 import androidx.compose.foundation.layout.Arrangement
@@ -30,13 +31,17 @@ import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.draw.alpha
 import androidx.compose.ui.draw.clip
 import androidx.compose.ui.graphics.vector.ImageVector
+import androidx.compose.ui.layout.ContentScale
+import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.text.font.FontFamily
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.style.TextOverflow
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
+import com.hughdevelopment.player.R
 import com.hughdevelopment.player.data.model.ListeningOverview
 import com.hughdevelopment.player.data.model.TopSongSummary
 import com.hughdevelopment.player.ui.components.CybersigilBackground
@@ -60,6 +65,16 @@ fun StatsDashboardScreen(
             .fillMaxSize()
             .background(VoidBlack)
     ) {
+        // High-contrast brutalist dashboard ambient backdrop
+        Image(
+            painter = painterResource(id = R.drawable.bg_dashboard),
+            contentDescription = null,
+            contentScale = ContentScale.Crop,
+            modifier = Modifier
+                .fillMaxSize()
+                .alpha(0.30f)
+        )
+
         CybersigilBackground(showHalo = true)
 
         Column(

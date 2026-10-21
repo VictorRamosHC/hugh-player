@@ -8,26 +8,35 @@ import androidx.activity.ComponentActivity
 import androidx.activity.compose.setContent
 import androidx.activity.result.contract.ActivityResultContracts
 import androidx.activity.viewModels
+import androidx.compose.animation.AnimatedVisibility
 import androidx.compose.animation.Crossfade
+import androidx.compose.animation.core.tween
+import androidx.compose.animation.fadeOut
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.navigationBarsPadding
 import androidx.compose.foundation.layout.statusBarsPadding
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
+import androidx.compose.runtime.mutableStateOf
+import androidx.compose.runtime.remember
+import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.core.content.ContextCompat
 import com.hughdevelopment.player.ui.components.ExpandedPlayerSheet
 import com.hughdevelopment.player.ui.components.MiniPlayerBar
+import com.hughdevelopment.player.ui.components.SplashScreenView
 import com.hughdevelopment.player.ui.screens.LibraryScreen
 import com.hughdevelopment.player.ui.screens.StatsDashboardScreen
 import com.hughdevelopment.player.ui.theme.HughPlayerTheme
 import com.hughdevelopment.player.ui.theme.VoidBlack
 import com.hughdevelopment.player.ui.viewmodel.AppScreen
 import com.hughdevelopment.player.ui.viewmodel.MusicViewModel
+import kotlinx.coroutines.delay
 
 class MainActivity : ComponentActivity() {
 
@@ -102,6 +111,13 @@ fun MainScreen(viewModel: MusicViewModel) {
     val overview by viewModel.listeningOverview.collectAsState()
     val isExpandedOpen by viewModel.isExpandedPlayerOpen.collectAsState()
     val currentScreen by viewModel.currentScreen.collectAsState()
+
+    var showSplash by remember { mutableStateOf(true) }
+
+    LaunchedEffect(Unit) {
+        delay(1600)
+        showSplash = false
+    }
 
     val progress = if (durationMs > 0) {
         (currentPositionMs.toFloat() / durationMs.toFloat()).coerceIn(0f, 1f)
@@ -178,6 +194,14 @@ fun MainScreen(viewModel: MusicViewModel) {
                 onToggleRepeat = { viewModel.toggleRepeat() },
                 onToggleFavorite = { viewModel.toggleFavorite(currentSong!!) }
             )
+        }
+
+        // Cinematic Splash Screen overlay with smooth fade out
+        AnimatedVisibility(
+            visible = showSplash,
+            exit = fadeOut(animationSpec = tween(500))
+        ) {
+            SplashScreenView()
         }
     }
 }
