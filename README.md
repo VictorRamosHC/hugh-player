@@ -36,21 +36,3 @@ Ele foi construído sobre uma identidade visual exclusiva de **Cybersigilism Neo
   * `proposeStandardizedPaths()`: Estrutura ferramentas para um agente local (ex: Gemini Nano) renomear, mover e organizar pastas musicais automaticamente.
 
 ---
-
-## Como Abrir e Gerar o APK
-
-### Opção 1: Via Android Studio (Recomendado)
-1. Abra o **Android Studio**.
-2. Selecione **Open** e aponte para:  
-   `C:\Users\victor.hugo\.gemini\antigravity\scratch\hugh-player`
-3. Aguarde o Gradle sincronizar as dependências.
-4. Conecte seu celular Android via USB (ou inicie um emulador).
-5. Clique no botão verde de **Run (Shift + F10)** ou vá em `Build > Build Bundle(s) / APK(s) > Build APK(s)`.
-
-### Opção 2: Linha de Comando (Gradle)
-```bash
-cd C:\Users\victor.hugo\.gemini\antigravity\scratch\hugh-player
-gradle assembleDebug
-```
-O APK final será gerado em:
-`app/build/outputs/apk/debug/app-debug.apk`
