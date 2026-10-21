@@ -6,6 +6,7 @@ import androidx.lifecycle.AndroidViewModel
 import androidx.lifecycle.viewModelScope
 import com.hughdevelopment.player.HughPlayerApplication
 import com.hughdevelopment.player.data.model.ListeningOverview
+import com.hughdevelopment.player.data.model.Playlist
 import com.hughdevelopment.player.data.model.Song
 import com.hughdevelopment.player.data.settings.SettingsState
 import com.hughdevelopment.player.data.settings.SortOrder
@@ -49,6 +50,13 @@ class MusicViewModel(application: Application) : AndroidViewModel(application) {
             initialValue = emptyList()
         )
 
+    val playlists: StateFlow<List<Playlist>> = repository.playlists
+        .stateIn(
+            scope = viewModelScope,
+            started = SharingStarted.WhileSubscribed(5000),
+            initialValue = emptyList()
+        )
+
     val listeningOverview: StateFlow<ListeningOverview> = repository.getListeningOverview()
         .stateIn(
             scope = viewModelScope,
@@ -82,7 +90,19 @@ class MusicViewModel(application: Application) : AndroidViewModel(application) {
 
     val isLoading: StateFlow<Boolean> = repository.isLoading
 
-    val currentPlayingSong: StateFlow<Song?> = playerController.currentSong
+    // Seamlessly combined so favorite toggling instantly reflects on the active playback bar
+    val currentPlayingSong: StateFlow<Song?> = combine(
+        playerController.currentSong,
+        songs
+    ) { controllerSong, songList ->
+        if (controllerSong == null) null
+        else songList.find { it.id == controllerSong.id } ?: controllerSong
+    }.stateIn(
+        scope = viewModelScope,
+        started = SharingStarted.WhileSubscribed(5000),
+        initialValue = null
+    )
+
     val isPlaying: StateFlow<Boolean> = playerController.isPlaying
     val playbackPositionMs: StateFlow<Long> = playerController.playbackPositionMs
     val durationMs: StateFlow<Long> = playerController.durationMs
@@ -141,7 +161,49 @@ class MusicViewModel(application: Application) : AndroidViewModel(application) {
 
     fun toggleFavorite(song: Song) {
         viewModelScope.launch {
+            val newFav = !song.isFavorite
+            playerController.updateSongFavorite(song.id, newFav)
             repository.toggleFavorite(song)
+        }
+    }
+
+    // --- Folder / Playlist Actions ---
+
+    fun createPlaylist(name: String, category: String = "CUSTOM", colorHex: String = "#F59E0B") {
+        viewModelScope.launch {
+            repository.createPlaylist(name, category, colorHex)
+        }
+    }
+
+    fun deletePlaylist(playlistId: Long) {
+        viewModelScope.launch {
+            repository.deletePlaylist(playlistId)
+        }
+    }
+
+    fun addSongToPlaylist(playlistId: Long, songId: Long) {
+        viewModelScope.launch {
+            repository.addSongToPlaylist(playlistId, songId)
+        }
+    }
+
+    fun addSongsToPlaylist(playlistId: Long, songIds: List<Long>) {
+        viewModelScope.launch {
+            repository.addSongsToPlaylist(playlistId, songIds)
+        }
+    }
+
+    fun removeSongFromPlaylist(playlistId: Long, songId: Long) {
+        viewModelScope.launch {
+            repository.removeSongFromPlaylist(playlistId, songId)
+        }
+    }
+
+    fun autoOrganizeWithAiPresets(onResult: (Map<String, Int>) -> Unit) {
+        viewModelScope.launch {
+            val current = repository.getCurrentSongs().ifEmpty { songs.value }
+            val counts = repository.autoOrganizeWithAiPresets(current)
+            onResult(counts)
         }
     }
 
@@ -192,6 +254,7 @@ class MusicViewModel(application: Application) : AndroidViewModel(application) {
 
 enum class AppScreen {
     LIBRARY,
+    FOLDERS,
     STATS_DASHBOARD,
     SETTINGS
 }

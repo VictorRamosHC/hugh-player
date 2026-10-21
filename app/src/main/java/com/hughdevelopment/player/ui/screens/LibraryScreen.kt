@@ -25,6 +25,7 @@ import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.BarChart
 import androidx.compose.material.icons.filled.Favorite
 import androidx.compose.material.icons.filled.FavoriteBorder
+import androidx.compose.material.icons.filled.Folder
 import androidx.compose.material.icons.filled.GraphicEq
 import androidx.compose.material.icons.filled.Refresh
 import androidx.compose.material.icons.filled.Search
@@ -76,6 +77,7 @@ fun LibraryScreen(
     wallpaperAlpha: Float,
     onSongSelected: (Song, List<Song>) -> Unit,
     onRefresh: () -> Unit,
+    onOpenFolders: () -> Unit,
     onOpenDashboard: () -> Unit,
     onOpenSettings: () -> Unit,
     onToggleFavorite: (Song) -> Unit,
@@ -151,6 +153,15 @@ fun LibraryScreen(
                         imageVector = Icons.Default.Shuffle,
                         contentDescription = "Tocar Todas no Shuffle",
                         tint = SigilSilver
+                    )
+                }
+
+                // Folders & Playlists Action
+                IconButton(onClick = onOpenFolders) {
+                    Icon(
+                        imageVector = Icons.Default.Folder,
+                        contentDescription = "Pastas & Playlists",
+                        tint = HermeticCyan
                     )
                 }
 

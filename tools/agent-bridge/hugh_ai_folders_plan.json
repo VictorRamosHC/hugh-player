@@ -1,0 +1,2142 @@
+{
+  "vault_version": "1.3.0",
+  "timestamp": 1792624118377,
+  "total_songs": 303,
+  "categories_summary": {
+    "Músicas Cristãs (Cantado)": 16,
+    "Músicas Cristãs (Playback)": 98,
+    "Músicas Dia a Dia": 154,
+    "Áudios de Reuniões": 35
+  },
+  "folders": {
+    "Músicas Cristãs (Cantado)": [
+      {
+        "id": 56266,
+        "title": "Bendito é o Rei - Ao Vivo",
+        "artist": "fhop music",
+        "current_path": "/storage/emulated/0/snaptube/download/SnapTube Audio/Bendito É O Rei (Ao Vivo) _ Fhop Music(M4A_128K).m4a",
+        "proposed_path": "/sdcard/Music/Músicas Cristãs (Cantado)/Bendito É O Rei (Ao Vivo) _ Fhop Music(M4A_128K).m4a"
+      },
+      {
+        "id": 47455,
+        "title": "Buscar-Me-Eis e Me Achareis - Ao Vivo",
+        "artist": "Alexsander Lucio",
+        "current_path": "/storage/emulated/0/snaptube/download/SnapTube Audio/Buscar-Me-Eis e Me Achareis (Ao Vivo)(M4A_128K).m4a",
+        "proposed_path": "/sdcard/Music/Músicas Cristãs (Cantado)/Buscar-Me-Eis e Me Achareis (Ao Vivo)(M4A_128K).m4a"
+      },
+      {
+        "id": 47833,
+        "title": "Canção & Louvor e Anna Clara Rocha | Comum e Imperfeito [Clipe Oficial]",
+        "artist": "Canção & Louvor",
+        "current_path": "/storage/emulated/0/snaptube/download/SnapTube Audio/Canção _ Louvor e Anna Clara Rocha _ Comum e Imperfeito [Clipe Oficial](M4A_128K).m4a",
+        "proposed_path": "/sdcard/Music/Músicas Cristãs (Cantado)/Canção _ Louvor e Anna Clara Rocha _ Comum e Imperfeito [Clipe Oficial](M4A_128K).m4a"
+      },
+      {
+        "id": 47439,
+        "title": "Começo, Meio e Fim / Mais Perto Quero Estar - Ao Vivo",
+        "artist": "Julia Vitória, One Service Project",
+        "current_path": "/storage/emulated/0/snaptube/download/SnapTube Audio/Julia Vitoria - Começo_ Meio e Fim _ Mais Perto Quero Estar (Ao Vivo)(M4A_128K).m4a",
+        "proposed_path": "/sdcard/Music/Músicas Cristãs (Cantado)/Julia Vitoria - Começo_ Meio e Fim _ Mais Perto Quero Estar (Ao Vivo)(M4A_128K).m4a"
+      },
+      {
+        "id": 96706,
+        "title": "Começo, Meio e Fim / Mais Perto Quero Estar - Ao Vivo",
+        "artist": "Julia Vitória, One Service Project",
+        "current_path": "/storage/emulated/0/snaptube/download/SnapTube Audio/Julia Vitoria - Começo_ Meio e Fim _ Mais Perto Quero Estar (Ao Vivo)(MP3_320K).mp3",
+        "proposed_path": "/sdcard/Music/Músicas Cristãs (Cantado)/Julia Vitoria - Começo_ Meio e Fim _ Mais Perto Quero Estar (Ao Vivo)(MP3_320K).mp3"
+      },
+      {
+        "id": 47450,
+        "title": "Como Na Primeira Vez + Ser mudado | Rute Maia - cover",
+        "artist": "Rute Maia",
+        "current_path": "/storage/emulated/0/snaptube/download/SnapTube Audio/Como Na Primeira Vez   Ser mudado _ Rute Maia - cover(M4A_128K).m4a",
+        "proposed_path": "/sdcard/Music/Músicas Cristãs (Cantado)/Como Na Primeira Vez   Ser mudado _ Rute Maia - cover(M4A_128K).m4a"
+      },
+      {
+        "id": 183373,
+        "title": "Culto do Calvário",
+        "artist": "Anderson Freire",
+        "current_path": "/storage/emulated/0/snaptube/download/SnapTube Audio/Anderson Freire - Culto do Calvário (Clipe Oficial MK Music)(MP3_160K).mp3",
+        "proposed_path": "/sdcard/Music/Músicas Cristãs (Cantado)/Anderson Freire - Culto do Calvário (Clipe Oficial MK Music)(MP3_160K).mp3"
+      },
+      {
+        "id": 209908,
+        "title": "Daniel",
+        "artist": "Mara Lima",
+        "current_path": "/storage/emulated/0/snaptube/download/SnapTube Audio/Mara Lima - Daniel(MP3_160K).mp3",
+        "proposed_path": "/sdcard/Music/Músicas Cristãs (Cantado)/Mara Lima - Daniel(MP3_160K).mp3"
+      },
+      {
+        "id": 228587,
+        "title": "Kalebe - Deus Te Ama",
+        "artist": "Cantor Kalebe",
+        "current_path": "/storage/emulated/0/snaptube/download/SnapTube Audio/Kalebe - Deus Te Ama(MP3_320K).mp3",
+        "proposed_path": "/sdcard/Music/Músicas Cristãs (Cantado)/Kalebe - Deus Te Ama(MP3_320K).mp3"
+      },
+      {
+        "id": 27172,
+        "title": "Na Unção de Deus - Ao Vivo",
+        "artist": "Elaine de Jesus",
+        "current_path": "/storage/emulated/0/snaptube/download/SnapTube Audio/Elaine de Jesus - Na Unção de Deus _ O Crente Cheio da Unção (Ao Vivo)(MP3_160K).mp3",
+        "proposed_path": "/sdcard/Music/Músicas Cristãs (Cantado)/Elaine de Jesus - Na Unção de Deus _ O Crente Cheio da Unção (Ao Vivo)(MP3_160K).mp3"
+      },
+      {
+        "id": 183391,
+        "title": "Posso Clamar",
+        "artist": "Eyshila",
+        "current_path": "/storage/emulated/0/snaptube/download/SnapTube Audio/Eyshila - Posso Clamar (Ao Vivo) - DVD 10 Anos Collection(MP3_160K).mp3",
+        "proposed_path": "/sdcard/Music/Músicas Cristãs (Cantado)/Eyshila - Posso Clamar (Ao Vivo) - DVD 10 Anos Collection(MP3_160K).mp3"
+      },
+      {
+        "id": 47471,
+        "title": "Quem é esse + O que seria de mim | Espontâneo | Louvor com Thiago Brito",
+        "artist": "Thiago Brito",
+        "current_path": "/storage/emulated/0/snaptube/download/SnapTube Audio/Quem é esse   O que seria de mim _ Espontâneo _ Louvor com Thiago Brito(M4A_128K).m4a",
+        "proposed_path": "/sdcard/Music/Músicas Cristãs (Cantado)/Quem é esse   O que seria de mim _ Espontâneo _ Louvor com Thiago Brito(M4A_128K).m4a"
+      },
+      {
+        "id": 47461,
+        "title": "Rafael Oliveira | O Exilado [Harpa Cristã 36]",
+        "artist": "Rafael Oliveira",
+        "current_path": "/storage/emulated/0/snaptube/download/SnapTube Audio/Rafael Oliveira _ O Exilado [Harpa Cristã 36](M4A_128K).m4a",
+        "proposed_path": "/sdcard/Music/Músicas Cristãs (Cantado)/Rafael Oliveira _ O Exilado [Harpa Cristã 36](M4A_128K).m4a"
+      },
+      {
+        "id": 183379,
+        "title": "Só em Jesus",
+        "artist": "Léo Jundi",
+        "current_path": "/storage/emulated/0/snaptube/download/SnapTube Audio/Só em Jesus(MP3_160K).mp3",
+        "proposed_path": "/sdcard/Music/Músicas Cristãs (Cantado)/Só em Jesus(MP3_160K).mp3"
+      },
+      {
+        "id": 32881,
+        "title": "Vitorioso És - Ao Vivo",
+        "artist": "Gabriel Guedes de Almeida",
+        "current_path": "/storage/emulated/0/snaptube/download/SnapTube Audio/Gabriel Guedes - Vitorioso És (Clipe Oficial)(MP3_160K).mp3",
+        "proposed_path": "/sdcard/Music/Músicas Cristãs (Cantado)/Gabriel Guedes - Vitorioso És (Clipe Oficial)(MP3_160K).mp3"
+      },
+      {
+        "id": 47445,
+        "title": "fhop music | NADA MAIS (Ao Vivo)",
+        "artist": "Fhop Music",
+        "current_path": "/storage/emulated/0/snaptube/download/SnapTube Audio/fhop music _ NADA MAIS (Ao Vivo)(M4A_128K).m4a",
+        "proposed_path": "/sdcard/Music/Músicas Cristãs (Cantado)/fhop music _ NADA MAIS (Ao Vivo)(M4A_128K).m4a"
+      }
+    ],
+    "Músicas Cristãs (Playback)": [
+      {
+        "id": 199263,
+        "title": "Coração Igual ao Teu (PLAYBACK LEGENDADO no Piano - TOM CONTRALTO \"Db\") Diante do Trono",
+        "artist": "Niel Nascimento",
+        "current_path": "/storage/emulated/0/snaptube/download/SnapTube Audio/🎤 Coração Igual ao Teu (PLAYBACK LEGENDADO no Piano - TOM CONTRALTO _Db_) Diante do Trono(MP3_160K).mp3",
+        "proposed_path": "/sdcard/Music/Músicas Cristãs (Playback)/🎤 Coração Igual ao Teu (PLAYBACK LEGENDADO no Piano - TOM CONTRALTO _Db_) Diante do Trono(MP3_160K).mp3"
+      },
+      {
+        "id": 202427,
+        "title": "Coração Igual ao Teu (PLAYBACK LEGENDADO no Piano - TOM CONTRALTO \"Db\") Diante do Trono",
+        "artist": "Niel Nascimento",
+        "current_path": "/storage/emulated/0/snaptube/download/playbacks/🎤 Coração Igual ao Teu (PLAYBACK LEGENDADO no Piano - TOM CONTRALTO _Db_) Diante do Trono(MP3_160K).mp3",
+        "proposed_path": "/sdcard/Music/Músicas Cristãs (Playback)/🎤 Coração Igual ao Teu (PLAYBACK LEGENDADO no Piano - TOM CONTRALTO _Db_) Diante do Trono(MP3_160K).mp3"
+      },
+      {
+        "id": 214050,
+        "title": "A Árvore e a Cruz",
+        "artist": "Mara Lima",
+        "current_path": "/storage/emulated/0/snaptube/download/SnapTube Audio/_A Árvore e a Cruz_ Play Back Com Letras   ( Mara Lima )(MP3_160K).mp3",
+        "proposed_path": "/sdcard/Music/Músicas Cristãs (Playback)/_A Árvore e a Cruz_ Play Back Com Letras   ( Mara Lima )(MP3_160K).mp3"
+      },
+      {
+        "id": 33402,
+        "title": "AGNUS DEI PLAYBACK LEGENDADO NOVO",
+        "artist": "Verdadeiro Evangelho",
+        "current_path": "/storage/emulated/0/snaptube/download/SnapTube Audio/AGNUS DEI PLAYBACK LEGENDADO NOVO(MP3_160K).mp3",
+        "proposed_path": "/sdcard/Music/Músicas Cristãs (Playback)/AGNUS DEI PLAYBACK LEGENDADO NOVO(MP3_160K).mp3"
+      },
+      {
+        "id": 202371,
+        "title": "AGNUS DEI PLAYBACK LEGENDADO NOVO",
+        "artist": "Verdadeiro Evangelho",
+        "current_path": "/storage/emulated/0/snaptube/download/playbacks/AGNUS DEI PLAYBACK LEGENDADO NOVO(MP3_160K).mp3",
+        "proposed_path": "/sdcard/Music/Músicas Cristãs (Playback)/AGNUS DEI PLAYBACK LEGENDADO NOVO(MP3_160K).mp3"
+      },
+      {
+        "id": 93887,
+        "title": "Adorador por Excelência - Playback",
+        "artist": "Nani Azevedo",
+        "current_path": "/storage/emulated/0/snaptube/download/SnapTube Audio/Adorador por Excelência   Nani Azevedo playback letra abaixo(MP3_320K).mp3",
+        "proposed_path": "/sdcard/Music/Músicas Cristãs (Playback)/Adorador por Excelência   Nani Azevedo playback letra abaixo(MP3_320K).mp3"
+      },
+      {
+        "id": 202394,
+        "title": "Adorador por Excelência - Playback",
+        "artist": "Nani Azevedo",
+        "current_path": "/storage/emulated/0/snaptube/download/playbacks/Adorador por Excelência   Nani Azevedo playback letra abaixo(MP3_320K).mp3",
+        "proposed_path": "/sdcard/Music/Músicas Cristãs (Playback)/Adorador por Excelência   Nani Azevedo playback letra abaixo(MP3_320K).mp3"
+      },
+      {
+        "id": 32895,
+        "title": "Atos 2 - Playback",
+        "artist": "Gabriel Guedes de Almeida",
+        "current_path": "/storage/emulated/0/snaptube/download/SnapTube Audio/Gabriel Guedes - Vitorioso És (Clipe Oficial) _ Playback(MP3_160K).mp3",
+        "proposed_path": "/sdcard/Music/Músicas Cristãs (Playback)/Gabriel Guedes - Vitorioso És (Clipe Oficial) _ Playback(MP3_160K).mp3"
+      },
+      {
+        "id": 202370,
+        "title": "Atos 2 - Playback",
+        "artist": "Gabriel Guedes de Almeida",
+        "current_path": "/storage/emulated/0/snaptube/download/playbacks/Gabriel Guedes - Vitorioso És (Clipe Oficial) _ Playback(MP3_160K).mp3",
+        "proposed_path": "/sdcard/Music/Músicas Cristãs (Playback)/Gabriel Guedes - Vitorioso És (Clipe Oficial) _ Playback(MP3_160K).mp3"
+      },
+      {
+        "id": 171817,
+        "title": "Cicatrizes - Bruna Karla playback com letra",
+        "artist": "Odete Playback",
+        "current_path": "/storage/emulated/0/snaptube/download/SnapTube Audio/Cicatrizes - Bruna Karla playback com letra(MP3_160K).mp3",
+        "proposed_path": "/sdcard/Music/Músicas Cristãs (Playback)/Cicatrizes - Bruna Karla playback com letra(MP3_160K).mp3"
+      },
+      {
+        "id": 202385,
+        "title": "Cicatrizes - Bruna Karla playback com letra",
+        "artist": "Odete Playback",
+        "current_path": "/storage/emulated/0/snaptube/download/playbacks/Cicatrizes - Bruna Karla playback com letra(MP3_160K).mp3",
+        "proposed_path": "/sdcard/Music/Músicas Cristãs (Playback)/Cicatrizes - Bruna Karla playback com letra(MP3_160K).mp3"
+      },
+      {
+        "id": 171823,
+        "title": "Cicatrizes - Playback",
+        "artist": "Jorge Araújo",
+        "current_path": "/storage/emulated/0/snaptube/download/SnapTube Audio/Cicatrizes (Playback)(MP3_160K).mp3",
+        "proposed_path": "/sdcard/Music/Músicas Cristãs (Playback)/Cicatrizes (Playback)(MP3_160K).mp3"
+      },
+      {
+        "id": 202376,
+        "title": "Cicatrizes - Playback",
+        "artist": "Jorge Araújo",
+        "current_path": "/storage/emulated/0/snaptube/download/playbacks/Cicatrizes (Playback)(MP3_160K).mp3",
+        "proposed_path": "/sdcard/Music/Músicas Cristãs (Playback)/Cicatrizes (Playback)(MP3_160K).mp3"
+      },
+      {
+        "id": 194493,
+        "title": "Consolador",
+        "artist": "Damares",
+        "current_path": "/storage/emulated/0/snaptube/download/SnapTube Audio/Consolador - Damares playback com letra(MP3_160K).mp3",
+        "proposed_path": "/sdcard/Music/Músicas Cristãs (Playback)/Consolador - Damares playback com letra(MP3_160K).mp3"
+      },
+      {
+        "id": 202426,
+        "title": "Consolador",
+        "artist": "Damares",
+        "current_path": "/storage/emulated/0/snaptube/download/playbacks/Consolador - Damares playback com letra(MP3_160K).mp3",
+        "proposed_path": "/sdcard/Music/Músicas Cristãs (Playback)/Consolador - Damares playback com letra(MP3_160K).mp3"
+      },
+      {
+        "id": 199258,
+        "title": "Coração Igual ao Teu - Ao Vivo",
+        "artist": "Diante do Trono",
+        "current_path": "/storage/emulated/0/snaptube/download/SnapTube Audio/CORAÇÃO IGUAL AO TEU _ Diante do Trono (playback com letra)(MP3_160K).mp3",
+        "proposed_path": "/sdcard/Music/Músicas Cristãs (Playback)/CORAÇÃO IGUAL AO TEU _ Diante do Trono (playback com letra)(MP3_160K).mp3"
+      },
+      {
+        "id": 202428,
+        "title": "Coração Igual ao Teu - Ao Vivo",
+        "artist": "Diante do Trono",
+        "current_path": "/storage/emulated/0/snaptube/download/playbacks/CORAÇÃO IGUAL AO TEU _ Diante do Trono (playback com letra)(MP3_160K).mp3",
+        "proposed_path": "/sdcard/Music/Músicas Cristãs (Playback)/CORAÇÃO IGUAL AO TEU _ Diante do Trono (playback com letra)(MP3_160K).mp3"
+      },
+      {
+        "id": 183370,
+        "title": "Culto do Calvário Playback",
+        "artist": "Anderson Freire",
+        "current_path": "/storage/emulated/0/snaptube/download/SnapTube Audio/Anderson Freire - Culto do Calvário - PLAYBACK COM LETRA(MP3_160K).mp3",
+        "proposed_path": "/sdcard/Music/Músicas Cristãs (Playback)/Anderson Freire - Culto do Calvário - PLAYBACK COM LETRA(MP3_160K).mp3"
+      },
+      {
+        "id": 202402,
+        "title": "Culto do Calvário Playback",
+        "artist": "Anderson Freire",
+        "current_path": "/storage/emulated/0/snaptube/download/playbacks/Anderson Freire - Culto do Calvário - PLAYBACK COM LETRA(MP3_160K).mp3",
+        "proposed_path": "/sdcard/Music/Músicas Cristãs (Playback)/Anderson Freire - Culto do Calvário - PLAYBACK COM LETRA(MP3_160K).mp3"
+      },
+      {
+        "id": 209912,
+        "title": "Daniel   Mara Lima playback com letra",
+        "artist": "Sintia correia Correia",
+        "current_path": "/storage/emulated/0/snaptube/download/SnapTube Audio/Daniel   Mara Lima playback com letra(MP3_160K).mp3",
+        "proposed_path": "/sdcard/Music/Músicas Cristãs (Playback)/Daniel   Mara Lima playback com letra(MP3_160K).mp3"
+      },
+      {
+        "id": 157637,
+        "title": "Depois da Cruz",
+        "artist": "Aline Barros",
+        "current_path": "/storage/emulated/0/snaptube/download/SnapTube Audio/DEPOIS DA CRUZ - Aline Barros (playback)(MP3_160K).mp3",
+        "proposed_path": "/sdcard/Music/Músicas Cristãs (Playback)/DEPOIS DA CRUZ - Aline Barros (playback)(MP3_160K).mp3"
+      },
+      {
+        "id": 202419,
+        "title": "Depois da Cruz",
+        "artist": "Aline Barros",
+        "current_path": "/storage/emulated/0/snaptube/download/playbacks/DEPOIS DA CRUZ - Aline Barros (playback)(MP3_160K).mp3",
+        "proposed_path": "/sdcard/Music/Músicas Cristãs (Playback)/DEPOIS DA CRUZ - Aline Barros (playback)(MP3_160K).mp3"
+      },
+      {
+        "id": 201862,
+        "title": "Desapareceu Um Povo ( Povo Barulhento ) Shirley Carvalhaes [ PlayBack Com Letra ]",
+        "artist": "Música Gospel Vanderley Santos",
+        "current_path": "/storage/emulated/0/snaptube/download/SnapTube Audio/Desapareceu Um Povo ( Povo Barulhento ) Shirley Carvalhaes [ PlayBack Com Letra ](MP3_160K).mp3",
+        "proposed_path": "/sdcard/Music/Músicas Cristãs (Playback)/Desapareceu Um Povo ( Povo Barulhento ) Shirley Carvalhaes [ PlayBack Com Letra ](MP3_160K).mp3"
+      },
+      {
+        "id": 202429,
+        "title": "Desapareceu Um Povo ( Povo Barulhento ) Shirley Carvalhaes [ PlayBack Com Letra ]",
+        "artist": "Música Gospel Vanderley Santos",
+        "current_path": "/storage/emulated/0/snaptube/download/playbacks/Desapareceu Um Povo ( Povo Barulhento ) Shirley Carvalhaes [ PlayBack Com Letra ](MP3_160K).mp3",
+        "proposed_path": "/sdcard/Music/Músicas Cristãs (Playback)/Desapareceu Um Povo ( Povo Barulhento ) Shirley Carvalhaes [ PlayBack Com Letra ](MP3_160K).mp3"
+      },
+      {
+        "id": 124890,
+        "title": "Deus do Secreto",
+        "artist": "Various Artists",
+        "current_path": "/storage/emulated/0/snaptube/download/SnapTube Audio/Ministério Sarando a Terra Ferida - Deus do Secreto - PLAYBACK COM LETRA(MP3_160K).mp3",
+        "proposed_path": "/sdcard/Music/Músicas Cristãs (Playback)/Ministério Sarando a Terra Ferida - Deus do Secreto - PLAYBACK COM LETRA(MP3_160K).mp3"
+      },
+      {
+        "id": 202408,
+        "title": "Deus do Secreto",
+        "artist": "Various Artists",
+        "current_path": "/storage/emulated/0/snaptube/download/playbacks/Ministério Sarando a Terra Ferida - Deus do Secreto - PLAYBACK COM LETRA(MP3_160K).mp3",
+        "proposed_path": "/sdcard/Music/Músicas Cristãs (Playback)/Ministério Sarando a Terra Ferida - Deus do Secreto - PLAYBACK COM LETRA(MP3_160K).mp3"
+      },
+      {
+        "id": 124887,
+        "title": "Deus do secreto   playback",
+        "artist": "Ministerio Evangelico Sinai São Vicente",
+        "current_path": "/storage/emulated/0/snaptube/download/SnapTube Audio/Deus do secreto   playback(MP3_160K).mp3",
+        "proposed_path": "/sdcard/Music/Músicas Cristãs (Playback)/Deus do secreto   playback(MP3_160K).mp3"
+      },
+      {
+        "id": 202407,
+        "title": "Deus do secreto   playback",
+        "artist": "Ministerio Evangelico Sinai São Vicente",
+        "current_path": "/storage/emulated/0/snaptube/download/playbacks/Deus do secreto   playback(MP3_160K).mp3",
+        "proposed_path": "/sdcard/Music/Músicas Cristãs (Playback)/Deus do secreto   playback(MP3_160K).mp3"
+      },
+      {
+        "id": 178778,
+        "title": "Digno é o Senhor (Worthy Is The Lamb)",
+        "artist": "Aline Barros",
+        "current_path": "/storage/emulated/0/snaptube/download/SnapTube Audio/Digno é o Senhor - Aline Barros(playback legendado)(MP3_160K).mp3",
+        "proposed_path": "/sdcard/Music/Músicas Cristãs (Playback)/Digno é o Senhor - Aline Barros(playback legendado)(MP3_160K).mp3"
+      },
+      {
+        "id": 202390,
+        "title": "Digno é o Senhor (Worthy Is The Lamb)",
+        "artist": "Aline Barros",
+        "current_path": "/storage/emulated/0/snaptube/download/playbacks/Digno é o Senhor - Aline Barros(playback legendado)(MP3_160K).mp3",
+        "proposed_path": "/sdcard/Music/Músicas Cristãs (Playback)/Digno é o Senhor - Aline Barros(playback legendado)(MP3_160K).mp3"
+      },
+      {
+        "id": 166411,
+        "title": "EU NAVEGAREI | Playback de violão (COM LETRA)",
+        "artist": "PLAYBACK DE VIOLÃO",
+        "current_path": "/storage/emulated/0/snaptube/download/SnapTube Audio/EU NAVEGAREI _ Playback de violão (COM LETRA)(MP3_160K).mp3",
+        "proposed_path": "/sdcard/Music/Músicas Cristãs (Playback)/EU NAVEGAREI _ Playback de violão (COM LETRA)(MP3_160K).mp3"
+      },
+      {
+        "id": 202383,
+        "title": "EU NAVEGAREI | Playback de violão (COM LETRA)",
+        "artist": "PLAYBACK DE VIOLÃO",
+        "current_path": "/storage/emulated/0/snaptube/download/playbacks/EU NAVEGAREI _ Playback de violão (COM LETRA)(MP3_160K).mp3",
+        "proposed_path": "/sdcard/Music/Músicas Cristãs (Playback)/EU NAVEGAREI _ Playback de violão (COM LETRA)(MP3_160K).mp3"
+      },
+      {
+        "id": 33408,
+        "title": "Ele É Santo - Playback",
+        "artist": "Giselli Cristina",
+        "current_path": "/storage/emulated/0/snaptube/download/SnapTube Audio/🎼 Giselli Cristina _ Ele é Santo Playback (com legenda)(MP3_160K).mp3",
+        "proposed_path": "/sdcard/Music/Músicas Cristãs (Playback)/🎼 Giselli Cristina _ Ele é Santo Playback (com legenda)(MP3_160K).mp3"
+      },
+      {
+        "id": 202372,
+        "title": "Ele É Santo - Playback",
+        "artist": "Giselli Cristina",
+        "current_path": "/storage/emulated/0/snaptube/download/playbacks/🎼 Giselli Cristina _ Ele é Santo Playback (com legenda)(MP3_160K).mp3",
+        "proposed_path": "/sdcard/Music/Músicas Cristãs (Playback)/🎼 Giselli Cristina _ Ele é Santo Playback (com legenda)(MP3_160K).mp3"
+      },
+      {
+        "id": 126737,
+        "title": "Em tua Presença",
+        "artist": "Fernanda Brum",
+        "current_path": "/storage/emulated/0/snaptube/download/SnapTube Audio/Em Tua Presença - Fernanda Brum(playback legendado)(MP3_160K).mp3",
+        "proposed_path": "/sdcard/Music/Músicas Cristãs (Playback)/Em Tua Presença - Fernanda Brum(playback legendado)(MP3_160K).mp3"
+      },
+      {
+        "id": 202416,
+        "title": "Em tua Presença",
+        "artist": "Fernanda Brum",
+        "current_path": "/storage/emulated/0/snaptube/download/playbacks/Em Tua Presença - Fernanda Brum(playback legendado)(MP3_160K).mp3",
+        "proposed_path": "/sdcard/Music/Músicas Cristãs (Playback)/Em Tua Presença - Fernanda Brum(playback legendado)(MP3_160K).mp3"
+      },
+      {
+        "id": 191680,
+        "title": "Eu Me Rendo - Renascer Praise (playback legendado)",
+        "artist": "EdgarS2Paula",
+        "current_path": "/storage/emulated/0/snaptube/download/SnapTube Audio/Eu Me Rendo - Renascer Praise (playback legendado)(MP3_160K).mp3",
+        "proposed_path": "/sdcard/Music/Músicas Cristãs (Playback)/Eu Me Rendo - Renascer Praise (playback legendado)(MP3_160K).mp3"
+      },
+      {
+        "id": 202406,
+        "title": "Eu Me Rendo - Renascer Praise (playback legendado)",
+        "artist": "EdgarS2Paula",
+        "current_path": "/storage/emulated/0/snaptube/download/playbacks/Eu Me Rendo - Renascer Praise (playback legendado)(MP3_160K).mp3",
+        "proposed_path": "/sdcard/Music/Músicas Cristãs (Playback)/Eu Me Rendo - Renascer Praise (playback legendado)(MP3_160K).mp3"
+      },
+      {
+        "id": 157929,
+        "title": "Eu Quero Ser Santo (Playback)",
+        "artist": "Eyshila",
+        "current_path": "/storage/emulated/0/snaptube/download/SnapTube Audio/Eu quero ser santo - Eyshila - Playback(MP3_160K).mp3",
+        "proposed_path": "/sdcard/Music/Músicas Cristãs (Playback)/Eu quero ser santo - Eyshila - Playback(MP3_160K).mp3"
+      },
+      {
+        "id": 202373,
+        "title": "Eu Quero Ser Santo (Playback)",
+        "artist": "Eyshila",
+        "current_path": "/storage/emulated/0/snaptube/download/playbacks/Eu quero ser santo - Eyshila - Playback(MP3_160K).mp3",
+        "proposed_path": "/sdcard/Music/Músicas Cristãs (Playback)/Eu quero ser santo - Eyshila - Playback(MP3_160K).mp3"
+      },
+      {
+        "id": 180327,
+        "title": "Fidelidade - Playback",
+        "artist": "Wagner Roberto, Louvor Eterno",
+        "current_path": "/storage/emulated/0/snaptube/download/SnapTube Audio/Fidelidade - Playback(MP3_160K).mp3",
+        "proposed_path": "/sdcard/Music/Músicas Cristãs (Playback)/Fidelidade - Playback(MP3_160K).mp3"
+      },
+      {
+        "id": 202400,
+        "title": "Fidelidade - Playback",
+        "artist": "Wagner Roberto, Louvor Eterno",
+        "current_path": "/storage/emulated/0/snaptube/download/playbacks/Fidelidade - Playback(MP3_160K).mp3",
+        "proposed_path": "/sdcard/Music/Músicas Cristãs (Playback)/Fidelidade - Playback(MP3_160K).mp3"
+      },
+      {
+        "id": 183533,
+        "title": "Fiel a Mim (Playback)",
+        "artist": "Eyshila",
+        "current_path": "/storage/emulated/0/snaptube/download/SnapTube Audio/Fiel a Mim - Eyshila (playback legendado)(MP3_160K).mp3",
+        "proposed_path": "/sdcard/Music/Músicas Cristãs (Playback)/Fiel a Mim - Eyshila (playback legendado)(MP3_160K).mp3"
+      },
+      {
+        "id": 202421,
+        "title": "Fiel a Mim (Playback)",
+        "artist": "Eyshila",
+        "current_path": "/storage/emulated/0/snaptube/download/playbacks/Fiel a Mim - Eyshila (playback legendado)(MP3_160K).mp3",
+        "proposed_path": "/sdcard/Music/Músicas Cristãs (Playback)/Fiel a Mim - Eyshila (playback legendado)(MP3_160K).mp3"
+      },
+      {
+        "id": 228369,
+        "title": "Fundo Musical Para Pregação e Orações | Instrumental A Ele a Glória | By Gabriel Alves",
+        "artist": "Gabriel Alves",
+        "current_path": "/storage/emulated/0/snaptube/download/SnapTube Audio/Fundo Musical Para Pregação e Orações _ Instrumental A Ele a Glória _ By Gabriel Alves(M4A_128K).m4a",
+        "proposed_path": "/sdcard/Music/Músicas Cristãs (Playback)/Fundo Musical Para Pregação e Orações _ Instrumental A Ele a Glória _ By Gabriel Alves(M4A_128K).m4a"
+      },
+      {
+        "id": 228379,
+        "title": "Gaivota pacifista - Kalebe (Playback com letra)",
+        "artist": "Jhonny Vasconcelos",
+        "current_path": "/storage/emulated/0/snaptube/download/SnapTube Audio/Gaivota pacifista - Kalebe (Playback com letra)(M4A_128K).m4a",
+        "proposed_path": "/sdcard/Music/Músicas Cristãs (Playback)/Gaivota pacifista - Kalebe (Playback com letra)(M4A_128K).m4a"
+      },
+      {
+        "id": 191206,
+        "title": "Homem dos Milagres - Playback",
+        "artist": "Mara Lima",
+        "current_path": "/storage/emulated/0/snaptube/download/SnapTube Audio/HOMEM DOS MILAGRES - MARA LIMA - PLAYBACK  Legendado(MP3_160K).mp3",
+        "proposed_path": "/sdcard/Music/Músicas Cristãs (Playback)/HOMEM DOS MILAGRES - MARA LIMA - PLAYBACK  Legendado(MP3_160K).mp3"
+      },
+      {
+        "id": 202423,
+        "title": "Homem dos Milagres - Playback",
+        "artist": "Mara Lima",
+        "current_path": "/storage/emulated/0/snaptube/download/playbacks/HOMEM DOS MILAGRES - MARA LIMA - PLAYBACK  Legendado(MP3_160K).mp3",
+        "proposed_path": "/sdcard/Music/Músicas Cristãs (Playback)/HOMEM DOS MILAGRES - MARA LIMA - PLAYBACK  Legendado(MP3_160K).mp3"
+      },
+      {
+        "id": 163260,
+        "title": "In Memorian",
+        "artist": "Mara Lima",
+        "current_path": "/storage/emulated/0/snaptube/download/SnapTube Audio/IN MEMORIAN - Mara Lima (playback)(MP3_160K).mp3",
+        "proposed_path": "/sdcard/Music/Músicas Cristãs (Playback)/IN MEMORIAN - Mara Lima (playback)(MP3_160K).mp3"
+      },
+      {
+        "id": 202375,
+        "title": "In Memorian",
+        "artist": "Mara Lima",
+        "current_path": "/storage/emulated/0/snaptube/download/playbacks/IN MEMORIAN - Mara Lima (playback)(MP3_160K).mp3",
+        "proposed_path": "/sdcard/Music/Músicas Cristãs (Playback)/IN MEMORIAN - Mara Lima (playback)(MP3_160K).mp3"
+      },
+      {
+        "id": 191209,
+        "title": "Léa Mendonça - Chora que a Vitória Vem",
+        "artist": "Léa Mendonça",
+        "current_path": "/storage/emulated/0/snaptube/download/SnapTube Audio/Chora Que A Vitória Vem - Léa Mendonça playback com letra(MP3_160K).mp3",
+        "proposed_path": "/sdcard/Music/Músicas Cristãs (Playback)/Chora Que A Vitória Vem - Léa Mendonça playback com letra(MP3_160K).mp3"
+      },
+      {
+        "id": 202403,
+        "title": "Léa Mendonça - Chora que a Vitória Vem",
+        "artist": "Léa Mendonça",
+        "current_path": "/storage/emulated/0/snaptube/download/playbacks/Chora Que A Vitória Vem - Léa Mendonça playback com letra(MP3_160K).mp3",
+        "proposed_path": "/sdcard/Music/Músicas Cristãs (Playback)/Chora Que A Vitória Vem - Léa Mendonça playback com letra(MP3_160K).mp3"
+      },
+      {
+        "id": 157936,
+        "title": "Na Orla do Teu Manto - Playback",
+        "artist": "Damares",
+        "current_path": "/storage/emulated/0/snaptube/download/SnapTube Audio/Damares - Na Orla do Teu Manto (Sony Music Live)(MP3_160K).mp3",
+        "proposed_path": "/sdcard/Music/Músicas Cristãs (Playback)/Damares - Na Orla do Teu Manto (Sony Music Live)(MP3_160K).mp3"
+      },
+      {
+        "id": 163141,
+        "title": "Na Orla do Teu Manto - Playback",
+        "artist": "Damares",
+        "current_path": "/storage/emulated/0/snaptube/download/SnapTube Audio/Na Orla Do Teu Manto - Damares playback com letra(MP3_160K).mp3",
+        "proposed_path": "/sdcard/Music/Músicas Cristãs (Playback)/Na Orla Do Teu Manto - Damares playback com letra(MP3_160K).mp3"
+      },
+      {
+        "id": 202378,
+        "title": "Na Orla do Teu Manto - Playback",
+        "artist": "Damares",
+        "current_path": "/storage/emulated/0/snaptube/download/playbacks/Na Orla Do Teu Manto - Damares playback com letra(MP3_160K).mp3",
+        "proposed_path": "/sdcard/Music/Músicas Cristãs (Playback)/Na Orla Do Teu Manto - Damares playback com letra(MP3_160K).mp3"
+      },
+      {
+        "id": 27185,
+        "title": "Na Unção de Deus - Playback",
+        "artist": "Elaine de Jesus",
+        "current_path": "/storage/emulated/0/snaptube/download/SnapTube Audio/Na Unção De Deus _ Elaine De Jesus [ PlayBack Com Letras ](MP3_160K).mp3",
+        "proposed_path": "/sdcard/Music/Músicas Cristãs (Playback)/Na Unção De Deus _ Elaine De Jesus [ PlayBack Com Letras ](MP3_160K).mp3"
+      },
+      {
+        "id": 202368,
+        "title": "Na Unção de Deus - Playback",
+        "artist": "Elaine de Jesus",
+        "current_path": "/storage/emulated/0/snaptube/download/playbacks/Na Unção De Deus _ Elaine De Jesus [ PlayBack Com Letras ](MP3_160K).mp3",
+        "proposed_path": "/sdcard/Music/Músicas Cristãs (Playback)/Na Unção De Deus _ Elaine De Jesus [ PlayBack Com Letras ](MP3_160K).mp3"
+      },
+      {
+        "id": 175426,
+        "title": "Nada pode calar um adorador (Eyshila)Playback com letra",
+        "artist": "Giselma Barbosa",
+        "current_path": "/storage/emulated/0/snaptube/download/SnapTube Audio/Nada pode calar um adorador (Eyshila)Playback com letra(MP3_160K).mp3",
+        "proposed_path": "/sdcard/Music/Músicas Cristãs (Playback)/Nada pode calar um adorador (Eyshila)Playback com letra(MP3_160K).mp3"
+      },
+      {
+        "id": 202389,
+        "title": "Nada pode calar um adorador (Eyshila)Playback com letra",
+        "artist": "Giselma Barbosa",
+        "current_path": "/storage/emulated/0/snaptube/download/playbacks/Nada pode calar um adorador (Eyshila)Playback com letra(MP3_160K).mp3",
+        "proposed_path": "/sdcard/Music/Músicas Cristãs (Playback)/Nada pode calar um adorador (Eyshila)Playback com letra(MP3_160K).mp3"
+      },
+      {
+        "id": 163945,
+        "title": "Não Há Deus Maior - Play Back",
+        "artist": "Luiz De Carvalho",
+        "current_path": "/storage/emulated/0/snaptube/download/SnapTube Audio/Não Há Deus Maior (Play Back)(MP3_160K).mp3",
+        "proposed_path": "/sdcard/Music/Músicas Cristãs (Playback)/Não Há Deus Maior (Play Back)(MP3_160K).mp3"
+      },
+      {
+        "id": 126698,
+        "title": "O Escudo - Playback",
+        "artist": "Voz da Verdade",
+        "current_path": "/storage/emulated/0/snaptube/download/SnapTube Audio/O Escudo - Voz da Verdade - Playback  (LEGENDADO)(M4A_128K).m4a",
+        "proposed_path": "/sdcard/Music/Músicas Cristãs (Playback)/O Escudo - Voz da Verdade - Playback  (LEGENDADO)(M4A_128K).m4a"
+      },
+      {
+        "id": 202401,
+        "title": "O Escudo - Playback",
+        "artist": "Voz da Verdade",
+        "current_path": "/storage/emulated/0/snaptube/download/playbacks/O Escudo - Voz da Verdade - Playback  (LEGENDADO)(M4A_128K).m4a",
+        "proposed_path": "/sdcard/Music/Músicas Cristãs (Playback)/O Escudo - Voz da Verdade - Playback  (LEGENDADO)(M4A_128K).m4a"
+      },
+      {
+        "id": 93897,
+        "title": "O Melhor Desta Terra - Playback",
+        "artist": "Nani Azevedo",
+        "current_path": "/storage/emulated/0/snaptube/download/SnapTube Audio/O Melhor Desta Terra   Play Back Com Letras ( Nani Azevedo )(MP3_320K).mp3",
+        "proposed_path": "/sdcard/Music/Músicas Cristãs (Playback)/O Melhor Desta Terra   Play Back Com Letras ( Nani Azevedo )(MP3_320K).mp3"
+      },
+      {
+        "id": 93906,
+        "title": "O Melhor Desta Terra - Playback",
+        "artist": "Nani Azevedo",
+        "current_path": "/storage/emulated/0/snaptube/download/SnapTube Audio/O Melhor Desta Terra (Playback)(MP3_320K).mp3",
+        "proposed_path": "/sdcard/Music/Músicas Cristãs (Playback)/O Melhor Desta Terra (Playback)(MP3_320K).mp3"
+      },
+      {
+        "id": 202396,
+        "title": "O Melhor Desta Terra - Playback",
+        "artist": "Nani Azevedo",
+        "current_path": "/storage/emulated/0/snaptube/download/playbacks/O Melhor Desta Terra (Playback)(MP3_320K).mp3",
+        "proposed_path": "/sdcard/Music/Músicas Cristãs (Playback)/O Melhor Desta Terra (Playback)(MP3_320K).mp3"
+      },
+      {
+        "id": 204500,
+        "title": "O Rosto de Cristo",
+        "artist": "Sarah Farias",
+        "current_path": "/storage/emulated/0/snaptube/download/SnapTube Audio/O Rosto De Cristo [Sarah Farias] Playback(MP3_160K).mp3",
+        "proposed_path": "/sdcard/Music/Músicas Cristãs (Playback)/O Rosto De Cristo [Sarah Farias] Playback(MP3_160K).mp3"
+      },
+      {
+        "id": 126713,
+        "title": "Oferta Agradável a Ti (Ao Vivo)",
+        "artist": "Cassiane",
+        "current_path": "/storage/emulated/0/snaptube/download/SnapTube Audio/Oferta Agradável a Ti - Cassiane(playback legendado)(MP3_160K).mp3",
+        "proposed_path": "/sdcard/Music/Músicas Cristãs (Playback)/Oferta Agradável a Ti - Cassiane(playback legendado)(MP3_160K).mp3"
+      },
+      {
+        "id": 202410,
+        "title": "Oferta Agradável a Ti (Ao Vivo)",
+        "artist": "Cassiane",
+        "current_path": "/storage/emulated/0/snaptube/download/playbacks/Oferta Agradável a Ti - Cassiane(playback legendado)(MP3_160K).mp3",
+        "proposed_path": "/sdcard/Music/Músicas Cristãs (Playback)/Oferta Agradável a Ti - Cassiane(playback legendado)(MP3_160K).mp3"
+      },
+      {
+        "id": 178698,
+        "title": "Play back com letra : Unção divina- Mara lima",
+        "artist": "Poliana Silva",
+        "current_path": "/storage/emulated/0/snaptube/download/SnapTube Audio/Play back com letra _ Unção divina- Mara lima(MP3_160K).mp3",
+        "proposed_path": "/sdcard/Music/Músicas Cristãs (Playback)/Play back com letra _ Unção divina- Mara lima(MP3_160K).mp3"
+      },
+      {
+        "id": 124874,
+        "title": "Poder Pra Salvar - Aline Barros(playback legendado)",
+        "artist": "EdgarS2Paula",
+        "current_path": "/storage/emulated/0/snaptube/download/SnapTube Audio/Poder Pra Salvar - Aline Barros(playback legendado)(MP3_160K).mp3",
+        "proposed_path": "/sdcard/Music/Músicas Cristãs (Playback)/Poder Pra Salvar - Aline Barros(playback legendado)(MP3_160K).mp3"
+      },
+      {
+        "id": 202422,
+        "title": "Poder Pra Salvar - Aline Barros(playback legendado)",
+        "artist": "EdgarS2Paula",
+        "current_path": "/storage/emulated/0/snaptube/download/playbacks/Poder Pra Salvar - Aline Barros(playback legendado)(MP3_160K).mp3",
+        "proposed_path": "/sdcard/Music/Músicas Cristãs (Playback)/Poder Pra Salvar - Aline Barros(playback legendado)(MP3_160K).mp3"
+      },
+      {
+        "id": 209925,
+        "title": "Portões Celestiais (Playback)",
+        "artist": "Michelle Nascimento",
+        "current_path": "/storage/emulated/0/snaptube/download/SnapTube Audio/Portões Celestiais PLAYBACK Michelle Nascimento(MP3_160K).mp3",
+        "proposed_path": "/sdcard/Music/Músicas Cristãs (Playback)/Portões Celestiais PLAYBACK Michelle Nascimento(MP3_160K).mp3"
+      },
+      {
+        "id": 183388,
+        "title": "Posso Clamar (Playback)",
+        "artist": "Eyshila",
+        "current_path": "/storage/emulated/0/snaptube/download/SnapTube Audio/Posso Clamar (Playback)(MP3_160K).mp3",
+        "proposed_path": "/sdcard/Music/Músicas Cristãs (Playback)/Posso Clamar (Playback)(MP3_160K).mp3"
+      },
+      {
+        "id": 202397,
+        "title": "Posso Clamar (Playback)",
+        "artist": "Eyshila",
+        "current_path": "/storage/emulated/0/snaptube/download/playbacks/Posso Clamar (Playback)(MP3_160K).mp3",
+        "proposed_path": "/sdcard/Music/Músicas Cristãs (Playback)/Posso Clamar (Playback)(MP3_160K).mp3"
+      },
+      {
+        "id": 163262,
+        "title": "Quão grande é o meu Deus - playback",
+        "artist": "Música Gospel",
+        "current_path": "/storage/emulated/0/snaptube/download/SnapTube Audio/Quão grande é o meu Deus - playback(MP3_160K).mp3",
+        "proposed_path": "/sdcard/Music/Músicas Cristãs (Playback)/Quão grande é o meu Deus - playback(MP3_160K).mp3"
+      },
+      {
+        "id": 202382,
+        "title": "Quão grande é o meu Deus - playback",
+        "artist": "Música Gospel",
+        "current_path": "/storage/emulated/0/snaptube/download/playbacks/Quão grande é o meu Deus - playback(MP3_160K).mp3",
+        "proposed_path": "/sdcard/Music/Músicas Cristãs (Playback)/Quão grande é o meu Deus - playback(MP3_160K).mp3"
+      },
+      {
+        "id": 171808,
+        "title": "SARAH FARIAS - ME ESCOLHEU - PLAYBACK LEGENDADO",
+        "artist": "Ministério Adonai",
+        "current_path": "/storage/emulated/0/snaptube/download/SnapTube Audio/SARAH FARIAS - ME ESCOLHEU - PLAYBACK LEGENDADO(MP3_160K).mp3",
+        "proposed_path": "/sdcard/Music/Músicas Cristãs (Playback)/SARAH FARIAS - ME ESCOLHEU - PLAYBACK LEGENDADO(MP3_160K).mp3"
+      },
+      {
+        "id": 202384,
+        "title": "SARAH FARIAS - ME ESCOLHEU - PLAYBACK LEGENDADO",
+        "artist": "Ministério Adonai",
+        "current_path": "/storage/emulated/0/snaptube/download/playbacks/SARAH FARIAS - ME ESCOLHEU - PLAYBACK LEGENDADO(MP3_160K).mp3",
+        "proposed_path": "/sdcard/Music/Músicas Cristãs (Playback)/SARAH FARIAS - ME ESCOLHEU - PLAYBACK LEGENDADO(MP3_160K).mp3"
+      },
+      {
+        "id": 183676,
+        "title": "Santo Lugar Playback",
+        "artist": "Mara Lima, Louvor Eterno",
+        "current_path": "/storage/emulated/0/snaptube/download/SnapTube Audio/Santo Lugar (Playback)(MP3_160K).mp3",
+        "proposed_path": "/sdcard/Music/Músicas Cristãs (Playback)/Santo Lugar (Playback)(MP3_160K).mp3"
+      },
+      {
+        "id": 202411,
+        "title": "Santo Lugar Playback",
+        "artist": "Mara Lima, Louvor Eterno",
+        "current_path": "/storage/emulated/0/snaptube/download/playbacks/Santo Lugar (Playback)(MP3_160K).mp3",
+        "proposed_path": "/sdcard/Music/Músicas Cristãs (Playback)/Santo Lugar (Playback)(MP3_160K).mp3"
+      },
+      {
+        "id": 178312,
+        "title": "Semente do Sangue (Playback)",
+        "artist": "Mara Lima",
+        "current_path": "/storage/emulated/0/snaptube/download/SnapTube Audio/Mara Lima - Semente do Sangue (Playback)(MP3_160K).mp3",
+        "proposed_path": "/sdcard/Music/Músicas Cristãs (Playback)/Mara Lima - Semente do Sangue (Playback)(MP3_160K).mp3"
+      },
+      {
+        "id": 202386,
+        "title": "Semente do Sangue (Playback)",
+        "artist": "Mara Lima",
+        "current_path": "/storage/emulated/0/snaptube/download/playbacks/Mara Lima - Semente do Sangue (Playback)(MP3_160K).mp3",
+        "proposed_path": "/sdcard/Music/Músicas Cristãs (Playback)/Mara Lima - Semente do Sangue (Playback)(MP3_160K).mp3"
+      },
+      {
+        "id": 175421,
+        "title": "Ser conhecido de Deus - Playback",
+        "artist": "Renascer Praise",
+        "current_path": "/storage/emulated/0/snaptube/download/SnapTube Audio/Ser reconhecido por Deus - Renascer Praise (playback legendado)(MP3_160K).mp3",
+        "proposed_path": "/sdcard/Music/Músicas Cristãs (Playback)/Ser reconhecido por Deus - Renascer Praise (playback legendado)(MP3_160K).mp3"
+      },
+      {
+        "id": 202388,
+        "title": "Ser conhecido de Deus - Playback",
+        "artist": "Renascer Praise",
+        "current_path": "/storage/emulated/0/snaptube/download/playbacks/Ser reconhecido por Deus - Renascer Praise (playback legendado)(MP3_160K).mp3",
+        "proposed_path": "/sdcard/Music/Músicas Cristãs (Playback)/Ser reconhecido por Deus - Renascer Praise (playback legendado)(MP3_160K).mp3"
+      },
+      {
+        "id": 178692,
+        "title": "Sou Peregrino - Playback",
+        "artist": "Antônia Gomes",
+        "current_path": "/storage/emulated/0/snaptube/download/SnapTube Audio/Antônia Gomes - Sou Peregrino _ Playback Com Letra(MP3_160K).mp3",
+        "proposed_path": "/sdcard/Music/Músicas Cristãs (Playback)/Antônia Gomes - Sou Peregrino _ Playback Com Letra(MP3_160K).mp3"
+      },
+      {
+        "id": 202398,
+        "title": "Sou Peregrino - Playback",
+        "artist": "Antônia Gomes",
+        "current_path": "/storage/emulated/0/snaptube/download/playbacks/Antônia Gomes - Sou Peregrino _ Playback Com Letra(MP3_160K).mp3",
+        "proposed_path": "/sdcard/Music/Músicas Cristãs (Playback)/Antônia Gomes - Sou Peregrino _ Playback Com Letra(MP3_160K).mp3"
+      },
+      {
+        "id": 25695,
+        "title": "Te Agradeço - Ao Vivo",
+        "artist": "Diante do Trono",
+        "current_path": "/storage/emulated/0/snaptube/download/SnapTube Audio/Te Agradeço - Diante do Trono(playback legendado)(MP3_320K).mp3",
+        "proposed_path": "/sdcard/Music/Músicas Cristãs (Playback)/Te Agradeço - Diante do Trono(playback legendado)(MP3_320K).mp3"
+      },
+      {
+        "id": 202366,
+        "title": "Te Agradeço - Ao Vivo",
+        "artist": "Diante do Trono",
+        "current_path": "/storage/emulated/0/snaptube/download/playbacks/Te Agradeço - Diante do Trono(playback legendado)(MP3_320K).mp3",
+        "proposed_path": "/sdcard/Music/Músicas Cristãs (Playback)/Te Agradeço - Diante do Trono(playback legendado)(MP3_320K).mp3"
+      },
+      {
+        "id": 25801,
+        "title": "Te Louvarei - Playback",
+        "artist": "Trazendo a Arca",
+        "current_path": "/storage/emulated/0/snaptube/download/SnapTube Audio/Te Louvarei - Ministério Toque no Altar(playback legendado)(M4A_128K).m4a",
+        "proposed_path": "/sdcard/Music/Músicas Cristãs (Playback)/Te Louvarei - Ministério Toque no Altar(playback legendado)(M4A_128K).m4a"
+      },
+      {
+        "id": 202367,
+        "title": "Te Louvarei - Playback",
+        "artist": "Trazendo a Arca",
+        "current_path": "/storage/emulated/0/snaptube/download/playbacks/Te Louvarei - Ministério Toque no Altar(playback legendado)(M4A_128K).m4a",
+        "proposed_path": "/sdcard/Music/Músicas Cristãs (Playback)/Te Louvarei - Ministério Toque no Altar(playback legendado)(M4A_128K).m4a"
+      },
+      {
+        "id": 185269,
+        "title": "Vaso de Alabastro",
+        "artist": "Mara Lima",
+        "current_path": "/storage/emulated/0/snaptube/download/SnapTube Audio/Vaso de Alabastro - Mara Lima - Playback (LEGENDADO)(MP3_160K).mp3",
+        "proposed_path": "/sdcard/Music/Músicas Cristãs (Playback)/Vaso de Alabastro - Mara Lima - Playback (LEGENDADO)(MP3_160K).mp3"
+      },
+      {
+        "id": 202412,
+        "title": "Vaso de Alabastro",
+        "artist": "Mara Lima",
+        "current_path": "/storage/emulated/0/snaptube/download/playbacks/Vaso de Alabastro - Mara Lima - Playback (LEGENDADO)(MP3_160K).mp3",
+        "proposed_path": "/sdcard/Music/Músicas Cristãs (Playback)/Vaso de Alabastro - Mara Lima - Playback (LEGENDADO)(MP3_160K).mp3"
+      },
+      {
+        "id": 33267,
+        "title": "Vida aos Sepulcros Play-back Giselli Cristina",
+        "artist": "Gessica Pâmela",
+        "current_path": "/storage/emulated/0/snaptube/download/SnapTube Audio/Vida aos Sepulcros Play-back Giselli Cristina(MP3_160K).mp3",
+        "proposed_path": "/sdcard/Music/Músicas Cristãs (Playback)/Vida aos Sepulcros Play-back Giselli Cristina(MP3_160K).mp3"
+      },
+      {
+        "id": 33273,
+        "title": "Vida aos sepulcros | Play Back Legendado | Giselli Cristina com filhos e neta",
+        "artist": "GISELLI CRISTINA PLAYBACKS",
+        "current_path": "/storage/emulated/0/snaptube/download/SnapTube Audio/Vida aos sepulcros _ Play Back Legendado _ Giselli Cristina com filhos e neta(MP3_160K).mp3",
+        "proposed_path": "/sdcard/Music/Músicas Cristãs (Playback)/Vida aos sepulcros _ Play Back Legendado _ Giselli Cristina com filhos e neta(MP3_160K).mp3"
+      },
+      {
+        "id": 126606,
+        "title": "Vim para adorar te PLAYBACK Adoradores",
+        "artist": "RONISE MARIA",
+        "current_path": "/storage/emulated/0/snaptube/download/SnapTube Audio/Vim para adorar te PLAYBACK Adoradores(M4A_128K).m4a",
+        "proposed_path": "/sdcard/Music/Músicas Cristãs (Playback)/Vim para adorar te PLAYBACK Adoradores(M4A_128K).m4a"
+      },
+      {
+        "id": 202409,
+        "title": "Vim para adorar te PLAYBACK Adoradores",
+        "artist": "RONISE MARIA",
+        "current_path": "/storage/emulated/0/snaptube/download/playbacks/Vim para adorar te PLAYBACK Adoradores(M4A_128K).m4a",
+        "proposed_path": "/sdcard/Music/Músicas Cristãs (Playback)/Vim para adorar te PLAYBACK Adoradores(M4A_128K).m4a"
+      },
+      {
+        "id": 32887,
+        "title": "Vitorioso És - Gabriel Guedes (Playback Original + Coral) [Ver.2]",
+        "artist": "Elias Instrumental",
+        "current_path": "/storage/emulated/0/snaptube/download/SnapTube Audio/Vitorioso És - Gabriel Guedes (Playback Original   Coral) [Ver.2](MP3_160K).mp3",
+        "proposed_path": "/sdcard/Music/Músicas Cristãs (Playback)/Vitorioso És - Gabriel Guedes (Playback Original   Coral) [Ver.2](MP3_160K).mp3"
+      },
+      {
+        "id": 202369,
+        "title": "Vitorioso És - Gabriel Guedes (Playback Original + Coral) [Ver.2]",
+        "artist": "Elias Instrumental",
+        "current_path": "/storage/emulated/0/snaptube/download/playbacks/Vitorioso És - Gabriel Guedes (Playback Original   Coral) [Ver.2](MP3_160K).mp3",
+        "proposed_path": "/sdcard/Music/Músicas Cristãs (Playback)/Vitorioso És - Gabriel Guedes (Playback Original   Coral) [Ver.2](MP3_160K).mp3"
+      }
+    ],
+    "Músicas Dia a Dia": [
+      {
+        "id": 208431,
+        "title": "500 Miles - 2004 Remaster",
+        "artist": "Peter |  Paul and Mary",
+        "current_path": "/storage/emulated/0/snaptube/download/SnapTube Audio/500 Miles (2004 Remaster)(M4A_128K).m4a",
+        "proposed_path": "/sdcard/Music/Músicas Dia a Dia/500 Miles (2004 Remaster)(M4A_128K).m4a"
+      },
+      {
+        "id": 201969,
+        "title": "A Man Without Love",
+        "artist": "Engelbert Humperdinck",
+        "current_path": "/storage/emulated/0/snaptube/download/SnapTube Audio/A Man Without Love LYRICS Video Engelbert Humperdinck 1968 🌙 Moon Knight Episode 1(MP3_160K).mp3",
+        "proposed_path": "/sdcard/Music/Músicas Dia a Dia/A Man Without Love LYRICS Video Engelbert Humperdinck 1968 🌙 Moon Knight Episode 1(MP3_160K).mp3"
+      },
+      {
+        "id": 212501,
+        "title": "ABBA - Gimme! Gimme! Gimme! (Bass, Drums & Vocals)",
+        "artist": "GoldenYesterday",
+        "current_path": "/storage/emulated/0/snaptube/download/SnapTube Audio/ABBA - Gimme_ Gimme_ Gimme_ (Bass_ Drums _ Vocals)(MP3_160K).mp3",
+        "proposed_path": "/sdcard/Music/Músicas Dia a Dia/ABBA - Gimme_ Gimme_ Gimme_ (Bass_ Drums _ Vocals)(MP3_160K).mp3"
+      },
+      {
+        "id": 180545,
+        "title": "ALL THE THINGS SHE SAID (HARDTEKK)",
+        "artist": "ANDONIS, prodByLone",
+        "current_path": "/storage/emulated/0/snaptube/download/SnapTube Audio/ALL THE THINGS SHE SAID (HARDTEKK)(MP3_160K).mp3",
+        "proposed_path": "/sdcard/Music/Músicas Dia a Dia/ALL THE THINGS SHE SAID (HARDTEKK)(MP3_160K).mp3"
+      },
+      {
+        "id": 210249,
+        "title": "Acid Rain",
+        "artist": "Avenged Sevenfold",
+        "current_path": "/storage/emulated/0/snaptube/download/SnapTube Audio/Acid Rain(MP3_160K).mp3",
+        "proposed_path": "/sdcard/Music/Músicas Dia a Dia/Acid Rain(MP3_160K).mp3"
+      },
+      {
+        "id": 206671,
+        "title": "Aerials",
+        "artist": "System Of A Down",
+        "current_path": "/storage/emulated/0/snaptube/download/SnapTube Audio/System Of A Down - Aerials (Official HD Video)(M4A_128K).m4a",
+        "proposed_path": "/sdcard/Music/Músicas Dia a Dia/System Of A Down - Aerials (Official HD Video)(M4A_128K).m4a"
+      },
+      {
+        "id": 226359,
+        "title": "All Caps",
+        "artist": "Madvillain, MF DOOM, Madlib",
+        "current_path": "/storage/emulated/0/snaptube/download/SnapTube Audio/Madvillain - All Caps(MP3_320K).mp3",
+        "proposed_path": "/sdcard/Music/Músicas Dia a Dia/Madvillain - All Caps(MP3_320K).mp3"
+      },
+      {
+        "id": 222993,
+        "title": "All I Need",
+        "artist": "Radiohead",
+        "current_path": "/storage/emulated/0/snaptube/download/SnapTube Audio/Radiohead - All I Need(MP3_320K).mp3",
+        "proposed_path": "/sdcard/Music/Músicas Dia a Dia/Radiohead - All I Need(MP3_320K).mp3"
+      },
+      {
+        "id": 208425,
+        "title": "America – A Horse With No Name (1971) extended",
+        "artist": "Abandoned Gems",
+        "current_path": "/storage/emulated/0/snaptube/download/SnapTube Audio/America – A Horse With No Name (1971) extended(M4A_128K).m4a",
+        "proposed_path": "/sdcard/Music/Músicas Dia a Dia/America – A Horse With No Name (1971) extended(M4A_128K).m4a"
+      },
+      {
+        "id": 223821,
+        "title": "Angel",
+        "artist": "Massive Attack",
+        "current_path": "/storage/emulated/0/snaptube/download/SnapTube Audio/Angel (Remastered 2019)(MP3_320K).mp3",
+        "proposed_path": "/sdcard/Music/Músicas Dia a Dia/Angel (Remastered 2019)(MP3_320K).mp3"
+      },
+      {
+        "id": 179665,
+        "title": "Animal I Have Become",
+        "artist": "Three Days Grace",
+        "current_path": "/storage/emulated/0/snaptube/download/SnapTube Audio/Animal I Have Become(MP3_160K).mp3",
+        "proposed_path": "/sdcard/Music/Músicas Dia a Dia/Animal I Have Become(MP3_160K).mp3"
+      },
+      {
+        "id": 215337,
+        "title": "As the World Caves In",
+        "artist": "Matt Maltese",
+        "current_path": "/storage/emulated/0/snaptube/download/SnapTube Audio/As The World Caves In - Matt Maltese (Cover by Sarah Cothran)(MP3_160K).mp3",
+        "proposed_path": "/sdcard/Music/Músicas Dia a Dia/As The World Caves In - Matt Maltese (Cover by Sarah Cothran)(MP3_160K).mp3"
+      },
+      {
+        "id": 227563,
+        "title": "BURY THE LIGHT DEEP WITHIN!!",
+        "artist": "Anomalirious",
+        "current_path": "/storage/emulated/0/snaptube/download/SnapTube Audio/BURY THE LIGHT DEEP WITHIN__(MP3_320K).mp3",
+        "proposed_path": "/sdcard/Music/Músicas Dia a Dia/BURY THE LIGHT DEEP WITHIN__(MP3_320K).mp3"
+      },
+      {
+        "id": 173938,
+        "title": "Back To Black",
+        "artist": "Amy Winehouse",
+        "current_path": "/storage/emulated/0/snaptube/download/SnapTube Audio/Back To Black(MP3_160K).mp3",
+        "proposed_path": "/sdcard/Music/Músicas Dia a Dia/Back To Black(MP3_160K).mp3"
+      },
+      {
+        "id": 180123,
+        "title": "Back To Black",
+        "artist": "Amy Winehouse",
+        "current_path": "/storage/emulated/0/snaptube/download/SnapTube Audio/Amy Winehouse - Back To Black(MP3_160K).mp3",
+        "proposed_path": "/sdcard/Music/Músicas Dia a Dia/Amy Winehouse - Back To Black(MP3_160K).mp3"
+      },
+      {
+        "id": 201612,
+        "title": "Be Like a Woman",
+        "artist": "Chris Rainbow",
+        "current_path": "/storage/emulated/0/snaptube/download/SnapTube Audio/Chris Rainbow - Be Like a Woman(MP3_160K).mp3",
+        "proposed_path": "/sdcard/Music/Músicas Dia a Dia/Chris Rainbow - Be Like a Woman(MP3_160K).mp3"
+      },
+      {
+        "id": 201963,
+        "title": "Be My Baby",
+        "artist": "The Ronettes",
+        "current_path": "/storage/emulated/0/snaptube/download/SnapTube Audio/The Ronettes - Be My Baby (Official Audio)(MP3_160K).mp3",
+        "proposed_path": "/sdcard/Music/Músicas Dia a Dia/The Ronettes - Be My Baby (Official Audio)(MP3_160K).mp3"
+      },
+      {
+        "id": 217997,
+        "title": "Be Quiet and Drive (Far Away)",
+        "artist": "Deftones",
+        "current_path": "/storage/emulated/0/snaptube/download/SnapTube Audio/Be Quiet and Drive (Far Away)(MP3_160K).mp3",
+        "proposed_path": "/sdcard/Music/Músicas Dia a Dia/Be Quiet and Drive (Far Away)(MP3_160K).mp3"
+      },
+      {
+        "id": 195193,
+        "title": "Black Sheep",
+        "artist": "Metric",
+        "current_path": "/storage/emulated/0/snaptube/download/SnapTube Audio/Scott Pilgrim Vs. The World - Black Sheep [4K](MP3_160K).mp3",
+        "proposed_path": "/sdcard/Music/Músicas Dia a Dia/Scott Pilgrim Vs. The World - Black Sheep [4K](MP3_160K).mp3"
+      },
+      {
+        "id": 224322,
+        "title": "Blade x Into The Void x \"Speed is life\" - Naoya Zenin (TikTok Version) [Full Version]",
+        "artist": "Chris’ Music - Paradise Remixes",
+        "current_path": "/storage/emulated/0/snaptube/download/SnapTube Audio/Blade x Into The Void x _Speed is life_ - Naoya Zenin (TikTok Version) [Full Version](MP3_320K).mp3",
+        "proposed_path": "/sdcard/Music/Músicas Dia a Dia/Blade x Into The Void x _Speed is life_ - Naoya Zenin (TikTok Version) [Full Version](MP3_320K).mp3"
+      },
+      {
+        "id": 179721,
+        "title": "Bohemian Rhapsody",
+        "artist": "Queen - Topic",
+        "current_path": "/storage/emulated/0/snaptube/download/SnapTube Audio/Bohemian Rhapsody(MP3_160K).mp3",
+        "proposed_path": "/sdcard/Music/Músicas Dia a Dia/Bohemian Rhapsody(MP3_160K).mp3"
+      },
+      {
+        "id": 222997,
+        "title": "Bring Me To Life",
+        "artist": "Evanescence",
+        "current_path": "/storage/emulated/0/snaptube/download/SnapTube Audio/Bring me to life but it_s angelic(MP3_320K).mp3",
+        "proposed_path": "/sdcard/Music/Músicas Dia a Dia/Bring me to life but it_s angelic(MP3_320K).mp3"
+      },
+      {
+        "id": 181424,
+        "title": "Bury the Light",
+        "artist": "Capcom Sound Team",
+        "current_path": "/storage/emulated/0/snaptube/download/SnapTube Audio/Bury the Light - Vergil_s battle theme from Devil May Cry 5 [OFFICIAL AUDIO](MP3_160K).mp3",
+        "proposed_path": "/sdcard/Music/Músicas Dia a Dia/Bury the Light - Vergil_s battle theme from Devil May Cry 5 [OFFICIAL AUDIO](MP3_160K).mp3"
+      },
+      {
+        "id": 179555,
+        "title": "Butterflies & Hurricanes",
+        "artist": "Muse",
+        "current_path": "/storage/emulated/0/snaptube/download/SnapTube Audio/Butterflies _ Hurricanes(MP3_160K).mp3",
+        "proposed_path": "/sdcard/Music/Músicas Dia a Dia/Butterflies _ Hurricanes(MP3_160K).mp3"
+      },
+      {
+        "id": 179577,
+        "title": "Can't Stop",
+        "artist": "Red Hot Chili Peppers",
+        "current_path": "/storage/emulated/0/snaptube/download/SnapTube Audio/Red Hot Chili Peppers - Can_t Stop [Official Music Video](MP3_160K).mp3",
+        "proposed_path": "/sdcard/Music/Músicas Dia a Dia/Red Hot Chili Peppers - Can_t Stop [Official Music Video](MP3_160K).mp3"
+      },
+      {
+        "id": 179749,
+        "title": "Careless Whisper",
+        "artist": "George Michael",
+        "current_path": "/storage/emulated/0/snaptube/download/SnapTube Audio/George Michael - Careless Whisper (Official Video)(MP3_160K).mp3",
+        "proposed_path": "/sdcard/Music/Músicas Dia a Dia/George Michael - Careless Whisper (Official Video)(MP3_160K).mp3"
+      },
+      {
+        "id": 179761,
+        "title": "Careless Whisper - Remastered",
+        "artist": "George Michael",
+        "current_path": "/storage/emulated/0/snaptube/download/SnapTube Audio/dj bax (Potions) - gucci flip flops (Extended Best part   Paying respects for the deep)(MP3_160K).mp3",
+        "proposed_path": "/sdcard/Music/Músicas Dia a Dia/dj bax (Potions) - gucci flip flops (Extended Best part   Paying respects for the deep)(MP3_160K).mp3"
+      },
+      {
+        "id": 210263,
+        "title": "Change (In the House of Flies)",
+        "artist": "Deftones",
+        "current_path": "/storage/emulated/0/snaptube/download/SnapTube Audio/Change (In the House of Flies)(MP3_160K).mp3",
+        "proposed_path": "/sdcard/Music/Músicas Dia a Dia/Change (In the House of Flies)(MP3_160K).mp3"
+      },
+      {
+        "id": 223016,
+        "title": "Cherry Waves",
+        "artist": "Deftones",
+        "current_path": "/storage/emulated/0/snaptube/download/SnapTube Audio/Cherry Waves(MP3_320K).mp3",
+        "proposed_path": "/sdcard/Music/Músicas Dia a Dia/Cherry Waves(MP3_320K).mp3"
+      },
+      {
+        "id": 219645,
+        "title": "Comfortable Liar",
+        "artist": "Chevelle",
+        "current_path": "/storage/emulated/0/snaptube/download/SnapTube Audio/Comfortable Liar(MP3_160K).mp3",
+        "proposed_path": "/sdcard/Music/Músicas Dia a Dia/Comfortable Liar(MP3_160K).mp3"
+      },
+      {
+        "id": 195229,
+        "title": "Concrete",
+        "artist": "Malcolm Todd",
+        "current_path": "/storage/emulated/0/snaptube/download/SnapTube Audio/Malcolm Todd - Concrete (Official Video)(MP3_160K).mp3",
+        "proposed_path": "/sdcard/Music/Músicas Dia a Dia/Malcolm Todd - Concrete (Official Video)(MP3_160K).mp3"
+      },
+      {
+        "id": 180514,
+        "title": "Cool For The Summer - Hardstyle",
+        "artist": "LXMINAL, Enmity",
+        "current_path": "/storage/emulated/0/snaptube/download/SnapTube Audio/Cool For The Summer(MP3_160K).mp3",
+        "proposed_path": "/sdcard/Music/Músicas Dia a Dia/Cool For The Summer(MP3_160K).mp3"
+      },
+      {
+        "id": 179639,
+        "title": "Crazy",
+        "artist": "Gnarls Barkley",
+        "current_path": "/storage/emulated/0/snaptube/download/SnapTube Audio/Gnarls Barkley - Crazy (Official Video) [4K Remaster](MP3_160K).mp3",
+        "proposed_path": "/sdcard/Music/Músicas Dia a Dia/Gnarls Barkley - Crazy (Official Video) [4K Remaster](MP3_160K).mp3"
+      },
+      {
+        "id": 222986,
+        "title": "Creep (Cangaço Sessions, Vol. 2 Deluxe) - Acústico",
+        "artist": "DUPÊ, Bagua Records, Ayrton Viola",
+        "current_path": "/storage/emulated/0/snaptube/download/SnapTube Audio/DUPÊ - Creep (Cangaço Sessions Vol. 2 - Deluxe Edition)(MP3_320K).mp3",
+        "proposed_path": "/sdcard/Music/Músicas Dia a Dia/DUPÊ - Creep (Cangaço Sessions Vol. 2 - Deluxe Edition)(MP3_320K).mp3"
+      },
+      {
+        "id": 208150,
+        "title": "Cyberpunk 2077 OST - The Rebel Path (Cello Version)",
+        "artist": "OST Station",
+        "current_path": "/storage/emulated/0/snaptube/download/SnapTube Audio/Cyberpunk 2077 OST - The Rebel Path (Cello Version)(M4A_128K).m4a",
+        "proposed_path": "/sdcard/Music/Músicas Dia a Dia/Cyberpunk 2077 OST - The Rebel Path (Cello Version)(M4A_128K).m4a"
+      },
+      {
+        "id": 208140,
+        "title": "Daft Punk Feat. Julian Casablancas - Instant Crush (Vinyl Version)",
+        "artist": "imsomaniac",
+        "current_path": "/storage/emulated/0/snaptube/download/SnapTube Audio/Daft Punk Feat. Julian Casablancas - Instant Crush (Vinyl Version)(M4A_128K).m4a",
+        "proposed_path": "/sdcard/Music/Músicas Dia a Dia/Daft Punk Feat. Julian Casablancas - Instant Crush (Vinyl Version)(M4A_128K).m4a"
+      },
+      {
+        "id": 224977,
+        "title": "Dragula",
+        "artist": "Rob Zombie",
+        "current_path": "/storage/emulated/0/snaptube/download/SnapTube Audio/Rob Zombie - Dragula(MP3_320K).mp3",
+        "proposed_path": "/sdcard/Music/Músicas Dia a Dia/Rob Zombie - Dragula(MP3_320K).mp3"
+      },
+      {
+        "id": 224336,
+        "title": "Dramatic",
+        "artist": "MASS OF THE FERMENTING DREGS",
+        "current_path": "/storage/emulated/0/snaptube/download/SnapTube Audio/Dramatic(MP3_320K).mp3",
+        "proposed_path": "/sdcard/Music/Músicas Dia a Dia/Dramatic(MP3_320K).mp3"
+      },
+      {
+        "id": 173929,
+        "title": "Duvet",
+        "artist": "bôa",
+        "current_path": "/storage/emulated/0/snaptube/download/SnapTube Audio/Bôa -  Duvet (Official Video)(MP3_160K).mp3",
+        "proposed_path": "/sdcard/Music/Músicas Dia a Dia/Bôa -  Duvet (Official Video)(MP3_160K).mp3"
+      },
+      {
+        "id": 179671,
+        "title": "Duvet",
+        "artist": "bôa",
+        "current_path": "/storage/emulated/0/snaptube/download/SnapTube Audio/Duvet(MP3_160K).mp3",
+        "proposed_path": "/sdcard/Music/Músicas Dia a Dia/Duvet(MP3_160K).mp3"
+      },
+      {
+        "id": 195235,
+        "title": "Earrings",
+        "artist": "Malcolm Todd",
+        "current_path": "/storage/emulated/0/snaptube/download/SnapTube Audio/Malcolm Todd - Earrings (Official Visualizer)(MP3_160K).mp3",
+        "proposed_path": "/sdcard/Music/Músicas Dia a Dia/Malcolm Todd - Earrings (Official Visualizer)(MP3_160K).mp3"
+      },
+      {
+        "id": 33414,
+        "title": "Ele É Santo",
+        "artist": "Giselli Cristina",
+        "current_path": "/storage/emulated/0/snaptube/download/SnapTube Audio/Ele É Santo(MP3_160K).mp3",
+        "proposed_path": "/sdcard/Music/Músicas Dia a Dia/Ele É Santo(MP3_160K).mp3"
+      },
+      {
+        "id": 195205,
+        "title": "Empire State Of Mind",
+        "artist": "JAY-Z, Alicia Keys",
+        "current_path": "/storage/emulated/0/snaptube/download/SnapTube Audio/JAŸ-Z - Empire State Of Mind ft. Alicia Keys(MP3_160K).mp3",
+        "proposed_path": "/sdcard/Music/Músicas Dia a Dia/JAŸ-Z - Empire State Of Mind ft. Alicia Keys(MP3_160K).mp3"
+      },
+      {
+        "id": 55410,
+        "title": "Era Eu (Ao Vivo)",
+        "artist": "Felipe Rodrigues - Topic",
+        "current_path": "/storage/emulated/0/snaptube/download/SnapTube Audio/Era Eu (Ao Vivo)(M4A_128K).m4a",
+        "proposed_path": "/sdcard/Music/Músicas Dia a Dia/Era Eu (Ao Vivo)(M4A_128K).m4a"
+      },
+      {
+        "id": 223180,
+        "title": "Eu Quero Ser Santo",
+        "artist": "Eyshila",
+        "current_path": "/storage/emulated/0/snaptube/download/SnapTube Audio/Eu quero ser santo - Eyshila(MP3_320K).mp3",
+        "proposed_path": "/sdcard/Music/Músicas Dia a Dia/Eu quero ser santo - Eyshila(MP3_320K).mp3"
+      },
+      {
+        "id": 173920,
+        "title": "Everything Stays (feat. Olivia Olson)",
+        "artist": "Adventure Time, Olivia Olson",
+        "current_path": "/storage/emulated/0/snaptube/download/SnapTube Audio/Everything Stays (feat. Olivia Olson)(MP3_160K).mp3",
+        "proposed_path": "/sdcard/Music/Músicas Dia a Dia/Everything Stays (feat. Olivia Olson)(MP3_160K).mp3"
+      },
+      {
+        "id": 219318,
+        "title": "Exit Music (For A Film)",
+        "artist": "Radiohead",
+        "current_path": "/storage/emulated/0/snaptube/download/SnapTube Audio/Exit Music (For A Film)(MP3_160K).mp3",
+        "proposed_path": "/sdcard/Music/Músicas Dia a Dia/Exit Music (For A Film)(MP3_160K).mp3"
+      },
+      {
+        "id": 42949,
+        "title": "Ezequiel 47 - Ao Vivo",
+        "artist": "Thiago Brito, Todah Music",
+        "current_path": "/storage/emulated/0/snaptube/download/SnapTube Audio/Ezequiel 47 (Ao Vivo)(M4A_128K).m4a",
+        "proposed_path": "/sdcard/Music/Músicas Dia a Dia/Ezequiel 47 (Ao Vivo)(M4A_128K).m4a"
+      },
+      {
+        "id": 47826,
+        "title": "Felipe Rodrigues e Elizeu Rodrigues - Nome Mais Doce (Ao Vivo)",
+        "artist": "Felipe Rodrigues",
+        "current_path": "/storage/emulated/0/snaptube/download/SnapTube Audio/Felipe Rodrigues e Elizeu Rodrigues - Nome Mais Doce (Ao Vivo)(M4A_128K).m4a",
+        "proposed_path": "/sdcard/Music/Músicas Dia a Dia/Felipe Rodrigues e Elizeu Rodrigues - Nome Mais Doce (Ao Vivo)(M4A_128K).m4a"
+      },
+      {
+        "id": 221021,
+        "title": "Flashing Lights",
+        "artist": "Kanye West",
+        "current_path": "/storage/emulated/0/snaptube/download/SnapTube Audio/Kanye West - Flashing Lights (Alternate Intro)(MP3_160K).mp3",
+        "proposed_path": "/sdcard/Music/Músicas Dia a Dia/Kanye West - Flashing Lights (Alternate Intro)(MP3_160K).mp3"
+      },
+      {
+        "id": 217140,
+        "title": "For Whom The Bell Tolls (Remastered)",
+        "artist": "Metallica",
+        "current_path": "/storage/emulated/0/snaptube/download/SnapTube Audio/For Whom The Bell Tolls (Remastered)(MP3_160K).mp3",
+        "proposed_path": "/sdcard/Music/Músicas Dia a Dia/For Whom The Bell Tolls (Remastered)(MP3_160K).mp3"
+      },
+      {
+        "id": 227686,
+        "title": "F・L・Y",
+        "artist": "Spectrum",
+        "current_path": "/storage/emulated/0/snaptube/download/SnapTube Audio/SPECTRUM _ F-L-Y (Music Video)(M4A_128K).m4a",
+        "proposed_path": "/sdcard/Music/Músicas Dia a Dia/SPECTRUM _ F-L-Y (Music Video)(M4A_128K).m4a"
+      },
+      {
+        "id": 179755,
+        "title": "Gucci Flip Flops x Careless Whisper - Viral Version",
+        "artist": "Moonshine",
+        "current_path": "/storage/emulated/0/snaptube/download/SnapTube Audio/Gucci Flip Flops x Careless Whisper - Viral Version(MP3_160K).mp3",
+        "proposed_path": "/sdcard/Music/Músicas Dia a Dia/Gucci Flip Flops x Careless Whisper - Viral Version(MP3_160K).mp3"
+      },
+      {
+        "id": 229802,
+        "title": "H.",
+        "artist": "TOOL",
+        "current_path": "/storage/emulated/0/snaptube/download/SnapTube Audio/TOOL - H. (Official Audio)(MP3_320K).mp3",
+        "proposed_path": "/sdcard/Music/Músicas Dia a Dia/TOOL - H. (Official Audio)(MP3_320K).mp3"
+      },
+      {
+        "id": 206681,
+        "title": "Headlock",
+        "artist": "Imogen Heap",
+        "current_path": "/storage/emulated/0/snaptube/download/SnapTube Audio/Headlock(M4A_128K).m4a",
+        "proposed_path": "/sdcard/Music/Músicas Dia a Dia/Headlock(M4A_128K).m4a"
+      },
+      {
+        "id": 227661,
+        "title": "High Forever - Marlon Hoffstadt Remix",
+        "artist": "Petite Meller, Marlon Hoffstadt",
+        "current_path": "/storage/emulated/0/snaptube/download/SnapTube Audio/High Forever (Marlon Hoffstadt Remix)(MP3_320K).mp3",
+        "proposed_path": "/sdcard/Music/Músicas Dia a Dia/High Forever (Marlon Hoffstadt Remix)(MP3_320K).mp3"
+      },
+      {
+        "id": 219325,
+        "title": "I Don't Wanna Be Me",
+        "artist": "Type O Negative",
+        "current_path": "/storage/emulated/0/snaptube/download/SnapTube Audio/I Don_t Wanna Be Me(MP3_160K).mp3",
+        "proposed_path": "/sdcard/Music/Músicas Dia a Dia/I Don_t Wanna Be Me(MP3_160K).mp3"
+      },
+      {
+        "id": 195196,
+        "title": "I Gotta Feeling",
+        "artist": "Black Eyed Peas",
+        "current_path": "/storage/emulated/0/snaptube/download/SnapTube Audio/The Black Eyed Peas - I Gotta Feeling (Official Music Video)(MP3_160K).mp3",
+        "proposed_path": "/sdcard/Music/Músicas Dia a Dia/The Black Eyed Peas - I Gotta Feeling (Official Music Video)(MP3_160K).mp3"
+      },
+      {
+        "id": 173926,
+        "title": "I Really Want to Stay at Your House",
+        "artist": "Rosa Walton, Hallie Coggins",
+        "current_path": "/storage/emulated/0/snaptube/download/SnapTube Audio/ROSA WALTON x HALLIE COGGINS - I REALLY WANT TO STAY AT YOUR HOUSE (LYRIC) AMV CYBERPUNK EDGERUNNERS(MP3_160K).mp3",
+        "proposed_path": "/sdcard/Music/Músicas Dia a Dia/ROSA WALTON x HALLIE COGGINS - I REALLY WANT TO STAY AT YOUR HOUSE (LYRIC) AMV CYBERPUNK EDGERUNNERS(MP3_160K).mp3"
+      },
+      {
+        "id": 179703,
+        "title": "I Thought I Saw Your Face Today",
+        "artist": "She & Him",
+        "current_path": "/storage/emulated/0/snaptube/download/SnapTube Audio/I Thought I Saw Your Face Today(MP3_160K).mp3",
+        "proposed_path": "/sdcard/Music/Músicas Dia a Dia/I Thought I Saw Your Face Today(MP3_160K).mp3"
+      },
+      {
+        "id": 180551,
+        "title": "I Want You to Resist",
+        "artist": "focus",
+        "current_path": "/storage/emulated/0/snaptube/download/SnapTube Audio/I want you to resist(MP3_160K).mp3",
+        "proposed_path": "/sdcard/Music/Músicas Dia a Dia/I want you to resist(MP3_160K).mp3"
+      },
+      {
+        "id": 179625,
+        "title": "I Was Made For Lovin' You",
+        "artist": "KISS",
+        "current_path": "/storage/emulated/0/snaptube/download/SnapTube Audio/Kiss - I Was Made For Lovin_ You(MP3_160K).mp3",
+        "proposed_path": "/sdcard/Music/Músicas Dia a Dia/Kiss - I Was Made For Lovin_ You(MP3_160K).mp3"
+      },
+      {
+        "id": 179589,
+        "title": "I'm Still Standing",
+        "artist": "Elton John",
+        "current_path": "/storage/emulated/0/snaptube/download/SnapTube Audio/I_m Still Standing(MP3_160K).mp3",
+        "proposed_path": "/sdcard/Music/Músicas Dia a Dia/I_m Still Standing(MP3_160K).mp3"
+      },
+      {
+        "id": 57342,
+        "title": "IMPERFEITO",
+        "artist": "Coral Canto Jovem e Rayssa Andreoli",
+        "current_path": "/storage/emulated/0/snaptube/download/SnapTube Audio/IMPERFEITO _ Coral Canto Jovem e Rayssa Andreoli(M4A_128K).m4a",
+        "proposed_path": "/sdcard/Music/Músicas Dia a Dia/IMPERFEITO _ Coral Canto Jovem e Rayssa Andreoli(M4A_128K).m4a"
+      },
+      {
+        "id": 179697,
+        "title": "Impostor Syndrome",
+        "artist": "Sidney Gish",
+        "current_path": "/storage/emulated/0/snaptube/download/SnapTube Audio/Impostor Syndrome(MP3_160K).mp3",
+        "proposed_path": "/sdcard/Music/Músicas Dia a Dia/Impostor Syndrome(MP3_160K).mp3"
+      },
+      {
+        "id": 208413,
+        "title": "Insomnia",
+        "artist": "Love Letter",
+        "current_path": "/storage/emulated/0/snaptube/download/SnapTube Audio/Insomnia(M4A_128K).m4a",
+        "proposed_path": "/sdcard/Music/Músicas Dia a Dia/Insomnia(M4A_128K).m4a"
+      },
+      {
+        "id": 179631,
+        "title": "Iron Man - 2012 - Remaster",
+        "artist": "Black Sabbath",
+        "current_path": "/storage/emulated/0/snaptube/download/SnapTube Audio/Iron Man (2012 Remaster)(MP3_160K).mp3",
+        "proposed_path": "/sdcard/Music/Músicas Dia a Dia/Iron Man (2012 Remaster)(MP3_160K).mp3"
+      },
+      {
+        "id": 179607,
+        "title": "Jane!",
+        "artist": "The Long Faces",
+        "current_path": "/storage/emulated/0/snaptube/download/SnapTube Audio/Jane_(MP3_160K).mp3",
+        "proposed_path": "/sdcard/Music/Músicas Dia a Dia/Jane_(MP3_160K).mp3"
+      },
+      {
+        "id": 179613,
+        "title": "Jerk It Out",
+        "artist": "Caesars",
+        "current_path": "/storage/emulated/0/snaptube/download/SnapTube Audio/Jerk It Out(MP3_160K).mp3",
+        "proposed_path": "/sdcard/Music/Músicas Dia a Dia/Jerk It Out(MP3_160K).mp3"
+      },
+      {
+        "id": 219308,
+        "title": "Join Me In Death",
+        "artist": "HIM",
+        "current_path": "/storage/emulated/0/snaptube/download/SnapTube Audio/Join Me In Death(MP3_160K).mp3",
+        "proposed_path": "/sdcard/Music/Músicas Dia a Dia/Join Me In Death(MP3_160K).mp3"
+      },
+      {
+        "id": 220998,
+        "title": "Joseph",
+        "artist": "Falling In Reverse, Corey Taylor, Serj Tankian",
+        "current_path": "/storage/emulated/0/snaptube/download/SnapTube Audio/Falling In Reverse - _Joseph_ (feat. Corey Taylor and Serj Tankian)(MP3_160K).mp3",
+        "proposed_path": "/sdcard/Music/Músicas Dia a Dia/Falling In Reverse - _Joseph_ (feat. Corey Taylor and Serj Tankian)(MP3_160K).mp3"
+      },
+      {
+        "id": 180520,
+        "title": "L.P. Rhythm - Versatile (Hardstylish Remix) (slowed)",
+        "artist": "Hardstylish",
+        "current_path": "/storage/emulated/0/snaptube/download/SnapTube Audio/L.P. Rhythm - Versatile (Hardstylish Remix) (slowed)(MP3_160K).mp3",
+        "proposed_path": "/sdcard/Music/Músicas Dia a Dia/L.P. Rhythm - Versatile (Hardstylish Remix) (slowed)(MP3_160K).mp3"
+      },
+      {
+        "id": 212497,
+        "title": "Lay All Your Love On Me",
+        "artist": "ABBA",
+        "current_path": "/storage/emulated/0/snaptube/download/SnapTube Audio/ABBA - Lay All Your Love On Me (Official Lyric Video)(MP3_160K).mp3",
+        "proposed_path": "/sdcard/Music/Músicas Dia a Dia/ABBA - Lay All Your Love On Me (Official Lyric Video)(MP3_160K).mp3"
+      },
+      {
+        "id": 180141,
+        "title": "Let Down",
+        "artist": "Radiohead",
+        "current_path": "/storage/emulated/0/snaptube/download/SnapTube Audio/Let Down (Remastered)(MP3_160K).mp3",
+        "proposed_path": "/sdcard/Music/Músicas Dia a Dia/Let Down (Remastered)(MP3_160K).mp3"
+      },
+      {
+        "id": 180117,
+        "title": "Let It Happen - Radio Edit",
+        "artist": "Tame Impala",
+        "current_path": "/storage/emulated/0/snaptube/download/SnapTube Audio/Tame Impala - Let It Happen (Official Video)(MP3_160K).mp3",
+        "proposed_path": "/sdcard/Music/Músicas Dia a Dia/Tame Impala - Let It Happen (Official Video)(MP3_160K).mp3"
+      },
+      {
+        "id": 179601,
+        "title": "Let You Down",
+        "artist": "Dawid Podsiadło",
+        "current_path": "/storage/emulated/0/snaptube/download/SnapTube Audio/Let You Down(MP3_160K).mp3",
+        "proposed_path": "/sdcard/Music/Músicas Dia a Dia/Let You Down(MP3_160K).mp3"
+      },
+      {
+        "id": 206661,
+        "title": "Like a Stone",
+        "artist": "Audioslave",
+        "current_path": "/storage/emulated/0/snaptube/download/SnapTube Audio/Audioslave - Like a Stone (Official Video)(M4A_128K).m4a",
+        "proposed_path": "/sdcard/Music/Músicas Dia a Dia/Audioslave - Like a Stone (Official Video)(M4A_128K).m4a"
+      },
+      {
+        "id": 215344,
+        "title": "Like a Stone",
+        "artist": "Audioslave",
+        "current_path": "/storage/emulated/0/snaptube/download/SnapTube Audio/Audioslave - Like a Stone (Official Video)(MP3_160K).mp3",
+        "proposed_path": "/sdcard/Music/Músicas Dia a Dia/Audioslave - Like a Stone (Official Video)(MP3_160K).mp3"
+      },
+      {
+        "id": 195211,
+        "title": "Linger",
+        "artist": "The Cranberries",
+        "current_path": "/storage/emulated/0/snaptube/download/SnapTube Audio/The Cranberries - Linger (4K Official Music Video)(MP3_160K).mp3",
+        "proposed_path": "/sdcard/Music/Músicas Dia a Dia/The Cranberries - Linger (4K Official Music Video)(MP3_160K).mp3"
+      },
+      {
+        "id": 208160,
+        "title": "Livin' On A Prayer",
+        "artist": "Bon Jovi",
+        "current_path": "/storage/emulated/0/snaptube/download/SnapTube Audio/Bon Jovi - Livin_ On A Prayer(M4A_128K).m4a",
+        "proposed_path": "/sdcard/Music/Músicas Dia a Dia/Bon Jovi - Livin_ On A Prayer(M4A_128K).m4a"
+      },
+      {
+        "id": 195214,
+        "title": "Locked out of Heaven",
+        "artist": "Bruno Mars",
+        "current_path": "/storage/emulated/0/snaptube/download/SnapTube Audio/Bruno Mars - Locked Out Of Heaven (Official Music Video)(MP3_160K).mp3",
+        "proposed_path": "/sdcard/Music/Músicas Dia a Dia/Bruno Mars - Locked Out Of Heaven (Official Music Video)(MP3_160K).mp3"
+      },
+      {
+        "id": 221015,
+        "title": "Lonely Day",
+        "artist": "System Of A Down",
+        "current_path": "/storage/emulated/0/snaptube/download/SnapTube Audio/System Of A Down - Lonely Day (Official HD Video)(MP3_160K).mp3",
+        "proposed_path": "/sdcard/Music/Músicas Dia a Dia/System Of A Down - Lonely Day (Official HD Video)(MP3_160K).mp3"
+      },
+      {
+        "id": 215351,
+        "title": "Love In Portofino",
+        "artist": "Dalida",
+        "current_path": "/storage/emulated/0/snaptube/download/SnapTube Audio/Love In Portofino(MP3_160K).mp3",
+        "proposed_path": "/sdcard/Music/Músicas Dia a Dia/Love In Portofino(MP3_160K).mp3"
+      },
+      {
+        "id": 173912,
+        "title": "Love Like You (feat. Rebecca Sugar) - End Credits",
+        "artist": "Steven Universe, Rebecca Sugar",
+        "current_path": "/storage/emulated/0/snaptube/download/SnapTube Audio/Love Like You (feat. Rebecca Sugar) [End Credits](MP3_160K).mp3",
+        "proposed_path": "/sdcard/Music/Músicas Dia a Dia/Love Like You (feat. Rebecca Sugar) [End Credits](MP3_160K).mp3"
+      },
+      {
+        "id": 211114,
+        "title": "Love Me Not",
+        "artist": "Ravyn Lenae",
+        "current_path": "/storage/emulated/0/snaptube/download/SnapTube Audio/Olivia Dean - Love Me Not in the Live Lounge(MP3_160K).mp3",
+        "proposed_path": "/sdcard/Music/Músicas Dia a Dia/Olivia Dean - Love Me Not in the Live Lounge(MP3_160K).mp3"
+      },
+      {
+        "id": 223023,
+        "title": "M.I.A.",
+        "artist": "Avenged Sevenfold",
+        "current_path": "/storage/emulated/0/snaptube/download/SnapTube Audio/M.I.A(MP3_320K).mp3",
+        "proposed_path": "/sdcard/Music/Músicas Dia a Dia/M.I.A(MP3_320K).mp3"
+      },
+      {
+        "id": 224361,
+        "title": "Maine’s theme extended- Cyberpunk Edgerunners (ugory zurawie)",
+        "artist": "Frizz Rizzle",
+        "current_path": "/storage/emulated/0/snaptube/download/SnapTube Audio/Maine_s theme extended- Cyberpunk Edgerunners (ugory zurawie)(MP3_320K).mp3",
+        "proposed_path": "/sdcard/Music/Músicas Dia a Dia/Maine_s theme extended- Cyberpunk Edgerunners (ugory zurawie)(MP3_320K).mp3"
+      },
+      {
+        "id": 224981,
+        "title": "Man in the Box",
+        "artist": "Alice In Chains",
+        "current_path": "/storage/emulated/0/snaptube/download/SnapTube Audio/Alice In Chains - Man in the Box (Official Video)(MP3_320K).mp3",
+        "proposed_path": "/sdcard/Music/Músicas Dia a Dia/Alice In Chains - Man in the Box (Official Video)(MP3_320K).mp3"
+      },
+      {
+        "id": 201615,
+        "title": "Michelle",
+        "artist": "Sir Chloe",
+        "current_path": "/storage/emulated/0/snaptube/download/SnapTube Audio/Sir Chloe - Michelle(MP3_160K).mp3",
+        "proposed_path": "/sdcard/Music/Músicas Dia a Dia/Sir Chloe - Michelle(MP3_160K).mp3"
+      },
+      {
+        "id": 209366,
+        "title": "Muse - Supremacy (Official Video)",
+        "artist": "Muse",
+        "current_path": "/storage/emulated/0/snaptube/download/SnapTube Audio/Muse - Supremacy (Official Video)(M4A_128K).m4a",
+        "proposed_path": "/sdcard/Music/Músicas Dia a Dia/Muse - Supremacy (Official Video)(M4A_128K).m4a"
+      },
+      {
+        "id": 201975,
+        "title": "My Way - 2008 Remastered",
+        "artist": "Frank Sinatra",
+        "current_path": "/storage/emulated/0/snaptube/download/SnapTube Audio/My Way (2008 Remastered)(MP3_160K).mp3",
+        "proposed_path": "/sdcard/Music/Músicas Dia a Dia/My Way (2008 Remastered)(MP3_160K).mp3"
+      },
+      {
+        "id": 227700,
+        "title": "Never Fade Away (SAMURAI Cover)",
+        "artist": "P.T. Adamczyk, Olga Jankowska",
+        "current_path": "/storage/emulated/0/snaptube/download/SnapTube Audio/Cyberpunk 2077 _ Never Fade Away by P. T. Adamczyk _ Olga Jankowska (SAMURAI Cover)(M4A_128K).m4a",
+        "proposed_path": "/sdcard/Music/Músicas Dia a Dia/Cyberpunk 2077 _ Never Fade Away by P. T. Adamczyk _ Olga Jankowska (SAMURAI Cover)(M4A_128K).m4a"
+      },
+      {
+        "id": 199603,
+        "title": "No Church In The Wild",
+        "artist": "JAY-Z, Kanye West, Frank Ocean, The-Dream",
+        "current_path": "/storage/emulated/0/snaptube/download/SnapTube Audio/Jay-Z _ Kanye West - No Church In The Wild ft. Frank Ocean_ The-Dream(MP3_160K).mp3",
+        "proposed_path": "/sdcard/Music/Músicas Dia a Dia/Jay-Z _ Kanye West - No Church In The Wild ft. Frank Ocean_ The-Dream(MP3_160K).mp3"
+      },
+      {
+        "id": 180104,
+        "title": "No Surprises",
+        "artist": "Radiohead",
+        "current_path": "/storage/emulated/0/snaptube/download/SnapTube Audio/Radiohead - No Surprises(MP3_160K).mp3",
+        "proposed_path": "/sdcard/Music/Músicas Dia a Dia/Radiohead - No Surprises(MP3_160K).mp3"
+      },
+      {
+        "id": 194607,
+        "title": "Nobody",
+        "artist": "Mitski",
+        "current_path": "/storage/emulated/0/snaptube/download/SnapTube Audio/Mitski - Nobody (Official Video)(MP3_160K).mp3",
+        "proposed_path": "/sdcard/Music/Músicas Dia a Dia/Mitski - Nobody (Official Video)(MP3_160K).mp3"
+      },
+      {
+        "id": 195217,
+        "title": "Nothing's New",
+        "artist": "Rio Romeo",
+        "current_path": "/storage/emulated/0/snaptube/download/SnapTube Audio/NOTHING_S NEW - RIO ROMEO(MP3_160K).mp3",
+        "proposed_path": "/sdcard/Music/Músicas Dia a Dia/NOTHING_S NEW - RIO ROMEO(MP3_160K).mp3"
+      },
+      {
+        "id": 57335,
+        "title": "Não Quero Ser O Mesmo - Ao Vivo",
+        "artist": "José Wellington",
+        "current_path": "/storage/emulated/0/snaptube/download/SnapTube Audio/José Wellington - Não Quero Ser O Mesmo(M4A_128K).m4a",
+        "proposed_path": "/sdcard/Music/Músicas Dia a Dia/José Wellington - Não Quero Ser O Mesmo(M4A_128K).m4a"
+      },
+      {
+        "id": 47821,
+        "title": "O Amor Tem Um Nome - Ao Vivo",
+        "artist": "Leandro Borges",
+        "current_path": "/storage/emulated/0/snaptube/download/SnapTube Audio/Leandro Borges - O Amor Tem Um Nome (Ao Vivo)(M4A_128K).m4a",
+        "proposed_path": "/sdcard/Music/Músicas Dia a Dia/Leandro Borges - O Amor Tem Um Nome (Ao Vivo)(M4A_128K).m4a"
+      },
+      {
+        "id": 211119,
+        "title": "Olivia Dean - So Easy (To Fall In Love) in the Live Lounge",
+        "artist": "BBCRadio1VEVO",
+        "current_path": "/storage/emulated/0/snaptube/download/SnapTube Audio/Olivia Dean - So Easy (To Fall In Love) in the Live Lounge(MP3_160K).mp3",
+        "proposed_path": "/sdcard/Music/Músicas Dia a Dia/Olivia Dean - So Easy (To Fall In Love) in the Live Lounge(MP3_160K).mp3"
+      },
+      {
+        "id": 180508,
+        "title": "On The Dance",
+        "artist": "DAYVØNE1, Human Resource 404, YONCE, Rozer_rev",
+        "current_path": "/storage/emulated/0/snaptube/download/SnapTube Audio/On The Dance(MP3_160K).mp3",
+        "proposed_path": "/sdcard/Music/Músicas Dia a Dia/On The Dance(MP3_160K).mp3"
+      },
+      {
+        "id": 217036,
+        "title": "One",
+        "artist": "Metallica",
+        "current_path": "/storage/emulated/0/snaptube/download/SnapTube Audio/Metallica_ One (Official Music Video)(MP3_160K).mp3",
+        "proposed_path": "/sdcard/Music/Músicas Dia a Dia/Metallica_ One (Official Music Video)(MP3_160K).mp3"
+      },
+      {
+        "id": 201951,
+        "title": "Only You",
+        "artist": "The Platters",
+        "current_path": "/storage/emulated/0/snaptube/download/SnapTube Audio/The Platters - Only You - Lyrics(MP3_160K).mp3",
+        "proposed_path": "/sdcard/Music/Músicas Dia a Dia/The Platters - Only You - Lyrics(MP3_160K).mp3"
+      },
+      {
+        "id": 179595,
+        "title": "Paranoid - 2012 - Remaster",
+        "artist": "Black Sabbath",
+        "current_path": "/storage/emulated/0/snaptube/download/SnapTube Audio/Black Sabbath - Paranoid (Official Audio)(MP3_160K).mp3",
+        "proposed_path": "/sdcard/Music/Músicas Dia a Dia/Black Sabbath - Paranoid (Official Audio)(MP3_160K).mp3"
+      },
+      {
+        "id": 222972,
+        "title": "Passenger",
+        "artist": "Deftones",
+        "current_path": "/storage/emulated/0/snaptube/download/SnapTube Audio/Deftones - Passenger [Official Visualizer](MP3_320K).mp3",
+        "proposed_path": "/sdcard/Music/Músicas Dia a Dia/Deftones - Passenger [Official Visualizer](MP3_320K).mp3"
+      },
+      {
+        "id": 124881,
+        "title": "Poder Pra Salvar (Mighty to Save)",
+        "artist": "Aline Barros",
+        "current_path": "/storage/emulated/0/snaptube/download/SnapTube Audio/Poder para salvar _ CD Caminho de Milagres _ Aline Barros(MP3_160K).mp3",
+        "proposed_path": "/sdcard/Music/Músicas Dia a Dia/Poder para salvar _ CD Caminho de Milagres _ Aline Barros(MP3_160K).mp3"
+      },
+      {
+        "id": 209916,
+        "title": "Portões Celestiais",
+        "artist": "Michelle Nascimento",
+        "current_path": "/storage/emulated/0/snaptube/download/SnapTube Audio/Portões Celestiais-Michelle Nascimento (voz e letra)(MP3_160K).mp3",
+        "proposed_path": "/sdcard/Music/Músicas Dia a Dia/Portões Celestiais-Michelle Nascimento (voz e letra)(MP3_160K).mp3"
+      },
+      {
+        "id": 180557,
+        "title": "Renee",
+        "artist": "SALES",
+        "current_path": "/storage/emulated/0/snaptube/download/SnapTube Audio/SALES - renee(MP3_160K).mp3",
+        "proposed_path": "/sdcard/Music/Músicas Dia a Dia/SALES - renee(MP3_160K).mp3"
+      },
+      {
+        "id": 219304,
+        "title": "Rosemary",
+        "artist": "Deftones",
+        "current_path": "/storage/emulated/0/snaptube/download/SnapTube Audio/Rosemary(MP3_160K).mp3",
+        "proposed_path": "/sdcard/Music/Músicas Dia a Dia/Rosemary(MP3_160K).mp3"
+      },
+      {
+        "id": 217986,
+        "title": "Rust",
+        "artist": "Black Label Society",
+        "current_path": "/storage/emulated/0/snaptube/download/SnapTube Audio/Rust(MP3_160K).mp3",
+        "proposed_path": "/sdcard/Music/Músicas Dia a Dia/Rust(MP3_160K).mp3"
+      },
+      {
+        "id": 223745,
+        "title": "Safe In Your Skin",
+        "artist": "Title Fight",
+        "current_path": "/storage/emulated/0/snaptube/download/SnapTube Audio/Safe In Your Skin(MP3_320K).mp3",
+        "proposed_path": "/sdcard/Music/Músicas Dia a Dia/Safe In Your Skin(MP3_320K).mp3"
+      },
+      {
+        "id": 205876,
+        "title": "Saint Celestine Speech - Our Martyred Lady - Warhammer 40000",
+        "artist": "AngryLegionary",
+        "current_path": "/storage/emulated/0/snaptube/download/SnapTube Audio/Saint Celestine Speech - Our Martyred Lady - Warhammer 40000(M4A_128K).m4a",
+        "proposed_path": "/sdcard/Music/Músicas Dia a Dia/Saint Celestine Speech - Our Martyred Lady - Warhammer 40000(M4A_128K).m4a"
+      },
+      {
+        "id": 223009,
+        "title": "Scorpions - Humanity",
+        "artist": "ScorpionsVEVO",
+        "current_path": "/storage/emulated/0/snaptube/download/SnapTube Audio/Scorpions - Humanity(MP3_320K).mp3",
+        "proposed_path": "/sdcard/Music/Músicas Dia a Dia/Scorpions - Humanity(MP3_320K).mp3"
+      },
+      {
+        "id": 179655,
+        "title": "Seven Nation Army",
+        "artist": "The White Stripes",
+        "current_path": "/storage/emulated/0/snaptube/download/SnapTube Audio/Seven Nation Army(MP3_160K).mp3",
+        "proposed_path": "/sdcard/Music/Músicas Dia a Dia/Seven Nation Army(MP3_160K).mp3"
+      },
+      {
+        "id": 223770,
+        "title": "Sextape",
+        "artist": "Deftones",
+        "current_path": "/storage/emulated/0/snaptube/download/SnapTube Audio/Sextape(MP3_320K).mp3",
+        "proposed_path": "/sdcard/Music/Músicas Dia a Dia/Sextape(MP3_320K).mp3"
+      },
+      {
+        "id": 224340,
+        "title": "She is inside, He is outside",
+        "artist": "MASS OF THE FERMENTING DREGS",
+        "current_path": "/storage/emulated/0/snaptube/download/SnapTube Audio/She is inside_ He is outside(MP3_320K).mp3",
+        "proposed_path": "/sdcard/Music/Músicas Dia a Dia/She is inside_ He is outside(MP3_320K).mp3"
+      },
+      {
+        "id": 180135,
+        "title": "Skyfall",
+        "artist": "Adele",
+        "current_path": "/storage/emulated/0/snaptube/download/SnapTube Audio/Adele - Skyfall (Official Lyric Video)(MP3_160K).mp3",
+        "proposed_path": "/sdcard/Music/Músicas Dia a Dia/Adele - Skyfall (Official Lyric Video)(MP3_160K).mp3"
+      },
+      {
+        "id": 179712,
+        "title": "Slipping Through My Fingers",
+        "artist": "ABBA",
+        "current_path": "/storage/emulated/0/snaptube/download/SnapTube Audio/Slipping Through My Fingers(MP3_160K).mp3",
+        "proposed_path": "/sdcard/Music/Músicas Dia a Dia/Slipping Through My Fingers(MP3_160K).mp3"
+      },
+      {
+        "id": 219656,
+        "title": "Stairway to Heaven - Remaster",
+        "artist": "Led Zeppelin",
+        "current_path": "/storage/emulated/0/snaptube/download/SnapTube Audio/Stairway to Heaven (Remaster)(MP3_160K).mp3",
+        "proposed_path": "/sdcard/Music/Músicas Dia a Dia/Stairway to Heaven (Remaster)(MP3_160K).mp3"
+      },
+      {
+        "id": 173943,
+        "title": "Steven Universe - Amar Como Você [SEM NARRADOR]",
+        "artist": "BolinhoDeCopu",
+        "current_path": "/storage/emulated/0/snaptube/download/SnapTube Audio/Steven Universe - Amar Como Você [SEM NARRADOR](MP3_160K).mp3",
+        "proposed_path": "/sdcard/Music/Músicas Dia a Dia/Steven Universe - Amar Como Você [SEM NARRADOR](MP3_160K).mp3"
+      },
+      {
+        "id": 179727,
+        "title": "Still Loving You",
+        "artist": "Scorpions",
+        "current_path": "/storage/emulated/0/snaptube/download/SnapTube Audio/Still Loving You(MP3_160K).mp3",
+        "proposed_path": "/sdcard/Music/Músicas Dia a Dia/Still Loving You(MP3_160K).mp3"
+      },
+      {
+        "id": 179645,
+        "title": "Suffer Me",
+        "artist": "The Cold Stares, Brutus Backlash",
+        "current_path": "/storage/emulated/0/snaptube/download/SnapTube Audio/Suffer Me(MP3_160K).mp3",
+        "proposed_path": "/sdcard/Music/Músicas Dia a Dia/Suffer Me(MP3_160K).mp3"
+      },
+      {
+        "id": 179571,
+        "title": "Take Me Out",
+        "artist": "Franz Ferdinand",
+        "current_path": "/storage/emulated/0/snaptube/download/SnapTube Audio/Take Me Out(MP3_160K).mp3",
+        "proposed_path": "/sdcard/Music/Músicas Dia a Dia/Take Me Out(MP3_160K).mp3"
+      },
+      {
+        "id": 47466,
+        "title": "Teu Toque / Espontâneo (Ao Vivo) | Gabi Sampaio, Nívea Soares",
+        "artist": "Gabi Sampaio",
+        "current_path": "/storage/emulated/0/snaptube/download/SnapTube Audio/Teu Toque _ Espontâneo (Ao Vivo) _ Gabi Sampaio_ Nívea Soares(M4A_128K).m4a",
+        "proposed_path": "/sdcard/Music/Músicas Dia a Dia/Teu Toque _ Espontâneo (Ao Vivo) _ Gabi Sampaio_ Nívea Soares(M4A_128K).m4a"
+      },
+      {
+        "id": 180107,
+        "title": "The Batman ft. KxllSwxtch & Nirvana",
+        "artist": "Whatever Forever",
+        "current_path": "/storage/emulated/0/snaptube/download/SnapTube Audio/The Batman ft. KxllSwxtch _ Nirvana(MP3_160K).mp3",
+        "proposed_path": "/sdcard/Music/Músicas Dia a Dia/The Batman ft. KxllSwxtch _ Nirvana(MP3_160K).mp3"
+      },
+      {
+        "id": 219660,
+        "title": "The Chain - 2004 Remaster",
+        "artist": "Fleetwood Mac",
+        "current_path": "/storage/emulated/0/snaptube/download/SnapTube Audio/The Chain (2004 Remaster)(MP3_160K).mp3",
+        "proposed_path": "/sdcard/Music/Músicas Dia a Dia/The Chain (2004 Remaster)(MP3_160K).mp3"
+      },
+      {
+        "id": 221008,
+        "title": "The Emptiness Machine",
+        "artist": "Linkin Park",
+        "current_path": "/storage/emulated/0/snaptube/download/SnapTube Audio/The Emptiness Machine (Official Music Video) - Linkin Park(MP3_160K).mp3",
+        "proposed_path": "/sdcard/Music/Músicas Dia a Dia/The Emptiness Machine (Official Music Video) - Linkin Park(MP3_160K).mp3"
+      },
+      {
+        "id": 180539,
+        "title": "The End",
+        "artist": "LLow",
+        "current_path": "/storage/emulated/0/snaptube/download/SnapTube Audio/The End(MP3_160K).mp3",
+        "proposed_path": "/sdcard/Music/Músicas Dia a Dia/The End(MP3_160K).mp3"
+      },
+      {
+        "id": 208130,
+        "title": "The Less I Let It Happen, The Better I Know",
+        "artist": "Samurai_ Jim",
+        "current_path": "/storage/emulated/0/snaptube/download/SnapTube Audio/The Less I Let It Happen_ The Better I Know(M4A_128K).m4a",
+        "proposed_path": "/sdcard/Music/Músicas Dia a Dia/The Less I Let It Happen_ The Better I Know(M4A_128K).m4a"
+      },
+      {
+        "id": 227692,
+        "title": "The Unknowing",
+        "artist": "Jfarrari",
+        "current_path": "/storage/emulated/0/snaptube/download/SnapTube Audio/The Unknowing(M4A_128K).m4a",
+        "proposed_path": "/sdcard/Music/Músicas Dia a Dia/The Unknowing(M4A_128K).m4a"
+      },
+      {
+        "id": 179709,
+        "title": "The Winner Takes It All",
+        "artist": "ABBA",
+        "current_path": "/storage/emulated/0/snaptube/download/SnapTube Audio/The Winner Takes It All(MP3_160K).mp3",
+        "proposed_path": "/sdcard/Music/Músicas Dia a Dia/The Winner Takes It All(MP3_160K).mp3"
+      },
+      {
+        "id": 179565,
+        "title": "This Fire",
+        "artist": "Franz Ferdinand",
+        "current_path": "/storage/emulated/0/snaptube/download/SnapTube Audio/This Fire(MP3_160K).mp3",
+        "proposed_path": "/sdcard/Music/Músicas Dia a Dia/This Fire(MP3_160K).mp3"
+      },
+      {
+        "id": 179737,
+        "title": "This I Love",
+        "artist": "Guns N' Roses",
+        "current_path": "/storage/emulated/0/snaptube/download/SnapTube Audio/This I Love(MP3_160K).mp3",
+        "proposed_path": "/sdcard/Music/Músicas Dia a Dia/This I Love(MP3_160K).mp3"
+      },
+      {
+        "id": 227702,
+        "title": "Toxicity",
+        "artist": "System Of A Down",
+        "current_path": "/storage/emulated/0/snaptube/download/SnapTube Audio/System Of A Down - Toxicity (Official HD Video)(M4A_128K).m4a",
+        "proposed_path": "/sdcard/Music/Músicas Dia a Dia/System Of A Down - Toxicity (Official HD Video)(M4A_128K).m4a"
+      },
+      {
+        "id": 227671,
+        "title": "Ugory - Zurawie (Maine ep 6 song)",
+        "artist": "Fish Smell Bad",
+        "current_path": "/storage/emulated/0/snaptube/download/SnapTube Audio/Ugory - Zurawie (Maine ep 6 song)(MP3_320K).mp3",
+        "proposed_path": "/sdcard/Music/Músicas Dia a Dia/Ugory - Zurawie (Maine ep 6 song)(MP3_320K).mp3"
+      },
+      {
+        "id": 179681,
+        "title": "Vanished",
+        "artist": "Crystal Castles",
+        "current_path": "/storage/emulated/0/snaptube/download/SnapTube Audio/Crystal Castles - Vanished(MP3_160K).mp3",
+        "proposed_path": "/sdcard/Music/Músicas Dia a Dia/Crystal Castles - Vanished(MP3_160K).mp3"
+      },
+      {
+        "id": 223756,
+        "title": "Warm Safe Place",
+        "artist": "Staind",
+        "current_path": "/storage/emulated/0/snaptube/download/SnapTube Audio/Warm Safe Place(MP3_320K).mp3",
+        "proposed_path": "/sdcard/Music/Músicas Dia a Dia/Warm Safe Place(MP3_320K).mp3"
+      },
+      {
+        "id": 180129,
+        "title": "Washing Machine Heart",
+        "artist": "Mitski",
+        "current_path": "/storage/emulated/0/snaptube/download/SnapTube Audio/Mitski - Washing Machine Heart(MP3_160K).mp3",
+        "proposed_path": "/sdcard/Music/Músicas Dia a Dia/Mitski - Washing Machine Heart(MP3_160K).mp3"
+      },
+      {
+        "id": 208419,
+        "title": "When the Sun Hits",
+        "artist": "Slowdive",
+        "current_path": "/storage/emulated/0/snaptube/download/SnapTube Audio/When the Sun Hits(M4A_128K).m4a",
+        "proposed_path": "/sdcard/Music/Músicas Dia a Dia/When the Sun Hits(M4A_128K).m4a"
+      },
+      {
+        "id": 179619,
+        "title": "Where Is My Mind?",
+        "artist": "Pixies",
+        "current_path": "/storage/emulated/0/snaptube/download/SnapTube Audio/Where Is My Mind_(MP3_160K).mp3",
+        "proposed_path": "/sdcard/Music/Músicas Dia a Dia/Where Is My Mind_(MP3_160K).mp3"
+      },
+      {
+        "id": 179583,
+        "title": "Who's Ready for Tomorrow",
+        "artist": "RAT BOY, IBDY",
+        "current_path": "/storage/emulated/0/snaptube/download/SnapTube Audio/Who_s Ready for Tomorrow(MP3_160K).mp3",
+        "proposed_path": "/sdcard/Music/Músicas Dia a Dia/Who_s Ready for Tomorrow(MP3_160K).mp3"
+      },
+      {
+        "id": 227710,
+        "title": "Withered",
+        "artist": "souls",
+        "current_path": "/storage/emulated/0/snaptube/download/SnapTube Audio/Withered(M4A_128K).m4a",
+        "proposed_path": "/sdcard/Music/Músicas Dia a Dia/Withered(M4A_128K).m4a"
+      },
+      {
+        "id": 201957,
+        "title": "You Are My Destiny",
+        "artist": "Paul Anka",
+        "current_path": "/storage/emulated/0/snaptube/download/SnapTube Audio/Paul Anka - You Are My Destiny (Visualizer) (Official)(MP3_160K).mp3",
+        "proposed_path": "/sdcard/Music/Músicas Dia a Dia/Paul Anka - You Are My Destiny (Visualizer) (Official)(MP3_160K).mp3"
+      },
+      {
+        "id": 179691,
+        "title": "Young Girl A",
+        "artist": "Siinamota",
+        "current_path": "/storage/emulated/0/snaptube/download/SnapTube Audio/椎名もた(siinamota) - Young Girl A _ 少女A(MP3_160K).mp3",
+        "proposed_path": "/sdcard/Music/Músicas Dia a Dia/椎名もた(siinamota) - Young Girl A _ 少女A(MP3_160K).mp3"
+      },
+      {
+        "id": 227657,
+        "title": "Zombie - Remastered 2020",
+        "artist": "The Cranberries",
+        "current_path": "/storage/emulated/0/snaptube/download/SnapTube Audio/The Cranberries - Zombie (Official Music Video)(MP3_320K).mp3",
+        "proposed_path": "/sdcard/Music/Músicas Dia a Dia/The Cranberries - Zombie (Official Music Video)(MP3_320K).mp3"
+      },
+      {
+        "id": 219297,
+        "title": "delusionalism",
+        "artist": "MASS OF THE FERMENTING DREGS",
+        "current_path": "/storage/emulated/0/snaptube/download/SnapTube Audio/Delusionalism(MP3_160K).mp3",
+        "proposed_path": "/sdcard/Music/Músicas Dia a Dia/Delusionalism(MP3_160K).mp3"
+      },
+      {
+        "id": 223763,
+        "title": "i think about you all the time",
+        "artist": "Deftones",
+        "current_path": "/storage/emulated/0/snaptube/download/SnapTube Audio/i think about you all the time(MP3_320K).mp3",
+        "proposed_path": "/sdcard/Music/Músicas Dia a Dia/i think about you all the time(MP3_320K).mp3"
+      },
+      {
+        "id": 222979,
+        "title": "major pa!n",
+        "artist": "K5bands",
+        "current_path": "/storage/emulated/0/snaptube/download/SnapTube Audio/major pa_n(MP3_320K).mp3",
+        "proposed_path": "/sdcard/Music/Músicas Dia a Dia/major pa_n(MP3_320K).mp3"
+      },
+      {
+        "id": 201628,
+        "title": "misery.",
+        "artist": "pupsies",
+        "current_path": "/storage/emulated/0/snaptube/download/SnapTube Audio/pupsies - Misery. (Lyrics)(MP3_160K).mp3",
+        "proposed_path": "/sdcard/Music/Músicas Dia a Dia/pupsies - Misery. (Lyrics)(MP3_160K).mp3"
+      },
+      {
+        "id": 180533,
+        "title": "where's my head at _",
+        "artist": "Basement Jaxx, 100 gecs",
+        "current_path": "/storage/emulated/0/snaptube/download/SnapTube Audio/where_s my head at _(MP3_160K).mp3",
+        "proposed_path": "/sdcard/Music/Músicas Dia a Dia/where_s my head at _(MP3_160K).mp3"
+      },
+      {
+        "id": 180527,
+        "title": "worry",
+        "artist": "LONOWN, riserayss",
+        "current_path": "/storage/emulated/0/snaptube/download/SnapTube Audio/LONOWN - Worry (slowed) _One summer night_ the fade of night_(MP3_160K).mp3",
+        "proposed_path": "/sdcard/Music/Músicas Dia a Dia/LONOWN - Worry (slowed) _One summer night_ the fade of night_(MP3_160K).mp3"
+      },
+      {
+        "id": 224315,
+        "title": "zany",
+        "artist": "DJ SENSX, WiNDeiL",
+        "current_path": "/storage/emulated/0/snaptube/download/SnapTube Audio/zany(MP3_320K).mp3",
+        "proposed_path": "/sdcard/Music/Músicas Dia a Dia/zany(MP3_320K).mp3"
+      },
+      {
+        "id": 224344,
+        "title": "かくいうもの",
+        "artist": "MASS OF THE FERMENTING DREGS",
+        "current_path": "/storage/emulated/0/snaptube/download/SnapTube Audio/かくいうもの(MP3_320K).mp3",
+        "proposed_path": "/sdcard/Music/Músicas Dia a Dia/かくいうもの(MP3_320K).mp3"
+      },
+      {
+        "id": 224354,
+        "title": "ワールドイズユアーズ",
+        "artist": "MASS OF THE FERMENTING DREGS",
+        "current_path": "/storage/emulated/0/snaptube/download/SnapTube Audio/ワールドイズユアーズ(MP3_320K).mp3",
+        "proposed_path": "/sdcard/Music/Músicas Dia a Dia/ワールドイズユアーズ(MP3_320K).mp3"
+      },
+      {
+        "id": 181418,
+        "title": "青い、濃い、橙色の日",
+        "artist": "MASS OF THE FERMENTING DREGS",
+        "current_path": "/storage/emulated/0/snaptube/download/SnapTube Audio/青い_濃い_橙色の日(MP3_160K).mp3",
+        "proposed_path": "/sdcard/Music/Músicas Dia a Dia/青い_濃い_橙色の日(MP3_160K).mp3"
+      }
+    ],
+    "Áudios de Reuniões": [
+      {
+        "id": 181267,
+        "title": "PLAYBACK PIANO  SIGO CANTANDO (Versão Inédita) #cover TOM FEMININO (D)",
+        "artist": "Playback Sucessos",
+        "current_path": "/storage/emulated/0/Android/media/com.whatsapp/WhatsApp/Media/WhatsApp Audio/AUD-20260621-WA0006.m4a",
+        "proposed_path": "/sdcard/Music/Áudios de Reuniões/AUD-20260621-WA0006.m4a"
+      },
+      {
+        "id": 194207,
+        "title": "Calma - Playback",
+        "artist": "Eliã Oliveira",
+        "current_path": "/storage/emulated/0/Android/media/com.whatsapp/WhatsApp/Media/WhatsApp Audio/AUD-20260725-WA0007.m4a",
+        "proposed_path": "/sdcard/Music/Áudios de Reuniões/AUD-20260725-WA0007.m4a"
+      },
+      {
+        "id": 183615,
+        "title": "Eu e Deus",
+        "artist": "Canção & Louvor",
+        "current_path": "/storage/emulated/0/Android/media/com.whatsapp/WhatsApp/Media/WhatsApp Audio/AUD-20260628-WA0002.m4a",
+        "proposed_path": "/sdcard/Music/Áudios de Reuniões/AUD-20260628-WA0002.m4a"
+      },
+      {
+        "id": 194164,
+        "title": "Fiel a Mim (Playback)",
+        "artist": "Eyshila",
+        "current_path": "/storage/emulated/0/Android/media/com.whatsapp/WhatsApp/Media/WhatsApp Audio/AUD-20260725-WA0002.m4a",
+        "proposed_path": "/sdcard/Music/Áudios de Reuniões/AUD-20260725-WA0002.m4a"
+      },
+      {
+        "id": 189592,
+        "title": "Identidade",
+        "artist": "Anderson Freire, Bruna Karla",
+        "current_path": "/storage/emulated/0/Android/media/com.whatsapp/WhatsApp/Media/WhatsApp Audio/AUD-20260712-WA0004.m4a",
+        "proposed_path": "/sdcard/Music/Áudios de Reuniões/AUD-20260712-WA0004.m4a"
+      },
+      {
+        "id": 189587,
+        "title": "Identidade (Playback)",
+        "artist": "Anderson Freire",
+        "current_path": "/storage/emulated/0/Android/media/com.whatsapp/WhatsApp/Media/WhatsApp Audio/AUD-20260712-WA0002.m4a",
+        "proposed_path": "/sdcard/Music/Áudios de Reuniões/AUD-20260712-WA0002.m4a"
+      },
+      {
+        "id": 178268,
+        "title": "Jó",
+        "artist": "Midian Lima",
+        "current_path": "/storage/emulated/0/Android/media/com.whatsapp/WhatsApp/Media/WhatsApp Audio/AUD-20260613-WA0019.m4a",
+        "proposed_path": "/sdcard/Music/Áudios de Reuniões/AUD-20260613-WA0019.m4a"
+      },
+      {
+        "id": 183281,
+        "title": "Léa Mendonça - Chora que a Vitória Vem",
+        "artist": "Léa Mendonça",
+        "current_path": "/storage/emulated/0/Android/media/com.whatsapp/WhatsApp/Media/WhatsApp Audio/AUD-20260627-WA0003.m4a",
+        "proposed_path": "/sdcard/Music/Áudios de Reuniões/AUD-20260627-WA0003.m4a"
+      },
+      {
+        "id": 182708,
+        "title": "Manancial (Eu Tenho Sede de Ti) (Playback)",
+        "artist": "Aline Barros",
+        "current_path": "/storage/emulated/0/Android/media/com.whatsapp/WhatsApp/Media/WhatsApp Audio/AUD-20260625-WA0005.m4a",
+        "proposed_path": "/sdcard/Music/Áudios de Reuniões/AUD-20260625-WA0005.m4a"
+      },
+      {
+        "id": 189600,
+        "title": "Não Posso Desistir (Playback)",
+        "artist": "Cassiane",
+        "current_path": "/storage/emulated/0/Android/media/com.whatsapp/WhatsApp/Media/WhatsApp Audio/AUD-20260712-WA0005.m4a",
+        "proposed_path": "/sdcard/Music/Áudios de Reuniões/AUD-20260712-WA0005.m4a"
+      },
+      {
+        "id": 180282,
+        "title": "Não há Deus Maior",
+        "artist": "Luiz De Carvalho",
+        "current_path": "/storage/emulated/0/Android/media/com.whatsapp/WhatsApp/Media/WhatsApp Audio/AUD-20260618-WA0028.m4a",
+        "proposed_path": "/sdcard/Music/Áudios de Reuniões/AUD-20260618-WA0028.m4a"
+      },
+      {
+        "id": 211969,
+        "title": "O Noivo Virá",
+        "artist": "Damares",
+        "current_path": "/storage/emulated/0/Android/media/com.whatsapp/WhatsApp/Media/WhatsApp Audio/AUD-20260906-WA0003.m4a",
+        "proposed_path": "/sdcard/Music/Áudios de Reuniões/AUD-20260906-WA0003.m4a"
+      },
+      {
+        "id": 211965,
+        "title": "O Noivo Virá - Playback",
+        "artist": "Damares",
+        "current_path": "/storage/emulated/0/Android/media/com.whatsapp/WhatsApp/Media/WhatsApp Audio/AUD-20260906-WA0001.m4a",
+        "proposed_path": "/sdcard/Music/Áudios de Reuniões/AUD-20260906-WA0001.m4a"
+      },
+      {
+        "id": 194191,
+        "title": "Quando Oro - Playback",
+        "artist": "Canção & Louvor",
+        "current_path": "/storage/emulated/0/Android/media/com.whatsapp/WhatsApp/Media/WhatsApp Audio/AUD-20260725-WA0006.m4a",
+        "proposed_path": "/sdcard/Music/Áudios de Reuniões/AUD-20260725-WA0006.m4a"
+      },
+      {
+        "id": 211971,
+        "title": "Quase Meia Noite - Vanilda Bordieri playback com letra",
+        "artist": "Zelly Lima voz e play back",
+        "current_path": "/storage/emulated/0/Android/media/com.whatsapp/WhatsApp/Media/WhatsApp Audio/AUD-20260906-WA0004.m4a",
+        "proposed_path": "/sdcard/Music/Áudios de Reuniões/AUD-20260906-WA0004.m4a"
+      },
+      {
+        "id": 209899,
+        "title": "Quase Meia-Noite - Ao Vivo",
+        "artist": "Vanilda Bordieri",
+        "current_path": "/storage/emulated/0/Android/media/com.whatsapp/WhatsApp/Media/WhatsApp Audio/AUD-20260830-WA0012.mp3",
+        "proposed_path": "/sdcard/Music/Áudios de Reuniões/AUD-20260830-WA0012.mp3"
+      },
+      {
+        "id": 206291,
+        "title": "Samurai (feat. Stevie Wonder)",
+        "artist": "Djavan, Stevie Wonder",
+        "current_path": "/storage/emulated/0/snaptube/download/SnapTube Audio/Djavan - Samurai (Áudio Oficial) ft. Stevie Wonder(M4A_128K).m4a",
+        "proposed_path": "/sdcard/Music/Áudios de Reuniões/Djavan - Samurai (Áudio Oficial) ft. Stevie Wonder(M4A_128K).m4a"
+      },
+      {
+        "id": 189602,
+        "title": "Se For pra Ser - Playback",
+        "artist": "Canção e Louvor",
+        "current_path": "/storage/emulated/0/Android/media/com.whatsapp/WhatsApp/Media/WhatsApp Audio/AUD-20260712-WA0006.m4a",
+        "proposed_path": "/sdcard/Music/Áudios de Reuniões/AUD-20260712-WA0006.m4a"
+      },
+      {
+        "id": 160485,
+        "title": "Sem Jesus Não Dá - Playback",
+        "artist": "Noemi Nonato",
+        "current_path": "/storage/emulated/0/Android/media/com.whatsapp/WhatsApp/Media/WhatsApp Audio/AUD-20260503-WA0018.m4a",
+        "proposed_path": "/sdcard/Music/Áudios de Reuniões/AUD-20260503-WA0018.m4a"
+      },
+      {
+        "id": 189548,
+        "title": "Sou Deus - Jana de Paula - PLAY BACK - VÍDEO LETRA",
+        "artist": "Cléia Souza",
+        "current_path": "/storage/emulated/0/Android/media/com.whatsapp/WhatsApp/Media/WhatsApp Audio/AUD-20260712-WA0000.m4a",
+        "proposed_path": "/sdcard/Music/Áudios de Reuniões/AUD-20260712-WA0000.m4a"
+      },
+      {
+        "id": 157940,
+        "title": "Sou O Teu Deus (feat. Giselli Cristina) (Playback)",
+        "artist": "Rafaelli Cristina - Topic",
+        "current_path": "/storage/emulated/0/Android/media/com.whatsapp/WhatsApp/Media/WhatsApp Audio/AUD-20260426-WA0023.m4a",
+        "proposed_path": "/sdcard/Music/Áudios de Reuniões/AUD-20260426-WA0023.m4a"
+      },
+      {
+        "id": 194166,
+        "title": "Te Agradeço - Ao Vivo",
+        "artist": "Diante do Trono",
+        "current_path": "/storage/emulated/0/Android/media/com.whatsapp/WhatsApp/Media/WhatsApp Audio/AUD-20260725-WA0003.m4a",
+        "proposed_path": "/sdcard/Music/Áudios de Reuniões/AUD-20260725-WA0003.m4a"
+      },
+      {
+        "id": 157629,
+        "title": "Te Louvarei - Playback",
+        "artist": "Trazendo a Arca",
+        "current_path": "/storage/emulated/0/Android/media/com.whatsapp/WhatsApp/Media/WhatsApp Audio/AUD-20260425-WA0074.m4a",
+        "proposed_path": "/sdcard/Music/Áudios de Reuniões/AUD-20260425-WA0074.m4a"
+      },
+      {
+        "id": 190843,
+        "title": "Track-11 20260717-102859",
+        "artist": "Desconhecido",
+        "current_path": "/storage/emulated/0/Audio_Reunioes/Transcrever/Track-11 20260717-102859.m4a",
+        "proposed_path": "/sdcard/Music/Áudios de Reuniões/Track-11 20260717-102859.m4a"
+      },
+      {
+        "id": 193100,
+        "title": "Track-13 20260722-100620",
+        "artist": "Desconhecido",
+        "current_path": "/storage/emulated/0/Audio_Reunioes/Transcrever/Track-13 20260722-100620.m4a",
+        "proposed_path": "/sdcard/Music/Áudios de Reuniões/Track-13 20260722-100620.m4a"
+      },
+      {
+        "id": 193686,
+        "title": "Track-14 20260724-081442",
+        "artist": "Desconhecido",
+        "current_path": "/storage/emulated/0/Audio_Reunioes/Transcrever/Track-14 20260724-081442.m4a",
+        "proposed_path": "/sdcard/Music/Áudios de Reuniões/Track-14 20260724-081442.m4a"
+      },
+      {
+        "id": 194678,
+        "title": "Track-15 20260727-103626",
+        "artist": "Desconhecido",
+        "current_path": "/storage/emulated/0/Audio_Reunioes/Transcrever/Track-15 20260727-103626.m4a",
+        "proposed_path": "/sdcard/Music/Áudios de Reuniões/Track-15 20260727-103626.m4a"
+      },
+      {
+        "id": 189827,
+        "title": "Track-5 20260713-113617",
+        "artist": "Desconhecido",
+        "current_path": "/storage/emulated/0/Audio_Reunioes/Transcrever/Track-5 20260713-113617.m4a",
+        "proposed_path": "/sdcard/Music/Áudios de Reuniões/Track-5 20260713-113617.m4a"
+      },
+      {
+        "id": 204048,
+        "title": "boletim papo",
+        "artist": "Desconhecido",
+        "current_path": "/storage/emulated/0/Audio_Reunioes/Transcrever/boletim papo .m4a",
+        "proposed_path": "/sdcard/Music/Áudios de Reuniões/boletim papo .m4a"
+      },
+      {
+        "id": 200736,
+        "title": "bot-boletim como ele funcionária",
+        "artist": "Desconhecido",
+        "current_path": "/storage/emulated/0/Audio_Reunioes/bot-boletim como ele funcionária.m4a",
+        "proposed_path": "/sdcard/Music/Áudios de Reuniões/bot-boletim como ele funcionária.m4a"
+      },
+      {
+        "id": 190325,
+        "title": "problema de acesso  20260715-085443",
+        "artist": "Desconhecido",
+        "current_path": "/storage/emulated/0/Audio_Reunioes/Transcrever/problema de acesso  20260715-085443.m4a",
+        "proposed_path": "/sdcard/Music/Áudios de Reuniões/problema de acesso  20260715-085443.m4a"
+      },
+      {
+        "id": 202065,
+        "title": "processo comissão",
+        "artist": "Desconhecido",
+        "current_path": "/storage/emulated/0/Audio_Reunioes/Transcrever/processo comissão .m4a",
+        "proposed_path": "/sdcard/Music/Áudios de Reuniões/processo comissão .m4a"
+      },
+      {
+        "id": 202041,
+        "title": "processo nota fiscal",
+        "artist": "Desconhecido",
+        "current_path": "/storage/emulated/0/Audio_Reunioes/Transcrever/processo nota fiscal.m4a",
+        "proposed_path": "/sdcard/Music/Áudios de Reuniões/processo nota fiscal.m4a"
+      },
+      {
+        "id": 190119,
+        "title": "processo transportador 20260714-085012",
+        "artist": "Desconhecido",
+        "current_path": "/storage/emulated/0/Audio_Reunioes/Transcrever/processo transportador 20260714-085012.m4a",
+        "proposed_path": "/sdcard/Music/Áudios de Reuniões/processo transportador 20260714-085012.m4a"
+      },
+      {
+        "id": 225334,
+        "title": "É QUASE MEIA NOITE. Vanilda bordieri. Playback(modificado)",
+        "artist": "NAJARA NOGUE",
+        "current_path": "/storage/emulated/0/Android/media/com.whatsapp/WhatsApp/Media/WhatsApp Audio/AUD-20261011-WA0038.m4a",
+        "proposed_path": "/sdcard/Music/Áudios de Reuniões/AUD-20261011-WA0038.m4a"
+      }
+    ]
+  }
+}

@@ -30,7 +30,7 @@ class MusicPlayerController(
     private var fadeManager: AudioFadeManager? = null
 
     var isFadeEnabled: Boolean = true
-    var fadeDurationMs: Long = 8000L
+    var fadeDurationMs: Long = 800L
 
     private fun getEffectiveFadeDuration(): Long = if (isFadeEnabled) fadeDurationMs else 0L
 
@@ -155,8 +155,13 @@ class MusicPlayerController(
         val fadeDur = getEffectiveFadeDuration()
         if (controller.isPlaying) {
             flushAccumulatedListenStats()
-            fadeManager?.fadeOutAndPause(fadeDur) ?: controller.pause()
+            _isPlaying.value = false
+            fadeManager?.fadeOutAndPause(fadeDur) ?: run {
+                controller.pause()
+                controller.volume = 1.0f
+            }
         } else {
+            _isPlaying.value = true
             fadeManager?.fadeIn(fadeDur) ?: controller.play()
         }
     }
@@ -196,6 +201,15 @@ class MusicPlayerController(
             } else {
                 controller.seekToPreviousMediaItem()
             }
+        }
+    }
+
+    fun updateSongFavorite(songId: Long, isFavorite: Boolean) {
+        if (_currentSong.value?.id == songId) {
+            _currentSong.value = _currentSong.value?.copy(isFavorite = isFavorite)
+        }
+        _playlist.value = _playlist.value.map {
+            if (it.id == songId) it.copy(isFavorite = isFavorite) else it
         }
     }
 

@@ -76,10 +76,23 @@
 ### Turno 7: Preservação de Contexto e Memória Integral
 * **Hugh:**
   > *"preciso tambem que esteja contexto, historico de mensagens e decisões, vc incluiu isso nele?"*
-* **Atom (Ação Atual):**
+* **Atom (Ação):**
   - Criação da pasta de documentação e contexto:
     - `docs/ARCHITECTURE_AND_DECISIONS.md`: Todas as decisões arquiteturais e técnicas.
     - `docs/PROMPT_FOR_HOME_AI.md`: Prompt pronto para colar em qualquer IA no PC de casa.
     - `docs/FULL_CONVERSATION_HISTORY.md`: Este registro histórico detalhado de todas as mensagens.
     - `docs/logs/transcript.jsonl`: Log bruto dos eventos da sessão.
   - Atualização do repositório Git com novo commit e regeração do arquivo `.zip` final em todos os destinos.
+
+---
+
+### Turno 8: Resolução de Gargalos Críticos, Pastas & Auditoria de Metas
+* **Hugh:**
+  > *"ok curti, mas oque interessa: erros: 1- quando o usuário ativa o fade in e fade out os botões na tool bar de pause, next e os demais não funcionam. 2- quando o fade in está desativado (e a tool bar funcionando) ao favoritar a musica que está tocando/pausada mas selecionada, o coração não altera de estado. 3- precisamos de uma opção de criação de pastas, organização e testar a conexão com ia para fazer a conexão... depois precisamos validar tudo. do inicio do projeto até agora e decidirmos se alcançamos nossa meta, fizemos oque desejavamos e se ja está tudo pronto (eu com certeza acho que ainda não está mas o precisamos de um /goal para definir)"*
+* **Atom (Ação):**
+  - **Correção Bug 1 (Fade & Toolbar):** Reengenharia de `AudioFadeManager.kt` e `MusicPlayerController.kt`. Soft fade no pause de 250ms com feedback instantâneo de UI; micro-dip de 100ms em skips com garantia de execução no bloco `finally` para evitar perda de toques; restauração incondicional do volume para 1.0f prevenindo travamentos em mudo; reajuste do slider para 0.2s - 3.0s (padrão 0.8s).
+  - **Correção Bug 2 (Favorito / Coração):** `currentPlayingSong` unificado com `combine(playerController.currentSong, songs)` de modo que ao tocar no coração (MiniPlayer, ExpandedPlayer ou Lista), a alteração do Room DB reflete reativamente em tempo real sem atraso.
+  - **Pastas & Playlists:** Criação de `PlaylistEntity`, `PlaylistDao`, `FoldersScreen.kt` com suporte completo a CRUD de pastas, diálogo de inserção manual com busca e seleção múltipla, e botão de auto-organização por IA.
+  - **Ponte de IA USB:** Atualização do script `agent_vault_bridge.py` com autodescoberta do ADB e comando `test-ai`. 303 faixas reais catalogadas e distribuídas com sucesso nas 4 pastas (Cristãs Cantado, Cristãs Playback, Dia a Dia, Áudios de Reuniões).
+  - **Auditoria & Goal:** Criação de `docs/PROJECT_GOAL_AUDIT.md` formalizando a auditoria de todas as etapas e a definição de pronto para as versões v1.4.0, v1.5.0 e v2.0.0.
+

@@ -212,8 +212,8 @@ fun SettingsScreen(
                         Slider(
                             value = settings.fadeDurationSeconds,
                             onValueChange = onChangeFadeDuration,
-                            valueRange = 1.0f..15.0f,
-                            steps = 14,
+                            valueRange = 0.2f..3.0f,
+                            steps = 13,
                             colors = SliderDefaults.colors(
                                 thumbColor = CyberAmber,
                                 activeTrackColor = CyberAmber,
@@ -223,7 +223,7 @@ fun SettingsScreen(
                         )
 
                         Text(
-                            text = "Dica: Valores entre 8s e 10s criam a fusão perfeita entre faixas sem corte abrupto.",
+                            text = "Dica: O pause possui corte anti-pop suave instantâneo (250ms). Valores entre 0.4s e 1.2s criam a transição perfeita e fluida entre faixas.",
                             color = MutedStone,
                             fontSize = 10.5.sp,
                             fontFamily = FontFamily.Monospace

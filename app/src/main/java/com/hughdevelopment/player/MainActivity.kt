@@ -30,6 +30,7 @@ import androidx.core.content.ContextCompat
 import com.hughdevelopment.player.ui.components.ExpandedPlayerSheet
 import com.hughdevelopment.player.ui.components.MiniPlayerBar
 import com.hughdevelopment.player.ui.components.SplashScreenView
+import com.hughdevelopment.player.ui.screens.FoldersScreen
 import com.hughdevelopment.player.ui.screens.LibraryScreen
 import com.hughdevelopment.player.ui.screens.SettingsScreen
 import com.hughdevelopment.player.ui.screens.StatsDashboardScreen
@@ -116,6 +117,7 @@ fun MainScreen(
     onExportAiManifest: (((String) -> Unit)) -> Unit
 ) {
     val sortedSongs by viewModel.sortedSongs.collectAsState()
+    val playlists by viewModel.playlists.collectAsState()
     val isLoading by viewModel.isLoading.collectAsState()
     val currentSong by viewModel.currentPlayingSong.collectAsState()
     val isPlaying by viewModel.isPlaying.collectAsState()
@@ -163,6 +165,7 @@ fun MainScreen(
                             viewModel.playSong(song, playlist)
                         },
                         onRefresh = { viewModel.loadLocalMusic() },
+                        onOpenFolders = { viewModel.navigateTo(AppScreen.FOLDERS) },
                         onOpenDashboard = { viewModel.navigateTo(AppScreen.STATS_DASHBOARD) },
                         onOpenSettings = { viewModel.navigateTo(AppScreen.SETTINGS) },
                         onToggleFavorite = { song -> viewModel.toggleFavorite(song) },
@@ -174,6 +177,37 @@ fun MainScreen(
                         },
                         onSelectSortOrder = { order ->
                             viewModel.setSortOrder(order)
+                        }
+                    )
+                }
+                AppScreen.FOLDERS -> {
+                    FoldersScreen(
+                        playlists = playlists,
+                        allSongs = sortedSongs,
+                        wallpaperAlpha = settings.libraryWallpaperAlpha,
+                        onBack = { viewModel.navigateTo(AppScreen.LIBRARY) },
+                        onPlayPlaylist = { playlist ->
+                            if (playlist.songs.isNotEmpty()) {
+                                viewModel.playSong(playlist.songs.first(), playlist.songs)
+                            }
+                        },
+                        onSongSelectedFromPlaylist = { song, playlistSongs ->
+                            viewModel.playSong(song, playlistSongs)
+                        },
+                        onCreatePlaylist = { name, category, colorHex ->
+                            viewModel.createPlaylist(name, category, colorHex)
+                        },
+                        onDeletePlaylist = { playlistId ->
+                            viewModel.deletePlaylist(playlistId)
+                        },
+                        onAddSongsToPlaylist = { playlistId, songIds ->
+                            viewModel.addSongsToPlaylist(playlistId, songIds)
+                        },
+                        onRemoveSongFromPlaylist = { playlistId, songId ->
+                            viewModel.removeSongFromPlaylist(playlistId, songId)
+                        },
+                        onAutoOrganizeAi = { callback ->
+                            viewModel.autoOrganizeWithAiPresets(callback)
                         }
                     )
                 }

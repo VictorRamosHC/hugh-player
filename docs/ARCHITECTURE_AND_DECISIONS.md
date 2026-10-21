@@ -94,3 +94,16 @@ Na reunião inicial da diretoria, foram avaliados 4 pilares:
 * Nova Splash Screen cinematográfica com transição fade-out suave na inicialização.
 * Ícone de aplicativo em alta definição com suporte completo a Adaptive Icons do Android 8+.
 * Fallbacks de álbuns locais com gravura 1-bit dither.
+
+### v1.3.0 (Otimização de Scroll, Configurações e Ponte USB)
+* Otimização da rolagem da biblioteca (LazyColumn desacoplada).
+* Criação da tela de Configurações (`SettingsScreen.kt`).
+* Inclusão de filtros de ordenação (A-Z, Recentes, Tamanho, Mais Ouvidas, Favoritas).
+* Script inicial da ponte USB (`agent_vault_bridge.py`).
+
+### v1.4.0 (Resolução de Bugs de Áudio/Favoritos, Pastas e IA Validada)
+* **Eliminação de Congelamento na Toolbar (Bug 1):** Soft fade instantâneo no pause (250ms) e micro-dip de 100ms no skip. Bloco `finally` garante restauração incondicional do volume e execução de ações mesmo com múltiplos toques rápidos. Recalibração da rampa para 0.2s - 3.0s.
+* **Sincronização Reativa do Coração (Bug 2):** `currentPlayingSong` reativo via `combine` entre o player e a tabela Room de favoritos, sincronizando instantaneamente MiniPlayerBar e ExpandedPlayerSheet.
+* **Sistema de Pastas & Playlists:** Room `PlaylistEntity` e `PlaylistSongCrossRef` (banco v3), tela nativa `FoldersScreen.kt`, CRUD completo e diálogo de inserção múltipla.
+* **Curadoria IA Validada:** Algoritmo de classificação automática no app e no script desktop para as 4 pastas solicitadas por Hugh (Cristãs Cantado, Cristãs Playback, Dia a Dia, Áudios de Reuniões), testado e comprovado com as 303 faixas reais do manifesto.
+

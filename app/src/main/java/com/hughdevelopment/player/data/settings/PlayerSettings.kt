@@ -15,7 +15,7 @@ enum class SortOrder(val label: String) {
 
 data class SettingsState(
     val isFadeEnabled: Boolean = true,
-    val fadeDurationSeconds: Float = 8.0f,
+    val fadeDurationSeconds: Float = 0.8f,
     val sortOrder: SortOrder = SortOrder.DEFAULT,
     val libraryWallpaperAlpha: Float = 0.30f,
     val playerWallpaperAlpha: Float = 0.35f,
@@ -34,7 +34,7 @@ class SettingsManager(context: Context) {
 
     private fun loadSettings(): SettingsState {
         val fadeEnabled = prefs.getBoolean(KEY_FADE_ENABLED, true)
-        val fadeDuration = prefs.getFloat(KEY_FADE_DURATION, 8.0f)
+        val fadeDuration = prefs.getFloat(KEY_FADE_DURATION, 0.8f)
         val sortName = prefs.getString(KEY_SORT_ORDER, SortOrder.DEFAULT.name) ?: SortOrder.DEFAULT.name
         val sortOrder = try {
             SortOrder.valueOf(sortName)
@@ -61,7 +61,7 @@ class SettingsManager(context: Context) {
     }
 
     fun setFadeDuration(seconds: Float) {
-        val clamped = seconds.coerceIn(1.0f, 15.0f)
+        val clamped = seconds.coerceIn(0.2f, 3.0f)
         prefs.edit().putFloat(KEY_FADE_DURATION, clamped).apply()
         _settings.value = _settings.value.copy(fadeDurationSeconds = clamped)
     }

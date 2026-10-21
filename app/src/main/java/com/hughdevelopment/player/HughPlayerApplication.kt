@@ -31,7 +31,7 @@ class HughPlayerApplication : Application(), ImageLoaderFactory {
         database = PlayerDatabase.getInstance(this)
         settingsManager = SettingsManager.getInstance(this)
         val scanner = MediaStoreScanner(this)
-        repository = MusicRepository(scanner, database.statsDao())
+        repository = MusicRepository(scanner, database.statsDao(), database.playlistDao())
         agentDataManager = AgentDataManager(this, repository)
     }
 

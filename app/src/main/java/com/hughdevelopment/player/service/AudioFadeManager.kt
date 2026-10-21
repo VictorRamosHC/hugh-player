@@ -15,19 +15,21 @@ import kotlin.math.sin
  * 
  * Provides native logarithmic & sinusoidal volume ramping for fade-in, fade-out,
  * and track transitions without clipping or popping artifacts.
- * Configurable from 0s (disabled) up to 15s.
  */
 class AudioFadeManager(
     private val scope: CoroutineScope,
     private val player: Player
 ) {
     private var fadeJob: Job? = null
-    var defaultFadeDurationMs: Long = 8000L
+    var defaultFadeDurationMs: Long = 800L
 
+    /**
+     * Smoothly fades in volume from 0.0 to 1.0.
+     * Guaranteed: player.volume will always be 1.0f upon completion or cancellation.
+     */
     fun fadeIn(durationMs: Long = defaultFadeDurationMs, onComplete: (() -> Unit)? = null) {
         fadeJob?.cancel()
 
-        // Instant bypass if fade is disabled or duration is negligible
         if (durationMs <= 50L) {
             player.volume = 1.0f
             if (!player.isPlaying) {
@@ -38,77 +40,109 @@ class AudioFadeManager(
         }
 
         fadeJob = scope.launch(Dispatchers.Main) {
-            val steps = (durationMs / 80L).toInt().coerceIn(25, 100)
-            val stepDelay = (durationMs / steps).coerceAtLeast(15L)
-            player.volume = 0.0f
-            if (!player.isPlaying) {
-                player.play()
-            }
+            try {
+                player.volume = 0.0f
+                if (!player.isPlaying) {
+                    player.play()
+                }
 
-            for (i in 1..steps) {
-                if (!isActive) break
-                val progress = i.toFloat() / steps
-                // Smooth sinusoidal curve: y = sin(progress * PI / 2)
-                val curveVolume = sin(progress * (Math.PI / 2.0)).toFloat()
-                player.volume = curveVolume.coerceIn(0.0f, 1.0f)
-                delay(stepDelay)
+                val safeDuration = durationMs.coerceIn(100L, 2000L)
+                val steps = (safeDuration / 40L).toInt().coerceIn(8, 40)
+                val stepDelay = (safeDuration / steps).coerceAtLeast(10L)
+
+                for (i in 1..steps) {
+                    if (!isActive) break
+                    val progress = i.toFloat() / steps
+                    val curveVolume = sin(progress * (Math.PI / 2.0)).toFloat()
+                    player.volume = curveVolume.coerceIn(0.0f, 1.0f)
+                    delay(stepDelay)
+                }
+                player.volume = 1.0f
+                onComplete?.invoke()
+            } finally {
+                // Ensure volume is never left at zero or partial
+                player.volume = 1.0f
             }
-            player.volume = 1.0f
-            onComplete?.invoke()
         }
     }
 
-    fun fadeOut(durationMs: Long = defaultFadeDurationMs, onComplete: (() -> Unit)? = null) {
+    /**
+     * Snappy anti-pop fade out for Pause (max 250ms).
+     * Immediately pauses player and resets volume to 1.0f.
+     */
+    fun fadeOutAndPause(durationMs: Long = 250L) {
         fadeJob?.cancel()
 
-        // Instant bypass if fade is disabled
-        if (durationMs <= 50L) {
-            player.volume = 0.0f
-            onComplete?.invoke()
-            return
-        }
-
-        fadeJob = scope.launch(Dispatchers.Main) {
-            val steps = (durationMs / 80L).toInt().coerceIn(25, 100)
-            val stepDelay = (durationMs / steps).coerceAtLeast(15L)
-            val startingVolume = player.volume
-
-            for (i in 1..steps) {
-                if (!isActive) break
-                val progress = i.toFloat() / steps
-                // Cosine curve fading from 1.0 down to 0.0
-                val curveFactor = cos(progress * (Math.PI / 2.0)).toFloat()
-                player.volume = (startingVolume * curveFactor).coerceIn(0.0f, 1.0f)
-                delay(stepDelay)
-            }
-            player.volume = 0.0f
-            onComplete?.invoke()
-        }
-    }
-
-    fun fadeOutAndPause(durationMs: Long = defaultFadeDurationMs) {
-        if (durationMs <= 50L) {
+        val safeDuration = durationMs.coerceIn(50L, 300L)
+        if (safeDuration <= 50L) {
             player.pause()
             player.volume = 1.0f
             return
         }
-        fadeOut(durationMs) {
-            player.pause()
-            player.volume = 1.0f // Reset for subsequent playback
+
+        fadeJob = scope.launch(Dispatchers.Main) {
+            try {
+                val startingVolume = player.volume.coerceAtLeast(0.1f)
+                val steps = (safeDuration / 30L).toInt().coerceIn(6, 15)
+                val stepDelay = (safeDuration / steps).coerceAtLeast(10L)
+
+                for (i in 1..steps) {
+                    if (!isActive) break
+                    val progress = i.toFloat() / steps
+                    val curveFactor = cos(progress * (Math.PI / 2.0)).toFloat()
+                    player.volume = (startingVolume * curveFactor).coerceIn(0.0f, 1.0f)
+                    delay(stepDelay)
+                }
+                player.pause()
+                player.volume = 1.0f
+            } finally {
+                player.pause()
+                player.volume = 1.0f
+            }
         }
     }
 
+    /**
+     * Smooth track transition: quick 100ms fade-out dip, executes track switch action, then fades in.
+     * Guaranteed: action() will ALWAYS execute even if cancelled or rapid clicks occur!
+     */
     fun fadeOutAndAction(durationMs: Long = defaultFadeDurationMs, action: () -> Unit) {
+        fadeJob?.cancel()
+
         if (durationMs <= 50L) {
             action()
+            player.volume = 1.0f
             fadeIn(0L)
             return
         }
-        // For track transitions, half-fade out and then fade back in
-        val transitionDuration = (durationMs / 2).coerceAtLeast(100L)
-        fadeOut(transitionDuration) {
-            action()
-            fadeIn(transitionDuration)
+
+        val fadeInDuration = durationMs.coerceIn(150L, 1000L)
+
+        fadeJob = scope.launch(Dispatchers.Main) {
+            var actionExecuted = false
+            try {
+                val startingVolume = player.volume.coerceAtLeast(0.1f)
+                val steps = 5
+                val stepDelay = 20L // Total 100ms dip
+
+                for (i in 1..steps) {
+                    if (!isActive) break
+                    val progress = i.toFloat() / steps
+                    val curveFactor = cos(progress * (Math.PI / 2.0)).toFloat()
+                    player.volume = (startingVolume * curveFactor).coerceIn(0.0f, 1.0f)
+                    delay(stepDelay)
+                }
+                action()
+                actionExecuted = true
+                fadeIn(fadeInDuration)
+            } finally {
+                if (!actionExecuted) {
+                    action()
+                }
+                if (!isActive) {
+                    player.volume = 1.0f
+                }
+            }
         }
     }
 }
