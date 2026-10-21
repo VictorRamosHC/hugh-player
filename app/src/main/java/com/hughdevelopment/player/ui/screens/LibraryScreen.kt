@@ -4,6 +4,7 @@ import androidx.compose.foundation.Image
 import androidx.compose.foundation.background
 import androidx.compose.foundation.border
 import androidx.compose.foundation.clickable
+import androidx.compose.foundation.horizontalScroll
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
@@ -18,6 +19,7 @@ import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.layout.width
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.itemsIndexed
+import androidx.compose.foundation.rememberScrollState
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.BarChart
@@ -26,6 +28,7 @@ import androidx.compose.material.icons.filled.FavoriteBorder
 import androidx.compose.material.icons.filled.GraphicEq
 import androidx.compose.material.icons.filled.Refresh
 import androidx.compose.material.icons.filled.Search
+import androidx.compose.material.icons.filled.Settings
 import androidx.compose.material.icons.filled.Shuffle
 import androidx.compose.material3.CircularProgressIndicator
 import androidx.compose.material3.Icon
@@ -51,6 +54,7 @@ import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import com.hughdevelopment.player.R
 import com.hughdevelopment.player.data.model.Song
+import com.hughdevelopment.player.data.settings.SortOrder
 import com.hughdevelopment.player.ui.components.ArtworkImage
 import com.hughdevelopment.player.ui.components.CybersigilBackground
 import com.hughdevelopment.player.ui.theme.CharcoalSurface
@@ -68,14 +72,19 @@ fun LibraryScreen(
     currentPlayingSong: Song?,
     isPlaying: Boolean,
     isLoading: Boolean,
+    sortOrder: SortOrder,
+    wallpaperAlpha: Float,
     onSongSelected: (Song, List<Song>) -> Unit,
     onRefresh: () -> Unit,
     onOpenDashboard: () -> Unit,
+    onOpenSettings: () -> Unit,
     onToggleFavorite: (Song) -> Unit,
     onShuffleAll: () -> Unit,
+    onSelectSortOrder: (SortOrder) -> Unit,
     modifier: Modifier = Modifier
 ) {
     var searchQuery by remember { mutableStateOf("") }
+    val sortScrollState = rememberScrollState()
 
     val filteredSongs = remember(songs, searchQuery) {
         if (searchQuery.isBlank()) songs
@@ -94,14 +103,14 @@ fun LibraryScreen(
             .fillMaxSize()
             .background(VoidBlack)
     ) {
-        // High-contrast neoclassical atmosphere backdrop
+        // High-contrast neoclassical atmosphere backdrop with dynamic opacity
         Image(
             painter = painterResource(id = R.drawable.bg_library),
             contentDescription = null,
             contentScale = ContentScale.Crop,
             modifier = Modifier
                 .fillMaxSize()
-                .alpha(0.30f)
+                .alpha(wallpaperAlpha)
         )
 
         // Procedural wireframe overlay
@@ -154,6 +163,15 @@ fun LibraryScreen(
                     )
                 }
 
+                // Settings Action
+                IconButton(onClick = onOpenSettings) {
+                    Icon(
+                        imageVector = Icons.Default.Settings,
+                        contentDescription = "Configurações",
+                        tint = SigilWhite
+                    )
+                }
+
                 // Rescan Storage Action
                 IconButton(onClick = onRefresh) {
                     Icon(
@@ -198,7 +216,43 @@ fun LibraryScreen(
                 singleLine = true
             )
 
-            Spacer(modifier = Modifier.height(10.dp))
+            Spacer(modifier = Modifier.height(8.dp))
+
+            // Sort Filter Chips Row (Recent, Size, Most Played, Favorites, A-Z)
+            Row(
+                modifier = Modifier
+                    .fillMaxWidth()
+                    .horizontalScroll(sortScrollState),
+                horizontalArrangement = Arrangement.spacedBy(6.dp)
+            ) {
+                SortChip(
+                    label = "A-Z",
+                    isSelected = sortOrder == SortOrder.DEFAULT,
+                    onClick = { onSelectSortOrder(SortOrder.DEFAULT) }
+                )
+                SortChip(
+                    label = "⚡ RECENTES",
+                    isSelected = sortOrder == SortOrder.DATE_ADDED_DESC,
+                    onClick = { onSelectSortOrder(SortOrder.DATE_ADDED_DESC) }
+                )
+                SortChip(
+                    label = "💾 MAIORES (MB)",
+                    isSelected = sortOrder == SortOrder.SIZE_DESC,
+                    onClick = { onSelectSortOrder(SortOrder.SIZE_DESC) }
+                )
+                SortChip(
+                    label = "🎧 MAIS OUVIDAS",
+                    isSelected = sortOrder == SortOrder.MOST_PLAYED,
+                    onClick = { onSelectSortOrder(SortOrder.MOST_PLAYED) }
+                )
+                SortChip(
+                    label = "⭐ FAVORITAS",
+                    isSelected = sortOrder == SortOrder.FAVORITES_FIRST,
+                    onClick = { onSelectSortOrder(SortOrder.FAVORITES_FIRST) }
+                )
+            }
+
+            Spacer(modifier = Modifier.height(8.dp))
 
             // Songs List
             if (isLoading) {
@@ -223,11 +277,12 @@ fun LibraryScreen(
             } else {
                 LazyColumn(
                     modifier = Modifier.fillMaxSize(),
-                    contentPadding = PaddingValues(bottom = 100.dp) // Space for mini-player
+                    contentPadding = PaddingValues(bottom = 110.dp) // Space for mini-player
                 ) {
                     itemsIndexed(
                         items = filteredSongs,
-                        key = { _, song -> song.id }
+                        key = { _, song -> song.id },
+                        contentType = { _, _ -> "song_row" }
                     ) { _, song ->
                         val isSelected = song.id == currentPlayingSong?.id
 
@@ -242,6 +297,35 @@ fun LibraryScreen(
                 }
             }
         }
+    }
+}
+
+@Composable
+private fun SortChip(
+    label: String,
+    isSelected: Boolean,
+    onClick: () -> Unit
+) {
+    Box(
+        modifier = Modifier
+            .clip(RoundedCornerShape(4.dp))
+            .background(if (isSelected) CyberAmber else CharcoalSurface)
+            .border(
+                width = 1.dp,
+                color = if (isSelected) CyberAmber else WireframeBorder,
+                shape = RoundedCornerShape(4.dp)
+            )
+            .clickable { onClick() }
+            .padding(horizontal = 9.dp, vertical = 5.dp)
+    ) {
+        Text(
+            text = label,
+            color = if (isSelected) VoidBlack else SigilSilver,
+            fontSize = 10.5.sp,
+            fontWeight = if (isSelected) FontWeight.Bold else FontWeight.Medium,
+            fontFamily = FontFamily.Monospace,
+            letterSpacing = 0.5.sp
+        )
     }
 }
 
@@ -268,12 +352,13 @@ private fun SongRowItem(
             .padding(8.dp),
         verticalAlignment = Alignment.CenterVertically
     ) {
-        // Thumbnail with reliable Neoclassical Statue fallback
+        // Thumbnail with reliable Neoclassical Statue fallback and cached failure protection
         ArtworkImage(
             artworkUri = song.albumArtUri,
             modifier = Modifier.size(44.dp),
             cornerRadius = 6.dp,
-            accentColor = if (isSelected) CyberAmber else HermeticCyan
+            accentColor = if (isSelected) CyberAmber else HermeticCyan,
+            targetDimensionPx = 120
         )
 
         Spacer(modifier = Modifier.width(10.dp))
@@ -289,8 +374,9 @@ private fun SongRowItem(
                 maxLines = 1,
                 overflow = TextOverflow.Ellipsis
             )
+            val sizeMb = "%.1f MB".format(song.sizeBytes.toFloat() / (1024f * 1024f))
             Text(
-                text = "${song.artist} • ${song.formattedDuration}",
+                text = "${song.artist} • ${song.formattedDuration} • $sizeMb",
                 color = MutedStone,
                 fontSize = 11.sp,
                 fontFamily = FontFamily.Monospace,

@@ -29,6 +29,11 @@ class MusicPlayerController(
     private var mediaController: MediaController? = null
     private var fadeManager: AudioFadeManager? = null
 
+    var isFadeEnabled: Boolean = true
+    var fadeDurationMs: Long = 8000L
+
+    private fun getEffectiveFadeDuration(): Long = if (isFadeEnabled) fadeDurationMs else 0L
+
     private val _currentSong = MutableStateFlow<Song?>(null)
     val currentSong = _currentSong.asStateFlow()
 
@@ -142,23 +147,31 @@ class MusicPlayerController(
 
         controller.setMediaItems(mediaItems, targetIndex, 0L)
         controller.prepare()
-        fadeManager?.fadeIn(350L) ?: controller.play()
+        fadeManager?.fadeIn(getEffectiveFadeDuration()) ?: controller.play()
     }
 
     fun togglePlayPauseWithFade() {
         val controller = mediaController ?: return
+        val fadeDur = getEffectiveFadeDuration()
         if (controller.isPlaying) {
             flushAccumulatedListenStats()
-            fadeManager?.fadeOutAndPause(300L) ?: controller.pause()
+            fadeManager?.fadeOutAndPause(fadeDur) ?: controller.pause()
         } else {
-            fadeManager?.fadeIn(300L) ?: controller.play()
+            fadeManager?.fadeIn(fadeDur) ?: controller.play()
         }
     }
 
     fun skipNextWithFade() {
         val controller = mediaController ?: return
         flushAccumulatedListenStats()
-        fadeManager?.fadeOutAndAction(250L) {
+        val fadeDur = getEffectiveFadeDuration()
+        fadeManager?.fadeOutAndAction(fadeDur) {
+            if (controller.hasNextMediaItem()) {
+                controller.seekToNextMediaItem()
+            } else {
+                controller.seekTo(0, 0L)
+            }
+        } ?: run {
             if (controller.hasNextMediaItem()) {
                 controller.seekToNextMediaItem()
             } else {
@@ -170,7 +183,14 @@ class MusicPlayerController(
     fun skipPreviousWithFade() {
         val controller = mediaController ?: return
         flushAccumulatedListenStats()
-        fadeManager?.fadeOutAndAction(250L) {
+        val fadeDur = getEffectiveFadeDuration()
+        fadeManager?.fadeOutAndAction(fadeDur) {
+            if (controller.currentPosition > 3000L || !controller.hasPreviousMediaItem()) {
+                controller.seekTo(0L)
+            } else {
+                controller.seekToPreviousMediaItem()
+            }
+        } ?: run {
             if (controller.currentPosition > 3000L || !controller.hasPreviousMediaItem()) {
                 controller.seekTo(0L)
             } else {

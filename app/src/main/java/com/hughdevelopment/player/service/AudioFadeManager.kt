@@ -15,19 +15,31 @@ import kotlin.math.sin
  * 
  * Provides native logarithmic & sinusoidal volume ramping for fade-in, fade-out,
  * and track transitions without clipping or popping artifacts.
+ * Configurable from 0s (disabled) up to 15s.
  */
 class AudioFadeManager(
     private val scope: CoroutineScope,
     private val player: Player
 ) {
     private var fadeJob: Job? = null
-    var defaultFadeDurationMs: Long = 400L
+    var defaultFadeDurationMs: Long = 8000L
 
     fun fadeIn(durationMs: Long = defaultFadeDurationMs, onComplete: (() -> Unit)? = null) {
         fadeJob?.cancel()
+
+        // Instant bypass if fade is disabled or duration is negligible
+        if (durationMs <= 50L) {
+            player.volume = 1.0f
+            if (!player.isPlaying) {
+                player.play()
+            }
+            onComplete?.invoke()
+            return
+        }
+
         fadeJob = scope.launch(Dispatchers.Main) {
-            val steps = 25
-            val stepDelay = (durationMs / steps).coerceAtLeast(10L)
+            val steps = (durationMs / 80L).toInt().coerceIn(25, 100)
+            val stepDelay = (durationMs / steps).coerceAtLeast(15L)
             player.volume = 0.0f
             if (!player.isPlaying) {
                 player.play()
@@ -48,9 +60,17 @@ class AudioFadeManager(
 
     fun fadeOut(durationMs: Long = defaultFadeDurationMs, onComplete: (() -> Unit)? = null) {
         fadeJob?.cancel()
+
+        // Instant bypass if fade is disabled
+        if (durationMs <= 50L) {
+            player.volume = 0.0f
+            onComplete?.invoke()
+            return
+        }
+
         fadeJob = scope.launch(Dispatchers.Main) {
-            val steps = 25
-            val stepDelay = (durationMs / steps).coerceAtLeast(10L)
+            val steps = (durationMs / 80L).toInt().coerceIn(25, 100)
+            val stepDelay = (durationMs / steps).coerceAtLeast(15L)
             val startingVolume = player.volume
 
             for (i in 1..steps) {
@@ -67,6 +87,11 @@ class AudioFadeManager(
     }
 
     fun fadeOutAndPause(durationMs: Long = defaultFadeDurationMs) {
+        if (durationMs <= 50L) {
+            player.pause()
+            player.volume = 1.0f
+            return
+        }
         fadeOut(durationMs) {
             player.pause()
             player.volume = 1.0f // Reset for subsequent playback
@@ -74,9 +99,16 @@ class AudioFadeManager(
     }
 
     fun fadeOutAndAction(durationMs: Long = defaultFadeDurationMs, action: () -> Unit) {
-        fadeOut(durationMs) {
+        if (durationMs <= 50L) {
             action()
-            fadeIn(durationMs)
+            fadeIn(0L)
+            return
+        }
+        // For track transitions, half-fade out and then fade back in
+        val transitionDuration = (durationMs / 2).coerceAtLeast(100L)
+        fadeOut(transitionDuration) {
+            action()
+            fadeIn(transitionDuration)
         }
     }
 }

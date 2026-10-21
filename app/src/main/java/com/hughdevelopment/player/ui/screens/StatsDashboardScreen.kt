@@ -23,6 +23,9 @@ import androidx.compose.material.icons.filled.ArrowBack
 import androidx.compose.material.icons.filled.ElectricBolt
 import androidx.compose.material.icons.filled.Favorite
 import androidx.compose.material.icons.filled.Headphones
+import androidx.compose.material.icons.filled.MilitaryTech
+import androidx.compose.material.icons.filled.Security
+import androidx.compose.material.icons.filled.Sync
 import androidx.compose.material.icons.filled.Timelapse
 import androidx.compose.material3.Icon
 import androidx.compose.material3.IconButton
@@ -117,7 +120,12 @@ fun StatsDashboardScreen(
                 }
             }
 
-            Spacer(modifier = Modifier.height(16.dp))
+            Spacer(modifier = Modifier.height(12.dp))
+
+            // GAMIFICATION: Vault Rank & XP Card
+            VaultLevelCard(overview = overview)
+
+            Spacer(modifier = Modifier.height(12.dp))
 
             // 4 Grid Metric Cards (2x2)
             Row(
@@ -162,7 +170,12 @@ fun StatsDashboardScreen(
                 )
             }
 
-            Spacer(modifier = Modifier.height(24.dp))
+            Spacer(modifier = Modifier.height(14.dp))
+
+            // Sigils / Achievements Badges Row
+            SigilsBadgesRow(overview = overview)
+
+            Spacer(modifier = Modifier.height(16.dp))
 
             Text(
                 text = "TOP FAIXAS MAIS TOCADAS",
@@ -173,13 +186,13 @@ fun StatsDashboardScreen(
                 letterSpacing = 1.sp
             )
 
-            Spacer(modifier = Modifier.height(10.dp))
+            Spacer(modifier = Modifier.height(8.dp))
 
             if (overview.topSongs.isEmpty()) {
                 Box(
                     modifier = Modifier
                         .fillMaxWidth()
-                        .height(180.dp)
+                        .height(140.dp)
                         .clip(RoundedCornerShape(10.dp))
                         .background(CharcoalSurface)
                         .border(1.dp, WireframeBorder, RoundedCornerShape(10.dp))
@@ -220,6 +233,128 @@ fun StatsDashboardScreen(
                     }
                 }
             }
+        }
+    }
+}
+
+@Composable
+private fun VaultLevelCard(overview: ListeningOverview) {
+    val xp = (overview.totalMinutesListened * 10) + (overview.totalSongsPlayed * 5) + (overview.favoriteCount * 25)
+    val (rankTitle, nextThreshold, currentLevel) = when {
+        xp < 300 -> Triple("NEOPHYTE OF THE VAULT", 300, 1)
+        xp < 1000 -> Triple("ACOLYTE OF SOUND", 1000, 2)
+        xp < 3000 -> Triple("HERMETIC ALCHEMIST", 3000, 3)
+        else -> Triple("ARCHON OF THE CORE", 5000, 4)
+    }
+    val progress = (xp.toFloat() / nextThreshold.toFloat()).coerceIn(0.05f, 1.0f)
+
+    Box(
+        modifier = Modifier
+            .fillMaxWidth()
+            .clip(RoundedCornerShape(10.dp))
+            .background(CharcoalSurface)
+            .border(1.5.dp, CyberAmber.copy(alpha = 0.8f), RoundedCornerShape(10.dp))
+            .padding(12.dp)
+    ) {
+        Column {
+            Row(
+                modifier = Modifier.fillMaxWidth(),
+                horizontalArrangement = Arrangement.SpaceBetween,
+                verticalAlignment = Alignment.CenterVertically
+            ) {
+                Row(verticalAlignment = Alignment.CenterVertically) {
+                    Icon(
+                        imageVector = Icons.Default.MilitaryTech,
+                        contentDescription = null,
+                        tint = CyberAmber,
+                        modifier = Modifier.size(20.dp)
+                    )
+                    Spacer(modifier = Modifier.width(6.dp))
+                    Text(
+                        text = "LVL $currentLevel • $rankTitle",
+                        color = CyberAmber,
+                        fontSize = 12.sp,
+                        fontWeight = FontWeight.Bold,
+                        fontFamily = FontFamily.Monospace,
+                        letterSpacing = 1.sp
+                    )
+                }
+
+                Text(
+                    text = "$xp / $nextThreshold XP",
+                    color = HermeticCyan,
+                    fontSize = 11.sp,
+                    fontFamily = FontFamily.Monospace,
+                    fontWeight = FontWeight.SemiBold
+                )
+            }
+
+            Spacer(modifier = Modifier.height(8.dp))
+
+            LinearProgressIndicator(
+                progress = { progress },
+                modifier = Modifier
+                    .fillMaxWidth()
+                    .height(4.dp),
+                color = CyberAmber,
+                trackColor = WireframeBorder
+            )
+        }
+    }
+}
+
+@Composable
+private fun SigilsBadgesRow(overview: ListeningOverview) {
+    val hasOverclocker = overview.totalMinutesListened >= 30
+    val hasDevotee = overview.favoriteCount >= 3
+    val hasLoop = overview.topSongs.any { it.playCount >= 5 }
+    val hasPurist = overview.uniqueTracksListened >= 5
+
+    Row(
+        modifier = Modifier.fillMaxWidth(),
+        horizontalArrangement = Arrangement.spacedBy(6.dp)
+    ) {
+        SigilBadgeItem("OVERCLOCK", hasOverclocker, Icons.Default.ElectricBolt, Modifier.weight(1f))
+        SigilBadgeItem("DEVOTEE", hasDevotee, Icons.Default.Favorite, Modifier.weight(1f))
+        SigilBadgeItem("LOOP", hasLoop, Icons.Default.Sync, Modifier.weight(1f))
+        SigilBadgeItem("PURIST", hasPurist, Icons.Default.Security, Modifier.weight(1f))
+    }
+}
+
+@Composable
+private fun SigilBadgeItem(
+    title: String,
+    isUnlocked: Boolean,
+    icon: ImageVector,
+    modifier: Modifier = Modifier
+) {
+    Box(
+        modifier = modifier
+            .clip(RoundedCornerShape(6.dp))
+            .background(if (isUnlocked) CharcoalSurface else VoidBlack.copy(alpha = 0.5f))
+            .border(
+                1.dp,
+                if (isUnlocked) CyberAmber else WireframeBorder.copy(alpha = 0.3f),
+                RoundedCornerShape(6.dp)
+            )
+            .padding(vertical = 6.dp),
+        contentAlignment = Alignment.Center
+    ) {
+        Column(horizontalAlignment = Alignment.CenterHorizontally) {
+            Icon(
+                imageVector = icon,
+                contentDescription = null,
+                tint = if (isUnlocked) CyberAmber else MutedStone.copy(alpha = 0.4f),
+                modifier = Modifier.size(16.dp)
+            )
+            Spacer(modifier = Modifier.height(2.dp))
+            Text(
+                text = title,
+                color = if (isUnlocked) SigilWhite else MutedStone.copy(alpha = 0.4f),
+                fontSize = 9.sp,
+                fontWeight = FontWeight.Bold,
+                fontFamily = FontFamily.Monospace
+            )
         }
     }
 }

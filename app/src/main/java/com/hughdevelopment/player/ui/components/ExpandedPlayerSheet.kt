@@ -74,6 +74,8 @@ fun ExpandedPlayerSheet(
     durationMs: Long,
     isShuffleEnabled: Boolean,
     repeatMode: Int,
+    wallpaperAlpha: Float = 0.35f,
+    isFadeActive: Boolean = true,
     onDismiss: () -> Unit,
     onTogglePlayPause: () -> Unit,
     onSkipNext: () -> Unit,
@@ -103,14 +105,14 @@ fun ExpandedPlayerSheet(
         Box(
             modifier = Modifier.fillMaxSize()
         ) {
-            // Klein Blue and Neoclassical Moiré Ambient Backdrop
+            // Klein Blue and Neoclassical Moiré Ambient Backdrop with dynamic opacity
             Image(
                 painter = painterResource(id = R.drawable.bg_expanded_player),
                 contentDescription = null,
                 contentScale = ContentScale.Crop,
                 modifier = Modifier
                     .fillMaxSize()
-                    .alpha(0.35f)
+                    .alpha(wallpaperAlpha)
             )
 
             // Procedural halo and wireframes
@@ -146,7 +148,7 @@ fun ExpandedPlayerSheet(
                             .padding(horizontal = 10.dp, vertical = 5.dp)
                     ) {
                         Text(
-                            text = "HUGH // 0x01 CORE • FADE ACTIVE",
+                            text = if (isFadeActive) "HUGH // 0x01 CORE • FADE ACTIVE" else "HUGH // 0x01 CORE • RAW CUT",
                             color = CyberAmber,
                             fontSize = 10.sp,
                             fontFamily = FontFamily.Monospace,
@@ -180,7 +182,8 @@ fun ExpandedPlayerSheet(
                         artworkUri = song.albumArtUri,
                         modifier = Modifier.fillMaxSize(),
                         cornerRadius = 18.dp,
-                        accentColor = CyberAmber
+                        accentColor = CyberAmber,
+                        targetDimensionPx = 480
                     )
 
                     // Overlay HUD Coordinate Tag

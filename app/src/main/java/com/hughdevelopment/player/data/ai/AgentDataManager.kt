@@ -1,6 +1,8 @@
 package com.hughdevelopment.player.data.ai
 
 import android.content.Context
+import android.media.MediaScannerConnection
+import android.os.Environment
 import com.hughdevelopment.player.data.model.Song
 import com.hughdevelopment.player.data.repository.MusicRepository
 import kotlinx.coroutines.Dispatchers
@@ -36,15 +38,35 @@ class AgentDataManager(
                 put("artist", song.artist)
                 put("album", song.album)
                 put("duration_sec", song.durationMs / 1000)
+                put("size_bytes", song.sizeBytes)
+                put("date_added", song.dateAdded)
+                put("is_favorite", song.isFavorite)
                 put("path", song.dataPath)
                 put("parent_dir", File(song.dataPath).parentFile?.name ?: "Unknown")
             }
             songsArray.put(item)
         }
 
+        root.put("vault_version", "1.3.0")
         root.put("total_songs", songs.size)
+        root.put("timestamp", System.currentTimeMillis())
         root.put("library", songsArray)
         root.toString(2)
+    }
+
+    /**
+     * Tool: Exports manifest JSON directly to Downloads directory
+     * so desktop USB agents (Atom, Codex, Hermes) can pull it via ADB or MTP.
+     */
+    suspend fun exportManifestToFile(context: Context): String = withContext(Dispatchers.IO) {
+        val json = getLibraryContextForAgent()
+        val downloadDir = Environment.getExternalStoragePublicDirectory(Environment.DIRECTORY_DOWNLOADS)
+        if (!downloadDir.exists()) {
+            downloadDir.mkdirs()
+        }
+        val file = File(downloadDir, "hugh_vault_ai_manifest.json")
+        file.writeText(json)
+        file.absolutePath
     }
 
     /**
@@ -63,6 +85,13 @@ class AgentDataManager(
         }
 
         folderMap
+    }
+
+    /**
+     * Tool: Triggers system media scanner across a folder or path after desktop AI modifies files.
+     */
+    fun triggerMediaRescan(context: Context, path: String) {
+        MediaScannerConnection.scanFile(context, arrayOf(path), null, null)
     }
 
     /**

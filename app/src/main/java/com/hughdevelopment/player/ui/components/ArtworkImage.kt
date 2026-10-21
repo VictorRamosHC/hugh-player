@@ -19,36 +19,58 @@ import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.unit.Dp
 import androidx.compose.ui.unit.dp
 import coil.compose.AsyncImage
+import coil.request.CachePolicy
 import coil.request.ImageRequest
+import coil.size.Precision
+import coil.size.Scale
+import coil.size.Size
 import com.hughdevelopment.player.R
 import com.hughdevelopment.player.ui.theme.CyberAmber
+import java.util.Collections
+
+object ArtworkCacheRegistry {
+    // In-memory set of URIs that failed loading (e.g. invalid MediaStore albumart IDs)
+    // Synchronized to prevent concurrent modification during fast fling scrolling
+    val failedUris: MutableSet<Uri> = Collections.synchronizedSet(HashSet<Uri>())
+}
 
 @Composable
 fun ArtworkImage(
     artworkUri: Uri?,
     modifier: Modifier = Modifier,
     cornerRadius: Dp = 8.dp,
-    accentColor: Color = CyberAmber
+    accentColor: Color = CyberAmber,
+    targetDimensionPx: Int = 128
 ) {
-    var isLoadFailed by remember(artworkUri) { mutableStateOf(artworkUri == null) }
+    val isKnownFailed = artworkUri == null || ArtworkCacheRegistry.failedUris.contains(artworkUri)
+    var isLoadFailed by remember(artworkUri) { mutableStateOf(isKnownFailed) }
 
     Box(modifier = modifier.clip(RoundedCornerShape(cornerRadius))) {
         if (!isLoadFailed && artworkUri != null) {
             val context = LocalContext.current
             AsyncImage(
-                model = remember(artworkUri) {
+                model = remember(artworkUri, targetDimensionPx) {
                     ImageRequest.Builder(context)
                         .data(artworkUri)
+                        .size(Size(targetDimensionPx, targetDimensionPx))
+                        .precision(Precision.INEXACT)
+                        .scale(Scale.FILL)
+                        .allowHardware(true)
+                        .memoryCachePolicy(CachePolicy.ENABLED)
+                        .diskCachePolicy(CachePolicy.ENABLED)
                         .crossfade(false)
                         .build()
                 },
                 contentDescription = "Capa do Álbum",
                 contentScale = ContentScale.Crop,
-                onError = { isLoadFailed = true },
+                onError = {
+                    ArtworkCacheRegistry.failedUris.add(artworkUri)
+                    isLoadFailed = true
+                },
                 modifier = Modifier.fillMaxSize()
             )
         } else {
-            // High-contrast neoclassical dithered bust fallback
+            // High-contrast neoclassical dithered bust fallback (Rendered instantly from optimized resource)
             Image(
                 painter = painterResource(id = R.drawable.placeholder_statue),
                 contentDescription = "Placeholder Neoclássico",

@@ -31,6 +31,7 @@ import com.hughdevelopment.player.ui.components.ExpandedPlayerSheet
 import com.hughdevelopment.player.ui.components.MiniPlayerBar
 import com.hughdevelopment.player.ui.components.SplashScreenView
 import com.hughdevelopment.player.ui.screens.LibraryScreen
+import com.hughdevelopment.player.ui.screens.SettingsScreen
 import com.hughdevelopment.player.ui.screens.StatsDashboardScreen
 import com.hughdevelopment.player.ui.theme.HughPlayerTheme
 import com.hughdevelopment.player.ui.theme.VoidBlack
@@ -41,6 +42,7 @@ import kotlinx.coroutines.delay
 class MainActivity : ComponentActivity() {
 
     private val viewModel: MusicViewModel by viewModels()
+    private val isPermissionsSettled = mutableStateOf(false)
 
     private val permissionLauncher = registerForActivityResult(
         ActivityResultContracts.RequestMultiplePermissions()
@@ -50,6 +52,8 @@ class MainActivity : ComponentActivity() {
         } else {
             permissions[Manifest.permission.READ_EXTERNAL_STORAGE] == true
         }
+
+        isPermissionsSettled.value = true
 
         if (audioGranted) {
             viewModel.loadLocalMusic()
@@ -63,7 +67,13 @@ class MainActivity : ComponentActivity() {
 
         setContent {
             HughPlayerTheme {
-                MainScreen(viewModel = viewModel)
+                MainScreen(
+                    viewModel = viewModel,
+                    isPermissionsSettled = isPermissionsSettled.value,
+                    onExportAiManifest = { callback ->
+                        viewModel.exportAiManifest(this@MainActivity, callback)
+                    }
+                )
             }
         }
     }
@@ -93,14 +103,19 @@ class MainActivity : ComponentActivity() {
         if (permissionsToRequest.isNotEmpty()) {
             permissionLauncher.launch(permissionsToRequest.toTypedArray())
         } else {
+            isPermissionsSettled.value = true
             viewModel.loadLocalMusic()
         }
     }
 }
 
 @Composable
-fun MainScreen(viewModel: MusicViewModel) {
-    val songs by viewModel.songs.collectAsState()
+fun MainScreen(
+    viewModel: MusicViewModel,
+    isPermissionsSettled: Boolean,
+    onExportAiManifest: (((String) -> Unit)) -> Unit
+) {
+    val sortedSongs by viewModel.sortedSongs.collectAsState()
     val isLoading by viewModel.isLoading.collectAsState()
     val currentSong by viewModel.currentPlayingSong.collectAsState()
     val isPlaying by viewModel.isPlaying.collectAsState()
@@ -111,12 +126,16 @@ fun MainScreen(viewModel: MusicViewModel) {
     val overview by viewModel.listeningOverview.collectAsState()
     val isExpandedOpen by viewModel.isExpandedPlayerOpen.collectAsState()
     val currentScreen by viewModel.currentScreen.collectAsState()
+    val settings by viewModel.settings.collectAsState()
 
     var showSplash by remember { mutableStateOf(true) }
 
-    LaunchedEffect(Unit) {
-        delay(1600)
-        showSplash = false
+    // Start splash timer only after permissions are settled so user always sees the boot screen
+    LaunchedEffect(isPermissionsSettled) {
+        if (isPermissionsSettled) {
+            delay(2800)
+            showSplash = false
+        }
     }
 
     val progress = if (durationMs > 0) {
@@ -134,21 +153,27 @@ fun MainScreen(viewModel: MusicViewModel) {
             when (screen) {
                 AppScreen.LIBRARY -> {
                     LibraryScreen(
-                        songs = songs,
+                        songs = sortedSongs,
                         currentPlayingSong = currentSong,
                         isPlaying = isPlaying,
                         isLoading = isLoading,
+                        sortOrder = settings.sortOrder,
+                        wallpaperAlpha = settings.libraryWallpaperAlpha,
                         onSongSelected = { song, playlist ->
                             viewModel.playSong(song, playlist)
                         },
                         onRefresh = { viewModel.loadLocalMusic() },
                         onOpenDashboard = { viewModel.navigateTo(AppScreen.STATS_DASHBOARD) },
+                        onOpenSettings = { viewModel.navigateTo(AppScreen.SETTINGS) },
                         onToggleFavorite = { song -> viewModel.toggleFavorite(song) },
                         onShuffleAll = {
-                            if (songs.isNotEmpty()) {
-                                val shuffled = songs.shuffled()
+                            if (sortedSongs.isNotEmpty()) {
+                                val shuffled = sortedSongs.shuffled()
                                 viewModel.playSong(shuffled.first(), shuffled)
                             }
+                        },
+                        onSelectSortOrder = { order ->
+                            viewModel.setSortOrder(order)
                         }
                     )
                 }
@@ -156,6 +181,17 @@ fun MainScreen(viewModel: MusicViewModel) {
                     StatsDashboardScreen(
                         overview = overview,
                         onBack = { viewModel.navigateTo(AppScreen.LIBRARY) }
+                    )
+                }
+                AppScreen.SETTINGS -> {
+                    SettingsScreen(
+                        settings = settings,
+                        onBack = { viewModel.navigateTo(AppScreen.LIBRARY) },
+                        onToggleFade = { viewModel.setFadeEnabled(it) },
+                        onChangeFadeDuration = { viewModel.setFadeDuration(it) },
+                        onChangeLibraryAlpha = { viewModel.setLibraryWallpaperAlpha(it) },
+                        onChangePlayerAlpha = { viewModel.setPlayerWallpaperAlpha(it) },
+                        onExportAiManifest = onExportAiManifest
                     )
                 }
             }
@@ -185,6 +221,8 @@ fun MainScreen(viewModel: MusicViewModel) {
                 durationMs = durationMs,
                 isShuffleEnabled = isShuffleEnabled,
                 repeatMode = repeatMode,
+                wallpaperAlpha = settings.playerWallpaperAlpha,
+                isFadeActive = settings.isFadeEnabled,
                 onDismiss = { viewModel.setExpandedPlayerOpen(false) },
                 onTogglePlayPause = { viewModel.togglePlayPause() },
                 onSkipNext = { viewModel.skipNext() },
@@ -196,12 +234,12 @@ fun MainScreen(viewModel: MusicViewModel) {
             )
         }
 
-        // Cinematic Splash Screen overlay with smooth fade out
+        // Cinematic Splash Screen overlay with interactive tap and smooth fade out
         AnimatedVisibility(
             visible = showSplash,
             exit = fadeOut(animationSpec = tween(500))
         ) {
-            SplashScreenView()
+            SplashScreenView(onDismiss = { showSplash = false })
         }
     }
 }
