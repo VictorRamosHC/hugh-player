@@ -12,7 +12,8 @@ data class Song(
     val albumArtUri: Uri?,
     val dataPath: String,
     val sizeBytes: Long,
-    val dateAdded: Long
+    val dateAdded: Long,
+    val isFavorite: Boolean = false
 ) {
     val formattedDuration: String
         get() {

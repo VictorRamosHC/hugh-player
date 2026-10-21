@@ -8,78 +8,83 @@ import androidx.compose.ui.geometry.Offset
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.graphics.Path
 import androidx.compose.ui.graphics.drawscope.Stroke
-import com.hughdevelopment.player.ui.theme.DitherDark
+import com.hughdevelopment.player.ui.theme.CharcoalSurface
+import com.hughdevelopment.player.ui.theme.CyberAmber
+import com.hughdevelopment.player.ui.theme.HermeticCyan
 import com.hughdevelopment.player.ui.theme.WireframeBorder
 
 /**
  * CybersigilBackground
- * 
- * Draws hardware-accelerated stippled dot grid and wireframe sigils
- * inspired by the Hermes Agent / Nous Research aesthetic.
+ *
+ * High-performance HUD & Neoclassical geometry inspired by Hermes Agent / Nous Research.
+ * Uses optimized hardware-accelerated vector paths to guarantee 120 FPS without CPU churn.
  */
 @Composable
 fun CybersigilBackground(
     modifier: Modifier = Modifier,
-    dotSpacing: Float = 48f,
-    dotRadius: Float = 1.4f,
-    dotColor: Color = DitherDark,
-    wireframeColor: Color = WireframeBorder
+    showHalo: Boolean = true
 ) {
     Canvas(modifier = modifier.fillMaxSize()) {
-        val width = size.width
-        val height = size.height
+        val w = size.width
+        val h = size.height
+        val cx = w / 2f
+        val cy = h / 2f
 
-        // 1. Stippled Halftone Dot Grid
-        var x = 0f
-        while (x < width) {
-            var y = 0f
-            while (y < height) {
-                drawCircle(
-                    color = dotColor,
-                    radius = dotRadius,
-                    center = Offset(x, y)
-                )
-                y += dotSpacing
-            }
-            x += dotSpacing
+        val wireColor = WireframeBorder.copy(alpha = 0.45f)
+        val strokeFine = Stroke(width = 1.0f)
+        val strokeBold = Stroke(width = 1.8f)
+
+        // 1. Neoclassical Hermetic Halo & Sacred Cyber Geometry (Center Background)
+        if (showHalo) {
+            val haloRadius = w * 0.42f
+            drawCircle(wireColor.copy(alpha = 0.20f), radius = haloRadius, center = Offset(cx, cy), style = strokeFine)
+            drawCircle(wireColor.copy(alpha = 0.12f), radius = haloRadius * 0.70f, center = Offset(cx, cy), style = strokeFine)
+            drawCircle(HermeticCyan.copy(alpha = 0.10f), radius = haloRadius * 1.15f, center = Offset(cx, cy), style = strokeFine)
+
+            // Crosshair Cardinal Ticks
+            val tickLen = 24f
+            drawLine(wireColor.copy(alpha = 0.35f), Offset(cx - haloRadius - tickLen, cy), Offset(cx - haloRadius + tickLen, cy), strokeWidth = 1f)
+            drawLine(wireColor.copy(alpha = 0.35f), Offset(cx + haloRadius - tickLen, cy), Offset(cx + haloRadius + tickLen, cy), strokeWidth = 1f)
+            drawLine(wireColor.copy(alpha = 0.35f), Offset(cx, cy - haloRadius - tickLen), Offset(cx, cy - haloRadius + tickLen), strokeWidth = 1f)
+            drawLine(wireColor.copy(alpha = 0.35f), Offset(cx, cy + haloRadius - tickLen), Offset(cx, cy + haloRadius + tickLen), strokeWidth = 1f)
         }
 
-        // 2. Geometric Corner Sigils (Cybernetic frames)
-        val cornerSize = 40f
-        val stroke = Stroke(width = 1.2f)
+        // 2. Cybernetic HUD Corner Sigils
+        val cornerOffset = 20f
+        val bracketSize = 36f
 
-        // Top-Left Frame & Tick
+        // Top Left [ + ]
         val pathTL = Path().apply {
-            moveTo(16f, 16f + cornerSize)
-            lineTo(16f, 16f)
-            lineTo(16f + cornerSize, 16f)
+            moveTo(cornerOffset, cornerOffset + bracketSize)
+            lineTo(cornerOffset, cornerOffset)
+            lineTo(cornerOffset + bracketSize, cornerOffset)
         }
-        drawPath(pathTL, wireframeColor, style = stroke)
-        drawLine(wireframeColor, Offset(16f, 16f), Offset(28f, 28f), strokeWidth = 1.2f)
+        drawPath(pathTL, wireColor, style = strokeBold)
+        drawLine(CyberAmber.copy(alpha = 0.6f), Offset(cornerOffset, cornerOffset), Offset(cornerOffset + 14f, cornerOffset + 14f), strokeWidth = 1.5f)
 
-        // Top-Right Frame & Tick
+        // Top Right
         val pathTR = Path().apply {
-            moveTo(width - 16f - cornerSize, 16f)
-            lineTo(width - 16f, 16f)
-            lineTo(width - 16f, 16f + cornerSize)
+            moveTo(w - cornerOffset - bracketSize, cornerOffset)
+            lineTo(w - cornerOffset, cornerOffset)
+            lineTo(w - cornerOffset, cornerOffset + bracketSize)
         }
-        drawPath(pathTR, wireframeColor, style = stroke)
-        drawLine(wireframeColor, Offset(width - 16f, 16f), Offset(width - 28f, 28f), strokeWidth = 1.2f)
+        drawPath(pathTR, wireColor, style = strokeBold)
+        drawLine(HermeticCyan.copy(alpha = 0.6f), Offset(w - cornerOffset, cornerOffset), Offset(w - cornerOffset - 14f, cornerOffset + 14f), strokeWidth = 1.5f)
 
-        // Bottom-Left Frame
+        // Bottom Left
         val pathBL = Path().apply {
-            moveTo(16f, height - 16f - cornerSize)
-            lineTo(16f, height - 16f)
-            lineTo(16f + cornerSize, height - 16f)
+            moveTo(cornerOffset, h - cornerOffset - bracketSize)
+            lineTo(cornerOffset, h - cornerOffset)
+            lineTo(cornerOffset + bracketSize, h - cornerOffset)
         }
-        drawPath(pathBL, wireframeColor, style = stroke)
+        drawPath(pathBL, wireColor, style = strokeBold)
 
-        // Bottom-Right Frame
+        // Bottom Right
         val pathBR = Path().apply {
-            moveTo(width - 16f - cornerSize, height - 16f)
-            lineTo(width - 16f, height - 16f)
-            lineTo(width - 16f, height - 16f - cornerSize)
+            moveTo(w - cornerOffset - bracketSize, h - cornerOffset)
+            lineTo(w - cornerOffset, h - cornerOffset)
+            lineTo(w - cornerOffset, h - cornerOffset - bracketSize)
         }
-        drawPath(pathBR, wireframeColor, style = stroke)
+        drawPath(pathBR, wireColor, style = strokeBold)
     }
 }

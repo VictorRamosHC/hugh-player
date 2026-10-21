@@ -27,8 +27,8 @@ class MediaStoreScanner(private val context: Context) {
             MediaStore.Audio.Media.DATE_ADDED
         )
 
-        // Exclude system sounds/ringtones/recordings shorter than 15 seconds
-        val selection = "${MediaStore.Audio.Media.IS_MUSIC} != 0 AND ${MediaStore.Audio.Media.DURATION} >= 15000"
+        // Exclude system sounds/ringtones/recordings shorter than 25 seconds
+        val selection = "${MediaStore.Audio.Media.IS_MUSIC} != 0 AND ${MediaStore.Audio.Media.DURATION} >= 25000"
         val sortOrder = "${MediaStore.Audio.Media.TITLE} ASC"
 
         context.contentResolver.query(
@@ -49,13 +49,19 @@ class MediaStoreScanner(private val context: Context) {
             val dateAddedColumn = cursor.getColumnIndexOrThrow(MediaStore.Audio.Media.DATE_ADDED)
 
             while (cursor.moveToNext()) {
-                val id = cursor.getLong(idColumn)
+                val path = cursor.getString(dataColumn) ?: ""
                 val rawTitle = cursor.getString(titleColumn) ?: "Desconhecido"
+
+                // Intelligent filter: ignore typical voice notes, WhatsApp audios and phone recordings
+                if (isNoiseOrRecording(path, rawTitle)) {
+                    continue
+                }
+
+                val id = cursor.getLong(idColumn)
                 val rawArtist = cursor.getString(artistColumn) ?: "Artista Desconhecido"
                 val rawAlbum = cursor.getString(albumColumn) ?: "Álbum Desconhecido"
                 val albumId = cursor.getLong(albumIdColumn)
                 val duration = cursor.getLong(durationColumn)
-                val path = cursor.getString(dataColumn) ?: ""
                 val size = cursor.getLong(sizeColumn)
                 val dateAdded = cursor.getLong(dateAddedColumn)
 
@@ -86,6 +92,33 @@ class MediaStoreScanner(private val context: Context) {
         }
 
         songList
+    }
+
+    private fun isNoiseOrRecording(path: String, title: String): Boolean {
+        val lowerPath = path.lowercase()
+        val lowerTitle = title.lowercase()
+
+        // Exclude WhatsApp voice notes and temporary audio dumps
+        if (lowerPath.contains("whatsapp voice notes") ||
+            lowerPath.contains("whatsapp/media/whatsapp voice notes") ||
+            lowerPath.contains("call_recorder") ||
+            lowerPath.contains("sound_recorder") ||
+            lowerPath.contains("/recordings/") ||
+            lowerPath.contains("/gravador/")
+        ) {
+            return true
+        }
+
+        // Exclude typical automated naming conventions for voice recordings (e.g., AUD-2026..., PTT-2026...)
+        if (lowerTitle.startsWith("aud-") ||
+            lowerTitle.startsWith("ptt-") ||
+            lowerTitle.startsWith("voice-") ||
+            lowerTitle.matches(Regex("""^\d{2}-\d{2}-\d{4}.*"""))
+        ) {
+            return true
+        }
+
+        return false
     }
 
     private fun cleanMetadata(text: String): String {

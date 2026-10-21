@@ -14,9 +14,7 @@ import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.navigationBarsPadding
 import androidx.compose.foundation.layout.statusBarsPadding
-import androidx.compose.material3.Scaffold
 import androidx.compose.runtime.Composable
-import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
 import androidx.compose.ui.Alignment
@@ -99,6 +97,8 @@ fun MainScreen(viewModel: MusicViewModel) {
     val isPlaying by viewModel.isPlaying.collectAsState()
     val currentPositionMs by viewModel.playbackPositionMs.collectAsState()
     val durationMs by viewModel.durationMs.collectAsState()
+    val isShuffleEnabled by viewModel.isShuffleEnabled.collectAsState()
+    val repeatMode by viewModel.repeatMode.collectAsState()
     val overview by viewModel.listeningOverview.collectAsState()
     val isExpandedOpen by viewModel.isExpandedPlayerOpen.collectAsState()
     val currentScreen by viewModel.currentScreen.collectAsState()
@@ -126,7 +126,14 @@ fun MainScreen(viewModel: MusicViewModel) {
                             viewModel.playSong(song, playlist)
                         },
                         onRefresh = { viewModel.loadLocalMusic() },
-                        onOpenDashboard = { viewModel.navigateTo(AppScreen.STATS_DASHBOARD) }
+                        onOpenDashboard = { viewModel.navigateTo(AppScreen.STATS_DASHBOARD) },
+                        onToggleFavorite = { song -> viewModel.toggleFavorite(song) },
+                        onShuffleAll = {
+                            if (songs.isNotEmpty()) {
+                                val shuffled = songs.shuffled()
+                                viewModel.playSong(shuffled.first(), shuffled)
+                            }
+                        }
                     )
                 }
                 AppScreen.STATS_DASHBOARD -> {
@@ -147,22 +154,29 @@ fun MainScreen(viewModel: MusicViewModel) {
                 onBarClick = { viewModel.setExpandedPlayerOpen(true) },
                 onTogglePlayPause = { viewModel.togglePlayPause() },
                 onSkipNext = { viewModel.skipNext() },
+                onSkipPrevious = { viewModel.skipPrevious() },
+                onToggleFavorite = { viewModel.toggleFavorite(currentSong!!) },
                 modifier = Modifier.align(Alignment.BottomCenter)
             )
         }
 
-        // Fullscreen Expanded Player Sheet with Fade & Cybersigil Controls
+        // Fullscreen Expanded Player Sheet with Visualizer, Scrubber & Cybernetic Controls
         if (isExpandedOpen && currentSong != null) {
             ExpandedPlayerSheet(
                 song = currentSong!!,
                 isPlaying = isPlaying,
                 currentPositionMs = currentPositionMs,
                 durationMs = durationMs,
+                isShuffleEnabled = isShuffleEnabled,
+                repeatMode = repeatMode,
                 onDismiss = { viewModel.setExpandedPlayerOpen(false) },
                 onTogglePlayPause = { viewModel.togglePlayPause() },
                 onSkipNext = { viewModel.skipNext() },
                 onSkipPrevious = { viewModel.skipPrevious() },
-                onSeekTo = { pos -> viewModel.seekTo(pos) }
+                onSeekTo = { pos -> viewModel.seekTo(pos) },
+                onToggleShuffle = { viewModel.toggleShuffle() },
+                onToggleRepeat = { viewModel.toggleRepeat() },
+                onToggleFavorite = { viewModel.toggleFavorite(currentSong!!) }
             )
         }
     }

@@ -12,6 +12,9 @@ interface StatsDao {
     @Query("SELECT * FROM playback_stats ORDER BY play_count DESC")
     fun getAllStatsFlow(): Flow<List<StatsEntity>>
 
+    @Query("SELECT * FROM playback_stats WHERE is_favorite = 1")
+    fun getFavoriteStatsFlow(): Flow<List<StatsEntity>>
+
     @Query("SELECT * FROM playback_stats ORDER BY play_count DESC LIMIT :limit")
     fun getTopPlayedTracks(limit: Int): Flow<List<StatsEntity>>
 
@@ -24,10 +27,13 @@ interface StatsDao {
     @Query("SELECT COUNT(*) FROM playback_stats WHERE play_count > 0")
     fun getUniquePlayedCountFlow(): Flow<Int>
 
+    @Query("SELECT COUNT(*) FROM playback_stats WHERE is_favorite = 1")
+    fun getFavoriteCountFlow(): Flow<Int>
+
     @Insert(onConflict = OnConflictStrategy.REPLACE)
     suspend fun insertOrUpdate(stats: StatsEntity)
 
-    suspend fun recordPlayProgress(songId: Long, title: String, artist: String, addedSeconds: Long) {
+    suspend fun recordTrackStarted(songId: Long, title: String, artist: String) {
         val existing = getStatsForSong(songId)
         if (existing == null) {
             insertOrUpdate(
@@ -36,7 +42,7 @@ interface StatsDao {
                     title = title,
                     artist = artist,
                     playCount = 1,
-                    totalSecondsListened = addedSeconds,
+                    totalSecondsListened = 0L,
                     lastPlayedTimestamp = System.currentTimeMillis()
                 )
             )
@@ -44,10 +50,53 @@ interface StatsDao {
             insertOrUpdate(
                 existing.copy(
                     playCount = existing.playCount + 1,
-                    totalSecondsListened = existing.totalSecondsListened + addedSeconds,
                     lastPlayedTimestamp = System.currentTimeMillis()
                 )
             )
+        }
+    }
+
+    suspend fun addSecondsListened(songId: Long, title: String, artist: String, seconds: Long) {
+        if (seconds <= 0) return
+        val existing = getStatsForSong(songId)
+        if (existing == null) {
+            insertOrUpdate(
+                StatsEntity(
+                    songId = songId,
+                    title = title,
+                    artist = artist,
+                    playCount = 1,
+                    totalSecondsListened = seconds,
+                    lastPlayedTimestamp = System.currentTimeMillis()
+                )
+            )
+        } else {
+            insertOrUpdate(
+                existing.copy(
+                    totalSecondsListened = existing.totalSecondsListened + seconds
+                )
+            )
+        }
+    }
+
+    suspend fun toggleFavorite(songId: Long, title: String, artist: String): Boolean {
+        val existing = getStatsForSong(songId)
+        return if (existing == null) {
+            insertOrUpdate(
+                StatsEntity(
+                    songId = songId,
+                    title = title,
+                    artist = artist,
+                    playCount = 0,
+                    totalSecondsListened = 0,
+                    isFavorite = true
+                )
+            )
+            true
+        } else {
+            val newFav = !existing.isFavorite
+            insertOrUpdate(existing.copy(isFavorite = newFav))
+            newFav
         }
     }
 }

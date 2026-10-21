@@ -20,10 +20,12 @@ import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.ArrowBack
 import androidx.compose.material.icons.filled.ElectricBolt
+import androidx.compose.material.icons.filled.Favorite
 import androidx.compose.material.icons.filled.Headphones
 import androidx.compose.material.icons.filled.Timelapse
 import androidx.compose.material3.Icon
 import androidx.compose.material3.IconButton
+import androidx.compose.material3.LinearProgressIndicator
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
@@ -58,7 +60,7 @@ fun StatsDashboardScreen(
             .fillMaxSize()
             .background(VoidBlack)
     ) {
-        CybersigilBackground()
+        CybersigilBackground(showHalo = true)
 
         Column(
             modifier = Modifier
@@ -92,7 +94,7 @@ fun StatsDashboardScreen(
                         letterSpacing = 1.5.sp
                     )
                     Text(
-                        text = "TELEMETRIA LOCAL 100% OFFLINE",
+                        text = "OFFLINE WRAPPED • 100% DISCO LOCAL",
                         color = CyberAmber,
                         fontSize = 11.sp,
                         fontFamily = FontFamily.Monospace
@@ -102,30 +104,45 @@ fun StatsDashboardScreen(
 
             Spacer(modifier = Modifier.height(16.dp))
 
-            // Key Metrics Cards
+            // 4 Grid Metric Cards (2x2)
             Row(
                 modifier = Modifier.fillMaxWidth(),
                 horizontalArrangement = Arrangement.spacedBy(8.dp)
             ) {
                 MetricCard(
-                    title = "MINUTOS",
-                    value = "${overview.totalMinutesListened}",
+                    title = "TEMPO OUVIDO",
+                    value = overview.formattedTotalTime,
                     icon = Icons.Default.Timelapse,
                     accentColor = CyberAmber,
                     modifier = Modifier.weight(1f)
                 )
                 MetricCard(
-                    title = "PLAYS",
+                    title = "PLAYS TOTAIS",
                     value = "${overview.totalSongsPlayed}",
                     icon = Icons.Default.Headphones,
                     accentColor = HermeticCyan,
                     modifier = Modifier.weight(1f)
                 )
+            }
+
+            Spacer(modifier = Modifier.height(8.dp))
+
+            Row(
+                modifier = Modifier.fillMaxWidth(),
+                horizontalArrangement = Arrangement.spacedBy(8.dp)
+            ) {
                 MetricCard(
-                    title = "FAIXAS",
+                    title = "FAIXAS ÚNICAS",
                     value = "${overview.uniqueTracksListened}",
                     icon = Icons.Default.ElectricBolt,
                     accentColor = SigilSilver,
+                    modifier = Modifier.weight(1f)
+                )
+                MetricCard(
+                    title = "FAVORITAS",
+                    value = "${overview.favoriteCount}",
+                    icon = Icons.Default.Favorite,
+                    accentColor = CyberAmber,
                     modifier = Modifier.weight(1f)
                 )
             }
@@ -141,32 +158,50 @@ fun StatsDashboardScreen(
                 letterSpacing = 1.sp
             )
 
-            Spacer(modifier = Modifier.height(12.dp))
+            Spacer(modifier = Modifier.height(10.dp))
 
             if (overview.topSongs.isEmpty()) {
                 Box(
                     modifier = Modifier
                         .fillMaxWidth()
-                        .height(160.dp)
-                        .clip(RoundedCornerShape(8.dp))
+                        .height(180.dp)
+                        .clip(RoundedCornerShape(10.dp))
                         .background(CharcoalSurface)
-                        .border(1.dp, WireframeBorder, RoundedCornerShape(8.dp)),
+                        .border(1.dp, WireframeBorder, RoundedCornerShape(10.dp))
+                        .padding(16.dp),
                     contentAlignment = Alignment.Center
                 ) {
-                    Text(
-                        text = "OUÇA MAIS MÚSICAS PARA GERAR MÉTRICAS",
-                        color = MutedStone,
-                        fontFamily = FontFamily.Monospace,
-                        fontSize = 12.sp
-                    )
+                    Column(horizontalAlignment = Alignment.CenterHorizontally) {
+                        Text(
+                            text = "[ VAULT PRONTO // AGUARDANDO REPRODUÇÕES ]",
+                            color = CyberAmber,
+                            fontFamily = FontFamily.Monospace,
+                            fontWeight = FontWeight.Bold,
+                            fontSize = 12.sp
+                        )
+                        Spacer(modifier = Modifier.height(6.dp))
+                        Text(
+                            text = "Toque suas faixas na biblioteca. O banco Room grava contagens e segundos de forma 100% offline.",
+                            color = MutedStone,
+                            fontFamily = FontFamily.Monospace,
+                            fontSize = 11.sp,
+                            textAlign = androidx.compose.ui.text.style.TextAlign.Center
+                        )
+                    }
                 }
             } else {
+                val maxPlays = overview.topSongs.maxOfOrNull { it.playCount }?.coerceAtLeast(1) ?: 1
+
                 LazyColumn(
                     modifier = Modifier.fillMaxSize(),
                     contentPadding = PaddingValues(bottom = 32.dp)
                 ) {
                     itemsIndexed(overview.topSongs) { index, item ->
-                        TopSongRow(index = index + 1, item = item)
+                        TopSongRow(
+                            index = index + 1,
+                            item = item,
+                            maxPlays = maxPlays
+                        )
                     }
                 }
             }
@@ -184,9 +219,9 @@ private fun MetricCard(
 ) {
     Box(
         modifier = modifier
-            .clip(RoundedCornerShape(8.dp))
+            .clip(RoundedCornerShape(10.dp))
             .background(CharcoalSurface)
-            .border(1.dp, WireframeBorder, RoundedCornerShape(8.dp))
+            .border(1.dp, WireframeBorder, RoundedCornerShape(10.dp))
             .padding(12.dp)
     ) {
         Column {
@@ -196,11 +231,11 @@ private fun MetricCard(
                 tint = accentColor,
                 modifier = Modifier.size(20.dp)
             )
-            Spacer(modifier = Modifier.height(8.dp))
+            Spacer(modifier = Modifier.height(6.dp))
             Text(
                 text = value,
                 color = SigilWhite,
-                fontSize = 20.sp,
+                fontSize = 18.sp,
                 fontWeight = FontWeight.Bold,
                 fontFamily = FontFamily.Monospace
             )
@@ -208,7 +243,8 @@ private fun MetricCard(
                 text = title,
                 color = MutedStone,
                 fontSize = 10.sp,
-                fontFamily = FontFamily.Monospace
+                fontFamily = FontFamily.Monospace,
+                letterSpacing = 0.5.sp
             )
         }
     }
@@ -217,63 +253,89 @@ private fun MetricCard(
 @Composable
 private fun TopSongRow(
     index: Int,
-    item: TopSongSummary
+    item: TopSongSummary,
+    maxPlays: Int
 ) {
-    Row(
+    val rankColor = when (index) {
+        1 -> CyberAmber
+        2 -> HermeticCyan
+        3 -> SigilSilver
+        else -> MutedStone
+    }
+
+    Box(
         modifier = Modifier
             .fillMaxWidth()
             .padding(vertical = 4.dp)
             .clip(RoundedCornerShape(8.dp))
             .background(CharcoalSurface)
             .border(1.dp, WireframeBorder.copy(alpha = 0.6f), RoundedCornerShape(8.dp))
-            .padding(12.dp),
-        verticalAlignment = Alignment.CenterVertically
+            .padding(12.dp)
     ) {
-        // Rank Indicator
-        Text(
-            text = "#$index",
-            color = if (index <= 3) CyberAmber else MutedStone,
-            fontSize = 14.sp,
-            fontWeight = FontWeight.Bold,
-            fontFamily = FontFamily.Monospace,
-            modifier = Modifier.width(32.dp)
-        )
+        Column {
+            Row(
+                modifier = Modifier.fillMaxWidth(),
+                verticalAlignment = Alignment.CenterVertically
+            ) {
+                // Rank Indicator
+                Text(
+                    text = "#$index",
+                    color = rankColor,
+                    fontSize = 14.sp,
+                    fontWeight = FontWeight.Bold,
+                    fontFamily = FontFamily.Monospace,
+                    modifier = Modifier.width(34.dp)
+                )
 
-        Column(modifier = Modifier.weight(1f)) {
-            Text(
-                text = item.title,
-                color = SigilWhite,
-                fontSize = 14.sp,
-                fontWeight = FontWeight.Medium,
-                fontFamily = FontFamily.Monospace,
-                maxLines = 1,
-                overflow = TextOverflow.Ellipsis
-            )
-            Text(
-                text = item.artist,
-                color = MutedStone,
-                fontSize = 12.sp,
-                fontFamily = FontFamily.Monospace,
-                maxLines = 1,
-                overflow = TextOverflow.Ellipsis
-            )
-        }
+                Column(modifier = Modifier.weight(1f)) {
+                    Text(
+                        text = item.title,
+                        color = SigilWhite,
+                        fontSize = 13.5.sp,
+                        fontWeight = FontWeight.Medium,
+                        fontFamily = FontFamily.Monospace,
+                        maxLines = 1,
+                        overflow = TextOverflow.Ellipsis
+                    )
+                    Text(
+                        text = item.artist,
+                        color = MutedStone,
+                        fontSize = 11.sp,
+                        fontFamily = FontFamily.Monospace,
+                        maxLines = 1,
+                        overflow = TextOverflow.Ellipsis
+                    )
+                }
 
-        Spacer(modifier = Modifier.width(8.dp))
+                Spacer(modifier = Modifier.width(8.dp))
 
-        Column(horizontalAlignment = Alignment.End) {
-            Text(
-                text = "${item.playCount}x",
-                color = HermeticCyan,
-                fontSize = 14.sp,
-                fontWeight = FontWeight.Bold,
-                fontFamily = FontFamily.Monospace
-            )
-            Text(
-                text = "${item.totalMinutesListened}m",
-                color = MutedStone,
-                fontSize = 11.sp,
-                fontFamily = FontFamily.Monospace
+                Column(horizontalAlignment = Alignment.End) {
+                    Text(
+                        text = "${item.playCount}x",
+                        color = HermeticCyan,
+                        fontSize = 13.5.sp,
+                        fontWeight = FontWeight.Bold,
+                        fontFamily = FontFamily.Monospace
+                    )
+                    Text(
+                        text = item.formattedTime,
+                        color = MutedStone,
+                        fontSize = 10.5.sp,
+                        fontFamily = FontFamily.Monospace
+                    )
+                }
+            }
+
+            Spacer(modifier = Modifier.height(8.dp))
+
+            // Proportional play bar
+            LinearProgressIndicator(
+                progress = { (item.playCount.toFloat() / maxPlays.toFloat()).coerceIn(0.05f, 1.0f) },
+                modifier = Modifier
+                    .fillMaxWidth()
+                    .height(3.dp),
+                color = rankColor,
+                trackColor = WireframeBorder.copy(alpha = 0.3f)
             )
         }
     }

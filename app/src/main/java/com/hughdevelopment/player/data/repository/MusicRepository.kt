@@ -15,8 +15,15 @@ class MusicRepository(
     private val scanner: MediaStoreScanner,
     private val statsDao: StatsDao
 ) {
-    private val _songs = MutableStateFlow<List<Song>>(emptyList())
-    val songs = _songs.asStateFlow()
+    private val _rawSongs = MutableStateFlow<List<Song>>(emptyList())
+
+    // Combine scanned songs with favorites from Room DB
+    val songs: Flow<List<Song>> = combine(_rawSongs, statsDao.getFavoriteStatsFlow()) { songList, favEntities ->
+        val favIdSet = favEntities.map { it.songId }.toSet()
+        songList.map { song ->
+            if (favIdSet.contains(song.id)) song.copy(isFavorite = true) else song.copy(isFavorite = false)
+        }
+    }
 
     private val _isLoading = MutableStateFlow(false)
     val isLoading = _isLoading.asStateFlow()
@@ -25,50 +32,64 @@ class MusicRepository(
         _isLoading.value = true
         try {
             val scanned = scanner.scanLocalSongs()
-            _songs.value = scanned
+            _rawSongs.value = scanned
         } finally {
             _isLoading.value = false
         }
     }
 
-    suspend fun recordSongPlayed(song: Song, secondsPlayed: Long) {
-        if (secondsPlayed >= 10) { // Count as play only if listened for at least 10s
-            statsDao.recordPlayProgress(
+    suspend fun recordSongStarted(song: Song) {
+        statsDao.recordTrackStarted(
+            songId = song.id,
+            title = song.title,
+            artist = song.artist
+        )
+    }
+
+    suspend fun recordSongProgress(song: Song, secondsPlayed: Long) {
+        if (secondsPlayed > 0) {
+            statsDao.addSecondsListened(
                 songId = song.id,
                 title = song.title,
                 artist = song.artist,
-                addedSeconds = secondsPlayed
+                seconds = secondsPlayed
             )
         }
+    }
+
+    suspend fun toggleFavorite(song: Song): Boolean {
+        return statsDao.toggleFavorite(song.id, song.title, song.artist)
     }
 
     fun getListeningOverview(): Flow<ListeningOverview> {
         return combine(
             statsDao.getAllStatsFlow(),
             statsDao.getTotalSecondsListenedFlow(),
-            statsDao.getUniquePlayedCountFlow()
-        ) { statsList, totalSeconds, uniqueCount ->
-            val totalMinutes = (totalSeconds ?: 0L) / 60
-            val topSongs = statsList.take(10).map { entity ->
+            statsDao.getUniquePlayedCountFlow(),
+            statsDao.getFavoriteCountFlow()
+        ) { statsList, totalSeconds, uniqueCount, favCount ->
+            val totalSec = totalSeconds ?: 0L
+            val topSongs = statsList.filter { it.playCount > 0 }.take(10).map { entity ->
                 TopSongSummary(
                     songId = entity.songId,
                     title = entity.title,
                     artist = entity.artist,
                     playCount = entity.playCount,
-                    totalMinutesListened = entity.totalSecondsListened / 60
+                    totalSecondsListened = entity.totalSecondsListened
                 )
             }
             ListeningOverview(
-                totalMinutesListened = totalMinutes,
+                totalSecondsListened = totalSec,
                 totalSongsPlayed = statsList.sumOf { it.playCount },
                 uniqueTracksListened = uniqueCount,
+                favoriteCount = favCount,
                 topSongs = topSongs
             )
         }
     }
 
     fun searchSongs(query: String): List<Song> {
-        val current = _songs.value
+        val current = _rawSongs.value
         if (query.isBlank()) return current
         val q = query.trim().lowercase()
         return current.filter { song ->

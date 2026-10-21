@@ -14,9 +14,12 @@ import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.layout.width
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material.icons.Icons
+import androidx.compose.material.icons.filled.Favorite
+import androidx.compose.material.icons.filled.FavoriteBorder
 import androidx.compose.material.icons.filled.Pause
 import androidx.compose.material.icons.filled.PlayArrow
 import androidx.compose.material.icons.filled.SkipNext
+import androidx.compose.material.icons.filled.SkipPrevious
 import androidx.compose.material3.Icon
 import androidx.compose.material3.IconButton
 import androidx.compose.material3.LinearProgressIndicator
@@ -25,16 +28,15 @@ import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
-import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.text.font.FontFamily
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.style.TextOverflow
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
-import coil.compose.AsyncImage
 import com.hughdevelopment.player.data.model.Song
 import com.hughdevelopment.player.ui.theme.CharcoalSurface
 import com.hughdevelopment.player.ui.theme.CyberAmber
+import com.hughdevelopment.player.ui.theme.HermeticCyan
 import com.hughdevelopment.player.ui.theme.MutedStone
 import com.hughdevelopment.player.ui.theme.SigilSilver
 import com.hughdevelopment.player.ui.theme.SigilWhite
@@ -48,50 +50,42 @@ fun MiniPlayerBar(
     onBarClick: () -> Unit,
     onTogglePlayPause: () -> Unit,
     onSkipNext: () -> Unit,
+    onSkipPrevious: () -> Unit,
+    onToggleFavorite: () -> Unit,
     modifier: Modifier = Modifier
 ) {
     Box(
         modifier = modifier
             .fillMaxWidth()
-            .padding(horizontal = 12.dp, vertical = 8.dp)
+            .padding(horizontal = 10.dp, vertical = 6.dp)
             .clip(RoundedCornerShape(12.dp))
             .background(CharcoalSurface)
-            .border(1.dp, WireframeBorder, RoundedCornerShape(12.dp))
+            .border(1.2.dp, WireframeBorder, RoundedCornerShape(12.dp))
             .clickable { onBarClick() }
     ) {
         Column {
             Row(
                 modifier = Modifier
                     .fillMaxWidth()
-                    .padding(8.dp),
+                    .padding(horizontal = 8.dp, vertical = 6.dp),
                 verticalAlignment = Alignment.CenterVertically
             ) {
-                // Artwork or Neoclassical Statue Glyph
-                if (currentSong.albumArtUri != null) {
-                    AsyncImage(
-                        model = currentSong.albumArtUri,
-                        contentDescription = "Capa do Álbum",
-                        contentScale = ContentScale.Crop,
-                        modifier = Modifier
-                            .size(48.dp)
-                            .clip(RoundedCornerShape(6.dp))
-                    )
-                } else {
-                    StatueGlyphView(
-                        modifier = Modifier.size(48.dp)
-                    )
-                }
+                // Reliable Artwork with Neoclassical Statue fallback
+                ArtworkImage(
+                    artworkUri = currentSong.albumArtUri,
+                    modifier = Modifier.size(46.dp),
+                    cornerRadius = 8.dp,
+                    accentColor = CyberAmber
+                )
 
-                Spacer(modifier = Modifier.width(12.dp))
+                Spacer(modifier = Modifier.width(10.dp))
 
-                // Song Info
-                Column(
-                    modifier = Modifier.weight(1f)
-                ) {
+                // Track Title and Artist
+                Column(modifier = Modifier.weight(1f)) {
                     Text(
                         text = currentSong.title,
                         color = SigilWhite,
-                        fontSize = 14.sp,
+                        fontSize = 13.sp,
                         fontWeight = FontWeight.SemiBold,
                         fontFamily = FontFamily.Monospace,
                         maxLines = 1,
@@ -100,30 +94,62 @@ fun MiniPlayerBar(
                     Text(
                         text = currentSong.artist,
                         color = MutedStone,
-                        fontSize = 12.sp,
+                        fontSize = 11.sp,
                         fontFamily = FontFamily.Monospace,
                         maxLines = 1,
                         overflow = TextOverflow.Ellipsis
                     )
                 }
 
+                // Favorite Toggle Button
+                IconButton(
+                    onClick = onToggleFavorite,
+                    modifier = Modifier.size(36.dp)
+                ) {
+                    Icon(
+                        imageVector = if (currentSong.isFavorite) Icons.Default.Favorite else Icons.Default.FavoriteBorder,
+                        contentDescription = "Favoritar",
+                        tint = if (currentSong.isFavorite) CyberAmber else MutedStone,
+                        modifier = Modifier.size(20.dp)
+                    )
+                }
+
+                // Skip Previous
+                IconButton(
+                    onClick = onSkipPrevious,
+                    modifier = Modifier.size(36.dp)
+                ) {
+                    Icon(
+                        imageVector = Icons.Default.SkipPrevious,
+                        contentDescription = "Anterior",
+                        tint = SigilSilver,
+                        modifier = Modifier.size(22.dp)
+                    )
+                }
+
                 // Play / Pause with Fade
-                IconButton(onClick = onTogglePlayPause) {
+                IconButton(
+                    onClick = onTogglePlayPause,
+                    modifier = Modifier.size(38.dp)
+                ) {
                     Icon(
                         imageVector = if (isPlaying) Icons.Default.Pause else Icons.Default.PlayArrow,
                         contentDescription = if (isPlaying) "Pausar" else "Reproduzir",
                         tint = SigilWhite,
-                        modifier = Modifier.size(28.dp)
+                        modifier = Modifier.size(26.dp)
                     )
                 }
 
-                // Next Track
-                IconButton(onClick = onSkipNext) {
+                // Skip Next
+                IconButton(
+                    onClick = onSkipNext,
+                    modifier = Modifier.size(36.dp)
+                ) {
                     Icon(
                         imageVector = Icons.Default.SkipNext,
                         contentDescription = "Próxima Música",
                         tint = SigilSilver,
-                        modifier = Modifier.size(26.dp)
+                        modifier = Modifier.size(22.dp)
                     )
                 }
             }
@@ -135,7 +161,7 @@ fun MiniPlayerBar(
                     .fillMaxWidth()
                     .height(2.5.dp),
                 color = CyberAmber,
-                trackColor = WireframeBorder
+                trackColor = WireframeBorder.copy(alpha = 0.5f)
             )
         }
     }

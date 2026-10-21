@@ -2,7 +2,6 @@ package com.hughdevelopment.player.service
 
 import android.content.ComponentName
 import android.content.Context
-import android.net.Uri
 import androidx.media3.common.MediaItem
 import androidx.media3.common.MediaMetadata
 import androidx.media3.common.Player
@@ -23,6 +22,7 @@ import kotlinx.coroutines.launch
 class MusicPlayerController(
     private val context: Context,
     private val scope: CoroutineScope,
+    private val onSongStarted: (Song) -> Unit,
     private val onSongProgressLogged: (Song, Long) -> Unit
 ) {
     private var controllerFuture: ListenableFuture<MediaController>? = null
@@ -44,6 +44,12 @@ class MusicPlayerController(
     private val _playlist = MutableStateFlow<List<Song>>(emptyList())
     val playlist = _playlist.asStateFlow()
 
+    private val _isShuffleEnabled = MutableStateFlow(false)
+    val isShuffleEnabled = _isShuffleEnabled.asStateFlow()
+
+    private val _repeatMode = MutableStateFlow(Player.REPEAT_MODE_OFF)
+    val repeatMode = _repeatMode.asStateFlow()
+
     private var progressTrackingJob: Job? = null
     private var secondsAccumulatedForCurrentSong = 0L
 
@@ -59,6 +65,8 @@ class MusicPlayerController(
                 mediaController = controllerFuture?.get()?.apply {
                     fadeManager = AudioFadeManager(scope, this)
                     addListener(playerListener)
+                    _isShuffleEnabled.value = shuffleModeEnabled
+                    _repeatMode.value = repeatMode
                 }
             } catch (e: Exception) {
                 e.printStackTrace()
@@ -89,17 +97,31 @@ class MusicPlayerController(
                     flushAccumulatedListenStats()
                     _currentSong.value = song
                     _durationMs.value = song.durationMs
+                    onSongStarted(song)
                 }
             }
+        }
+
+        override fun onShuffleModeEnabledChanged(shuffleModeEnabled: Boolean) {
+            _isShuffleEnabled.value = shuffleModeEnabled
+        }
+
+        override fun onRepeatModeChanged(newRepeatMode: Int) {
+            _repeatMode.value = newRepeatMode
         }
     }
 
     fun playSong(song: Song, newPlaylist: List<Song> = _playlist.value) {
         val controller = mediaController ?: return
+        flushAccumulatedListenStats()
+
         _playlist.value = newPlaylist
         _currentSong.value = song
         _durationMs.value = song.durationMs
         secondsAccumulatedForCurrentSong = 0L
+
+        // Trigger instantaneous play recording in DB
+        onSongStarted(song)
 
         val mediaItems = newPlaylist.map { s ->
             MediaItem.Builder()
@@ -120,25 +142,26 @@ class MusicPlayerController(
 
         controller.setMediaItems(mediaItems, targetIndex, 0L)
         controller.prepare()
-        fadeManager?.fadeIn(400L) ?: controller.play()
+        fadeManager?.fadeIn(350L) ?: controller.play()
     }
 
     fun togglePlayPauseWithFade() {
         val controller = mediaController ?: return
         if (controller.isPlaying) {
-            fadeManager?.fadeOutAndPause(350L) ?: controller.pause()
+            flushAccumulatedListenStats()
+            fadeManager?.fadeOutAndPause(300L) ?: controller.pause()
         } else {
-            fadeManager?.fadeIn(350L) ?: controller.play()
+            fadeManager?.fadeIn(300L) ?: controller.play()
         }
     }
 
     fun skipNextWithFade() {
         val controller = mediaController ?: return
+        flushAccumulatedListenStats()
         fadeManager?.fadeOutAndAction(250L) {
             if (controller.hasNextMediaItem()) {
                 controller.seekToNextMediaItem()
             } else {
-                // Loop back to start if at end
                 controller.seekTo(0, 0L)
             }
         }
@@ -146,6 +169,7 @@ class MusicPlayerController(
 
     fun skipPreviousWithFade() {
         val controller = mediaController ?: return
+        flushAccumulatedListenStats()
         fadeManager?.fadeOutAndAction(250L) {
             if (controller.currentPosition > 3000L || !controller.hasPreviousMediaItem()) {
                 controller.seekTo(0L)
@@ -160,6 +184,24 @@ class MusicPlayerController(
         _playbackPositionMs.value = positionMs
     }
 
+    fun toggleShuffle() {
+        val controller = mediaController ?: return
+        val newShuffle = !controller.shuffleModeEnabled
+        controller.shuffleModeEnabled = newShuffle
+        _isShuffleEnabled.value = newShuffle
+    }
+
+    fun toggleRepeat() {
+        val controller = mediaController ?: return
+        val nextMode = when (controller.repeatMode) {
+            Player.REPEAT_MODE_OFF -> Player.REPEAT_MODE_ALL
+            Player.REPEAT_MODE_ALL -> Player.REPEAT_MODE_ONE
+            else -> Player.REPEAT_MODE_OFF
+        }
+        controller.repeatMode = nextMode
+        _repeatMode.value = nextMode
+    }
+
     private fun startPositionTracker() {
         progressTrackingJob?.cancel()
         progressTrackingJob = scope.launch(Dispatchers.Main) {
@@ -168,6 +210,11 @@ class MusicPlayerController(
                     _playbackPositionMs.value = c.currentPosition
                     _durationMs.value = if (c.duration > 0) c.duration else _currentSong.value?.durationMs ?: 0L
                     secondsAccumulatedForCurrentSong += 1
+
+                    // Auto-flush every 5 seconds to continuously guarantee statistics persistence
+                    if (secondsAccumulatedForCurrentSong >= 5) {
+                        flushAccumulatedListenStats()
+                    }
                 }
                 delay(1000L)
             }
@@ -184,7 +231,7 @@ class MusicPlayerController(
         val song = _currentSong.value
         if (song != null && secondsAccumulatedForCurrentSong > 0) {
             onSongProgressLogged(song, secondsAccumulatedForCurrentSong)
-            secondsAccumulatedForCurrentSong = 0
+            secondsAccumulatedForCurrentSong = 0L
         }
     }
 

@@ -23,26 +23,39 @@ class MusicViewModel(application: Application) : AndroidViewModel(application) {
     val playerController = MusicPlayerController(
         context = application.applicationContext,
         scope = viewModelScope,
+        onSongStarted = { song ->
+            viewModelScope.launch {
+                repository.recordSongStarted(song)
+            }
+        },
         onSongProgressLogged = { song, secondsPlayed ->
             viewModelScope.launch {
-                repository.recordSongPlayed(song, secondsPlayed)
+                repository.recordSongProgress(song, secondsPlayed)
             }
         }
     )
 
     val songs: StateFlow<List<Song>> = repository.songs
+        .stateIn(
+            scope = viewModelScope,
+            started = SharingStarted.WhileSubscribed(5000),
+            initialValue = emptyList()
+        )
+
     val isLoading: StateFlow<Boolean> = repository.isLoading
 
     val currentPlayingSong: StateFlow<Song?> = playerController.currentSong
     val isPlaying: StateFlow<Boolean> = playerController.isPlaying
     val playbackPositionMs: StateFlow<Long> = playerController.playbackPositionMs
     val durationMs: StateFlow<Long> = playerController.durationMs
+    val isShuffleEnabled: StateFlow<Boolean> = playerController.isShuffleEnabled
+    val repeatMode: StateFlow<Int> = playerController.repeatMode
 
     val listeningOverview: StateFlow<ListeningOverview> = repository.getListeningOverview()
         .stateIn(
             scope = viewModelScope,
             started = SharingStarted.WhileSubscribed(5000),
-            initialValue = ListeningOverview(0, 0, 0, emptyList())
+            initialValue = ListeningOverview(0, 0, 0, 0, emptyList())
         )
 
     private val _isExpandedPlayerOpen = MutableStateFlow(false)
@@ -79,6 +92,20 @@ class MusicViewModel(application: Application) : AndroidViewModel(application) {
 
     fun seekTo(positionMs: Long) {
         playerController.seekTo(positionMs)
+    }
+
+    fun toggleShuffle() {
+        playerController.toggleShuffle()
+    }
+
+    fun toggleRepeat() {
+        playerController.toggleRepeat()
+    }
+
+    fun toggleFavorite(song: Song) {
+        viewModelScope.launch {
+            repository.toggleFavorite(song)
+        }
     }
 
     fun setExpandedPlayerOpen(open: Boolean) {

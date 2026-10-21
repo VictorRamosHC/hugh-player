@@ -17,9 +17,14 @@ import androidx.compose.foundation.layout.width
 import androidx.compose.foundation.shape.CircleShape
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material.icons.Icons
+import androidx.compose.material.icons.filled.Favorite
+import androidx.compose.material.icons.filled.FavoriteBorder
 import androidx.compose.material.icons.filled.KeyboardArrowDown
 import androidx.compose.material.icons.filled.Pause
 import androidx.compose.material.icons.filled.PlayArrow
+import androidx.compose.material.icons.filled.Repeat
+import androidx.compose.material.icons.filled.RepeatOne
+import androidx.compose.material.icons.filled.Shuffle
 import androidx.compose.material.icons.filled.SkipNext
 import androidx.compose.material.icons.filled.SkipPrevious
 import androidx.compose.material3.ExperimentalMaterial3Api
@@ -31,17 +36,20 @@ import androidx.compose.material3.SliderDefaults
 import androidx.compose.material3.Text
 import androidx.compose.material3.rememberModalBottomSheetState
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.getValue
+import androidx.compose.runtime.mutableStateOf
+import androidx.compose.runtime.remember
+import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
-import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.text.font.FontFamily
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.text.style.TextOverflow
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
-import coil.compose.AsyncImage
+import androidx.media3.common.Player
 import com.hughdevelopment.player.data.model.Song
 import com.hughdevelopment.player.ui.theme.CharcoalSurface
 import com.hughdevelopment.player.ui.theme.CyberAmber
@@ -59,13 +67,27 @@ fun ExpandedPlayerSheet(
     isPlaying: Boolean,
     currentPositionMs: Long,
     durationMs: Long,
+    isShuffleEnabled: Boolean,
+    repeatMode: Int,
     onDismiss: () -> Unit,
     onTogglePlayPause: () -> Unit,
     onSkipNext: () -> Unit,
     onSkipPrevious: () -> Unit,
-    onSeekTo: (Long) -> Unit
+    onSeekTo: (Long) -> Unit,
+    onToggleShuffle: () -> Unit,
+    onToggleRepeat: () -> Unit,
+    onToggleFavorite: () -> Unit
 ) {
     val sheetState = rememberModalBottomSheetState(skipPartiallyExpanded = true)
+
+    // Local drag state to eliminate seeking stutter/lag completely
+    var draggingProgress by remember { mutableStateOf<Float?>(null) }
+
+    val effectiveProgress = draggingProgress ?: if (durationMs > 0) {
+        (currentPositionMs.toFloat() / durationMs.toFloat()).coerceIn(0f, 1f)
+    } else 0f
+
+    val displayedPositionMs = draggingProgress?.let { (it * durationMs).toLong() } ?: currentPositionMs
 
     ModalBottomSheet(
         onDismissRequest = onDismiss,
@@ -76,15 +98,15 @@ fun ExpandedPlayerSheet(
         Box(
             modifier = Modifier
                 .fillMaxSize()
-                .padding(24.dp)
+                .padding(horizontal = 24.dp, vertical = 16.dp)
         ) {
-            CybersigilBackground()
+            CybersigilBackground(showHalo = true)
 
             Column(
                 modifier = Modifier.fillMaxSize(),
                 horizontalAlignment = Alignment.CenterHorizontally
             ) {
-                // Header Bar
+                // Header HUD
                 Row(
                     modifier = Modifier.fillMaxWidth(),
                     horizontalArrangement = Arrangement.SpaceBetween,
@@ -99,59 +121,78 @@ fun ExpandedPlayerSheet(
                         )
                     }
 
-                    // Tech Badge
+                    // Tech HUD Badge
                     Box(
                         modifier = Modifier
                             .clip(RoundedCornerShape(4.dp))
-                            .border(1.dp, WireframeBorder, RoundedCornerShape(4.dp))
+                            .border(1.dp, CyberAmber.copy(alpha = 0.6f), RoundedCornerShape(4.dp))
                             .background(CharcoalSurface)
-                            .padding(horizontal = 8.dp, vertical = 4.dp)
+                            .padding(horizontal = 10.dp, vertical = 5.dp)
                     ) {
                         Text(
-                            text = "HUGH ENGINE • FADE ACTIVE",
-                            color = HermeticCyan,
+                            text = "HUGH // 0x01 CORE • FADE ACTIVE",
+                            color = CyberAmber,
                             fontSize = 10.sp,
                             fontFamily = FontFamily.Monospace,
-                            fontWeight = FontWeight.Bold
+                            fontWeight = FontWeight.Bold,
+                            letterSpacing = 1.sp
                         )
                     }
 
-                    Spacer(modifier = Modifier.width(32.dp))
+                    IconButton(onClick = onToggleFavorite) {
+                        Icon(
+                            imageVector = if (song.isFavorite) Icons.Default.Favorite else Icons.Default.FavoriteBorder,
+                            contentDescription = "Favoritar",
+                            tint = if (song.isFavorite) CyberAmber else SigilSilver,
+                            modifier = Modifier.size(26.dp)
+                        )
+                    }
                 }
 
-                Spacer(modifier = Modifier.height(24.dp))
+                Spacer(modifier = Modifier.height(16.dp))
 
-                // Big Album Art or Statue Glyph with Cybersigil Frame
+                // Big Album Artwork with Cybernetic Frame & Neoclassical Fallback
                 Box(
                     modifier = Modifier
                         .fillMaxWidth(0.85f)
                         .aspectRatio(1f)
-                        .clip(RoundedCornerShape(16.dp))
-                        .border(1.5.dp, WireframeBorder, RoundedCornerShape(16.dp))
+                        .clip(RoundedCornerShape(18.dp))
+                        .border(1.5.dp, WireframeBorder, RoundedCornerShape(18.dp))
                         .background(CharcoalSurface)
                 ) {
-                    if (song.albumArtUri != null) {
-                        AsyncImage(
-                            model = song.albumArtUri,
-                            contentDescription = "Capa do Álbum",
-                            contentScale = ContentScale.Crop,
-                            modifier = Modifier.fillMaxSize()
-                        )
-                    } else {
-                        StatueGlyphView(
-                            modifier = Modifier.fillMaxSize(),
-                            accentColor = CyberAmber
+                    ArtworkImage(
+                        artworkUri = song.albumArtUri,
+                        modifier = Modifier.fillMaxSize(),
+                        cornerRadius = 18.dp,
+                        accentColor = CyberAmber
+                    )
+
+                    // Overlay HUD Coordinate Tag
+                    Box(
+                        modifier = Modifier
+                            .align(Alignment.BottomStart)
+                            .padding(8.dp)
+                            .clip(RoundedCornerShape(4.dp))
+                            .background(VoidBlack.copy(alpha = 0.75f))
+                            .padding(horizontal = 6.dp, vertical = 2.dp)
+                    ) {
+                        Text(
+                            text = "OFFLINE VAULT // LOSSLESS",
+                            color = HermeticCyan,
+                            fontSize = 9.sp,
+                            fontFamily = FontFamily.Monospace,
+                            fontWeight = FontWeight.Bold
                         )
                     }
                 }
 
-                Spacer(modifier = Modifier.height(32.dp))
+                Spacer(modifier = Modifier.height(20.dp))
 
                 // Song Title & Artist
                 Text(
                     text = song.title,
                     color = SigilWhite,
-                    fontSize = 22.sp,
+                    fontSize = 20.sp,
                     fontWeight = FontWeight.Bold,
                     fontFamily = FontFamily.Monospace,
                     maxLines = 1,
@@ -159,29 +200,45 @@ fun ExpandedPlayerSheet(
                     textAlign = TextAlign.Center
                 )
 
-                Spacer(modifier = Modifier.height(6.dp))
+                Spacer(modifier = Modifier.height(4.dp))
 
                 Text(
                     text = "${song.artist} • ${song.album}",
                     color = MutedStone,
-                    fontSize = 14.sp,
+                    fontSize = 13.sp,
                     fontFamily = FontFamily.Monospace,
                     maxLines = 1,
                     overflow = TextOverflow.Ellipsis,
                     textAlign = TextAlign.Center
                 )
 
-                Spacer(modifier = Modifier.height(28.dp))
+                Spacer(modifier = Modifier.height(16.dp))
 
-                // High-precision Cyber Slider
-                val progress = if (durationMs > 0) {
-                    (currentPositionMs.toFloat() / durationMs.toFloat()).coerceIn(0f, 1f)
-                } else 0f
+                // Real-time Procedural Audio Visualizer Spectrum Bars
+                AudioVisualizerBars(
+                    isPlaying = isPlaying,
+                    modifier = Modifier
+                        .fillMaxWidth(0.92f)
+                        .padding(horizontal = 8.dp),
+                    barCount = 30,
+                    height = 32.dp,
+                    activeColor = CyberAmber,
+                    secondaryColor = HermeticCyan
+                )
 
+                Spacer(modifier = Modifier.height(16.dp))
+
+                // High-precision Cyber Slider (Smooth seeking without playback stutter)
                 Slider(
-                    value = progress,
+                    value = effectiveProgress,
                     onValueChange = { newFrac ->
-                        onSeekTo((newFrac * durationMs).toLong())
+                        draggingProgress = newFrac
+                    },
+                    onValueChangeFinished = {
+                        draggingProgress?.let { finalFrac ->
+                            onSeekTo((finalFrac * durationMs).toLong())
+                            draggingProgress = null
+                        }
                     },
                     modifier = Modifier.fillMaxWidth(),
                     colors = SliderDefaults.colors(
@@ -197,10 +254,11 @@ fun ExpandedPlayerSheet(
                     horizontalArrangement = Arrangement.SpaceBetween
                 ) {
                     Text(
-                        text = formatTime(currentPositionMs),
-                        color = MutedStone,
+                        text = formatTime(displayedPositionMs),
+                        color = HermeticCyan,
                         fontSize = 12.sp,
-                        fontFamily = FontFamily.Monospace
+                        fontFamily = FontFamily.Monospace,
+                        fontWeight = FontWeight.SemiBold
                     )
                     Text(
                         text = formatTime(durationMs),
@@ -210,35 +268,44 @@ fun ExpandedPlayerSheet(
                     )
                 }
 
-                Spacer(modifier = Modifier.height(24.dp))
+                Spacer(modifier = Modifier.height(16.dp))
 
-                // Playback Controls
+                // Complete Cyber Playback Controls Bar
                 Row(
                     modifier = Modifier.fillMaxWidth(),
-                    horizontalArrangement = Arrangement.Center,
+                    horizontalArrangement = Arrangement.SpaceEvenly,
                     verticalAlignment = Alignment.CenterVertically
                 ) {
+                    // Shuffle Button
+                    IconButton(onClick = onToggleShuffle) {
+                        Icon(
+                            imageVector = Icons.Default.Shuffle,
+                            contentDescription = "Aleatório",
+                            tint = if (isShuffleEnabled) CyberAmber else MutedStone,
+                            modifier = Modifier.size(24.dp)
+                        )
+                    }
+
+                    // Skip Previous
                     IconButton(
                         onClick = onSkipPrevious,
-                        modifier = Modifier.size(52.dp)
+                        modifier = Modifier.size(48.dp)
                     ) {
                         Icon(
                             imageVector = Icons.Default.SkipPrevious,
                             contentDescription = "Anterior",
                             tint = SigilSilver,
-                            modifier = Modifier.size(36.dp)
+                            modifier = Modifier.size(34.dp)
                         )
                     }
 
-                    Spacer(modifier = Modifier.width(28.dp))
-
-                    // Play/Pause Big Hexagonal / Circle Button
+                    // Play/Pause Core Button with Cyber Reactor Ring
                     Box(
                         modifier = Modifier
-                            .size(72.dp)
+                            .size(68.dp)
                             .clip(CircleShape)
                             .background(SigilWhite)
-                            .border(2.dp, CyberAmber, CircleShape),
+                            .border(2.5.dp, CyberAmber, CircleShape),
                         contentAlignment = Alignment.Center
                     ) {
                         IconButton(
@@ -249,22 +316,36 @@ fun ExpandedPlayerSheet(
                                 imageVector = if (isPlaying) Icons.Default.Pause else Icons.Default.PlayArrow,
                                 contentDescription = if (isPlaying) "Pausar" else "Reproduzir",
                                 tint = VoidBlack,
-                                modifier = Modifier.size(42.dp)
+                                modifier = Modifier.size(38.dp)
                             )
                         }
                     }
 
-                    Spacer(modifier = Modifier.width(28.dp))
-
+                    // Skip Next
                     IconButton(
                         onClick = onSkipNext,
-                        modifier = Modifier.size(52.dp)
+                        modifier = Modifier.size(48.dp)
                     ) {
                         Icon(
                             imageVector = Icons.Default.SkipNext,
                             contentDescription = "Próxima",
                             tint = SigilSilver,
-                            modifier = Modifier.size(36.dp)
+                            modifier = Modifier.size(34.dp)
+                        )
+                    }
+
+                    // Repeat Mode Button
+                    IconButton(onClick = onToggleRepeat) {
+                        val icon = when (repeatMode) {
+                            Player.REPEAT_MODE_ONE -> Icons.Default.RepeatOne
+                            else -> Icons.Default.Repeat
+                        }
+                        val tint = if (repeatMode != Player.REPEAT_MODE_OFF) CyberAmber else MutedStone
+                        Icon(
+                            imageVector = icon,
+                            contentDescription = "Repetir",
+                            tint = tint,
+                            modifier = Modifier.size(24.dp)
                         )
                     }
                 }

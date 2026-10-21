@@ -23,5 +23,8 @@ data class StatsEntity(
     val totalSecondsListened: Long = 0L,
 
     @ColumnInfo(name = "last_played_timestamp")
-    val lastPlayedTimestamp: Long = System.currentTimeMillis()
+    val lastPlayedTimestamp: Long = System.currentTimeMillis(),
+
+    @ColumnInfo(name = "is_favorite", defaultValue = "0")
+    val isFavorite: Boolean = false
 )

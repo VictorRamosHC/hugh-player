@@ -17,9 +17,9 @@
     <application
         android:name=".HughPlayerApplication"
         android:allowBackup="true"
-        android:icon="@android:drawable/ic_media_play"
+        android:icon="@mipmap/ic_launcher"
         android:label="Hugh Player"
-        android:roundIcon="@android:drawable/ic_media_play"
+        android:roundIcon="@mipmap/ic_launcher_round"
         android:supportsRtl="true"
         android:theme="@android:style/Theme.Material.NoActionBar">
 
