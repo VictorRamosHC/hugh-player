@@ -16,6 +16,9 @@ interface PlaylistDao {
     @Query("SELECT * FROM playlists WHERE id = :id LIMIT 1")
     suspend fun getPlaylistById(id: Long): PlaylistEntity?
 
+    @Query("SELECT * FROM playlists WHERE name = :name LIMIT 1")
+    suspend fun getPlaylistByName(name: String): PlaylistEntity?
+
     @Insert(onConflict = OnConflictStrategy.REPLACE)
     suspend fun insertPlaylist(playlist: PlaylistEntity): Long
 
@@ -31,7 +34,7 @@ interface PlaylistDao {
     @Query("SELECT songId FROM playlist_songs WHERE playlistId = :playlistId")
     suspend fun getSongIdsForPlaylist(playlistId: Long): List<Long>
 
-    @Query("SELECT * FROM playlist_songs")
+    @Query("SELECT * FROM playlist_songs ORDER BY addedAt ASC")
     fun getAllPlaylistSongsFlow(): Flow<List<PlaylistSongCrossRef>>
 
     @Insert(onConflict = OnConflictStrategy.IGNORE)

@@ -161,6 +161,7 @@ fun MainScreen(
                         isLoading = isLoading,
                         sortOrder = settings.sortOrder,
                         wallpaperAlpha = settings.libraryWallpaperAlpha,
+                        playlists = playlists,
                         onSongSelected = { song, playlist ->
                             viewModel.playSong(song, playlist)
                         },
@@ -169,6 +170,9 @@ fun MainScreen(
                         onOpenDashboard = { viewModel.navigateTo(AppScreen.STATS_DASHBOARD) },
                         onOpenSettings = { viewModel.navigateTo(AppScreen.SETTINGS) },
                         onToggleFavorite = { song -> viewModel.toggleFavorite(song) },
+                        onAddSongToPlaylist = { playlistId, songId ->
+                            viewModel.addSongToPlaylist(playlistId, songId)
+                        },
                         onShuffleAll = {
                             if (sortedSongs.isNotEmpty()) {
                                 val shuffled = sortedSongs.shuffled()
@@ -264,7 +268,11 @@ fun MainScreen(
                 onSeekTo = { pos -> viewModel.seekTo(pos) },
                 onToggleShuffle = { viewModel.toggleShuffle() },
                 onToggleRepeat = { viewModel.toggleRepeat() },
-                onToggleFavorite = { viewModel.toggleFavorite(currentSong!!) }
+                onToggleFavorite = { viewModel.toggleFavorite(currentSong!!) },
+                onAddToPlaylist = {
+                    viewModel.setExpandedPlayerOpen(false)
+                    viewModel.navigateTo(AppScreen.FOLDERS)
+                }
             )
         }
 

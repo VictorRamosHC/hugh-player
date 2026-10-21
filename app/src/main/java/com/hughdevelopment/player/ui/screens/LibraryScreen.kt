@@ -67,6 +67,14 @@ import com.hughdevelopment.player.ui.theme.SigilWhite
 import com.hughdevelopment.player.ui.theme.VoidBlack
 import com.hughdevelopment.player.ui.theme.WireframeBorder
 
+import android.widget.Toast
+import androidx.compose.ui.platform.LocalContext
+import androidx.compose.material.icons.filled.PlaylistAdd
+import androidx.compose.material3.AlertDialog
+import androidx.compose.material3.TextButton
+import androidx.compose.ui.graphics.Color
+import com.hughdevelopment.player.data.model.Playlist
+
 @Composable
 fun LibraryScreen(
     songs: List<Song>,
@@ -75,16 +83,20 @@ fun LibraryScreen(
     isLoading: Boolean,
     sortOrder: SortOrder,
     wallpaperAlpha: Float,
+    playlists: List<Playlist> = emptyList(),
     onSongSelected: (Song, List<Song>) -> Unit,
     onRefresh: () -> Unit,
     onOpenFolders: () -> Unit,
     onOpenDashboard: () -> Unit,
     onOpenSettings: () -> Unit,
     onToggleFavorite: (Song) -> Unit,
+    onAddSongToPlaylist: (Long, Long) -> Unit = { _, _ -> },
     onShuffleAll: () -> Unit,
     onSelectSortOrder: (SortOrder) -> Unit,
     modifier: Modifier = Modifier
 ) {
+    val context = LocalContext.current
+    var songToAddToPlaylist by remember { mutableStateOf<Song?>(null) }
     var searchQuery by remember { mutableStateOf("") }
     val sortScrollState = rememberScrollState()
 
@@ -302,11 +314,112 @@ fun LibraryScreen(
                             isSelected = isSelected,
                             isPlaying = isSelected && isPlaying,
                             onClick = { onSongSelected(song, filteredSongs) },
-                            onToggleFavorite = { onToggleFavorite(song) }
+                            onToggleFavorite = { onToggleFavorite(song) },
+                            onAddToPlaylist = { songToAddToPlaylist = song }
                         )
                     }
                 }
             }
+        }
+
+        // Dialog: Quick Add Song to Folder from Library
+        if (songToAddToPlaylist != null) {
+            val targetSong = songToAddToPlaylist!!
+            AlertDialog(
+                onDismissRequest = { songToAddToPlaylist = null },
+                containerColor = CharcoalSurface,
+                title = {
+                    Text(
+                        text = "ADICIONAR À PASTA",
+                        color = SigilWhite,
+                        fontFamily = FontFamily.Monospace,
+                        fontWeight = FontWeight.Bold,
+                        fontSize = 15.sp
+                    )
+                },
+                text = {
+                    Column {
+                        Text(
+                            text = targetSong.title,
+                            color = CyberAmber,
+                            fontFamily = FontFamily.Monospace,
+                            fontSize = 12.sp,
+                            maxLines = 1,
+                            overflow = TextOverflow.Ellipsis
+                        )
+                        Spacer(modifier = Modifier.height(12.dp))
+                        if (playlists.isEmpty()) {
+                            Text(
+                                text = "Nenhuma pasta criada ainda. Abra a aba de Pastas no topo para criar sua primeira pasta ou use o botão de auto-organização.",
+                                color = MutedStone,
+                                fontFamily = FontFamily.Monospace,
+                                fontSize = 11.5.sp
+                            )
+                        } else {
+                            LazyColumn(
+                                modifier = Modifier
+                                    .fillMaxWidth()
+                                    .height(260.dp),
+                                verticalArrangement = Arrangement.spacedBy(6.dp)
+                            ) {
+                                items(playlists.size) { index ->
+                                    val pl = playlists[index]
+                                    val plColor = remember(pl.colorHex) {
+                                        try {
+                                            Color(android.graphics.Color.parseColor(pl.colorHex))
+                                        } catch (e: Exception) {
+                                            CyberAmber
+                                        }
+                                    }
+                                    Row(
+                                        modifier = Modifier
+                                            .fillMaxWidth()
+                                            .clip(RoundedCornerShape(8.dp))
+                                            .background(VoidBlack)
+                                            .border(1.dp, plColor.copy(alpha = 0.5f), RoundedCornerShape(8.dp))
+                                            .clickable {
+                                                onAddSongToPlaylist(pl.id, targetSong.id)
+                                                songToAddToPlaylist = null
+                                                Toast.makeText(context, "Música adicionada à pasta '${pl.name}'", Toast.LENGTH_SHORT).show()
+                                            }
+                                            .padding(10.dp),
+                                        verticalAlignment = Alignment.CenterVertically
+                                    ) {
+                                        Icon(
+                                            imageVector = Icons.Default.Folder,
+                                            contentDescription = null,
+                                            tint = plColor,
+                                            modifier = Modifier.size(24.dp)
+                                        )
+                                        Spacer(modifier = Modifier.width(10.dp))
+                                        Column(modifier = Modifier.weight(1f)) {
+                                            Text(
+                                                text = pl.name,
+                                                color = SigilWhite,
+                                                fontSize = 13.sp,
+                                                fontFamily = FontFamily.Monospace,
+                                                fontWeight = FontWeight.Medium
+                                            )
+                                            Text(
+                                                text = "${pl.category} • ${pl.songCount} faixas",
+                                                color = MutedStone,
+                                                fontSize = 10.sp,
+                                                fontFamily = FontFamily.Monospace
+                                            )
+                                        }
+                                    }
+                                }
+                            }
+                        }
+                    }
+                },
+                confirmButton = {},
+                dismissButton = {
+                    TextButton(onClick = { songToAddToPlaylist = null }) {
+                        Text(text = "CANCELAR", color = MutedStone, fontFamily = FontFamily.Monospace)
+                    }
+                }
+            )
         }
     }
 }
@@ -346,7 +459,8 @@ private fun SongRowItem(
     isSelected: Boolean,
     isPlaying: Boolean,
     onClick: () -> Unit,
-    onToggleFavorite: () -> Unit
+    onToggleFavorite: () -> Unit,
+    onAddToPlaylist: () -> Unit
 ) {
     Row(
         modifier = Modifier
@@ -404,7 +518,7 @@ private fun SongRowItem(
                 tint = CyberAmber,
                 modifier = Modifier
                     .size(20.dp)
-                    .padding(end = 6.dp)
+                    .padding(end = 4.dp)
             )
         }
 
@@ -418,6 +532,19 @@ private fun SongRowItem(
                 contentDescription = "Favoritar",
                 tint = if (song.isFavorite) CyberAmber else WireframeBorder,
                 modifier = Modifier.size(18.dp)
+            )
+        }
+
+        // Quick Add to Playlist / Folder Icon
+        IconButton(
+            onClick = onAddToPlaylist,
+            modifier = Modifier.size(32.dp)
+        ) {
+            Icon(
+                imageVector = Icons.Default.PlaylistAdd,
+                contentDescription = "Adicionar à pasta",
+                tint = SigilSilver,
+                modifier = Modifier.size(20.dp)
             )
         }
     }

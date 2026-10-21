@@ -98,8 +98,17 @@ fun FoldersScreen(
     var showCreateDialog by remember { mutableStateOf(false) }
     var showAddSongsDialog by remember { mutableStateOf(false) }
 
-    // Synchronize active selected playlist when list updates
-    val activePlaylist = playlists.find { it.id == selectedPlaylistForDetail?.id } ?: selectedPlaylistForDetail
+    // Synchronize active selected playlist when list updates, clearing stale deleted playlists
+    val activePlaylist = remember(playlists, selectedPlaylistForDetail) {
+        if (selectedPlaylistForDetail == null) null
+        else playlists.find { it.id == selectedPlaylistForDetail?.id }
+    }
+
+    androidx.compose.runtime.LaunchedEffect(playlists, selectedPlaylistForDetail) {
+        if (selectedPlaylistForDetail != null && activePlaylist == null) {
+            selectedPlaylistForDetail = null
+        }
+    }
 
     Box(
         modifier = modifier
@@ -571,7 +580,7 @@ private fun CreateFolderDialog(
     var selectedCategory by remember { mutableStateOf("GERAL") }
     var selectedColor by remember { mutableStateOf("#F59E0B") }
 
-    val categories = listOf("CRISTÃS", "PLAYBACK", "DIA A DIA", "REUNIÕES", "GERAL")
+    val categories = listOf("CRISTÃS (CANTADO)", "CRISTÃS (PLAYBACK)", "DIA A DIA", "REUNIÕES", "GERAL")
     val colors = listOf(
         "#F59E0B" to "Amber",
         "#06B6D4" to "Cyan",

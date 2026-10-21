@@ -57,6 +57,7 @@ class MusicPlayerController(
 
     private var progressTrackingJob: Job? = null
     private var secondsAccumulatedForCurrentSong = 0L
+    private var isPlayIntended = false
 
     fun initialize() {
         val sessionToken = SessionToken(
@@ -82,6 +83,7 @@ class MusicPlayerController(
     private val playerListener = object : Player.Listener {
         override fun onIsPlayingChanged(isPlaying: Boolean) {
             _isPlaying.value = isPlaying
+            isPlayIntended = isPlaying
             if (isPlaying) {
                 startPositionTracker()
             } else {
@@ -124,6 +126,8 @@ class MusicPlayerController(
         _currentSong.value = song
         _durationMs.value = song.durationMs
         secondsAccumulatedForCurrentSong = 0L
+        isPlayIntended = true
+        _isPlaying.value = true
 
         // Trigger instantaneous play recording in DB
         onSongStarted(song)
@@ -147,60 +151,113 @@ class MusicPlayerController(
 
         controller.setMediaItems(mediaItems, targetIndex, 0L)
         controller.prepare()
-        fadeManager?.fadeIn(getEffectiveFadeDuration()) ?: controller.play()
+
+        val fadeDur = getEffectiveFadeDuration()
+        if (fadeDur > 50L) {
+            fadeManager?.fadeIn(fadeDur)
+        } else {
+            fadeManager?.cancel()
+            controller.volume = 1.0f
+            controller.play()
+        }
     }
 
     fun togglePlayPauseWithFade() {
         val controller = mediaController ?: return
-        val fadeDur = getEffectiveFadeDuration()
-        if (controller.isPlaying) {
-            flushAccumulatedListenStats()
+        val currentlyPlaying = isPlayIntended || controller.isPlaying
+
+        if (currentlyPlaying) {
+            // Intended action: PAUSE
+            isPlayIntended = false
             _isPlaying.value = false
-            fadeManager?.fadeOutAndPause(fadeDur) ?: run {
+            flushAccumulatedListenStats()
+
+            val fadeDur = getEffectiveFadeDuration()
+            if (fadeDur > 50L) {
+                fadeManager?.fadeOutAndPause(200L)
+            } else {
+                fadeManager?.cancel()
                 controller.pause()
                 controller.volume = 1.0f
             }
         } else {
+            // Intended action: PLAY
+            isPlayIntended = true
             _isPlaying.value = true
-            fadeManager?.fadeIn(fadeDur) ?: controller.play()
+
+            val fadeDur = getEffectiveFadeDuration()
+            if (fadeDur > 50L) {
+                fadeManager?.fadeIn(fadeDur)
+            } else {
+                fadeManager?.cancel()
+                controller.volume = 1.0f
+                controller.play()
+            }
         }
     }
 
     fun skipNextWithFade() {
         val controller = mediaController ?: return
         flushAccumulatedListenStats()
-        val fadeDur = getEffectiveFadeDuration()
-        fadeManager?.fadeOutAndAction(fadeDur) {
-            if (controller.hasNextMediaItem()) {
-                controller.seekToNextMediaItem()
+        val shouldPlay = isPlayIntended || controller.isPlaying
+
+        // Immediate track transition
+        if (controller.hasNextMediaItem()) {
+            controller.seekToNextMediaItem()
+        } else {
+            controller.seekTo(0, 0L)
+        }
+
+        if (shouldPlay) {
+            isPlayIntended = true
+            _isPlaying.value = true
+            val fadeDur = getEffectiveFadeDuration()
+            if (fadeDur > 50L) {
+                fadeManager?.fadeIn(fadeDur)
             } else {
-                controller.seekTo(0, 0L)
+                fadeManager?.cancel()
+                controller.volume = 1.0f
+                controller.play()
             }
-        } ?: run {
-            if (controller.hasNextMediaItem()) {
-                controller.seekToNextMediaItem()
-            } else {
-                controller.seekTo(0, 0L)
-            }
+        } else {
+            // Respect paused state
+            isPlayIntended = false
+            _isPlaying.value = false
+            fadeManager?.cancel()
+            controller.volume = 1.0f
+            controller.pause()
         }
     }
 
     fun skipPreviousWithFade() {
         val controller = mediaController ?: return
         flushAccumulatedListenStats()
-        val fadeDur = getEffectiveFadeDuration()
-        fadeManager?.fadeOutAndAction(fadeDur) {
-            if (controller.currentPosition > 3000L || !controller.hasPreviousMediaItem()) {
-                controller.seekTo(0L)
+        val shouldPlay = isPlayIntended || controller.isPlaying
+
+        if (controller.currentPosition > 3000L || !controller.hasPreviousMediaItem()) {
+            controller.seekTo(0L)
+        } else {
+            controller.seekToPreviousMediaItem()
+        }
+
+        if (shouldPlay) {
+            isPlayIntended = true
+            _isPlaying.value = true
+            val fadeDur = getEffectiveFadeDuration()
+            if (fadeDur > 50L) {
+                fadeManager?.fadeIn(fadeDur)
             } else {
-                controller.seekToPreviousMediaItem()
+                fadeManager?.cancel()
+                controller.volume = 1.0f
+                controller.play()
             }
-        } ?: run {
-            if (controller.currentPosition > 3000L || !controller.hasPreviousMediaItem()) {
-                controller.seekTo(0L)
-            } else {
-                controller.seekToPreviousMediaItem()
-            }
+        } else {
+            // Respect paused state
+            isPlayIntended = false
+            _isPlaying.value = false
+            fadeManager?.cancel()
+            controller.volume = 1.0f
+            controller.pause()
         }
     }
 

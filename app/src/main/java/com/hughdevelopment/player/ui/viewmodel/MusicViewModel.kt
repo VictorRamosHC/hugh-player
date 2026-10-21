@@ -163,7 +163,8 @@ class MusicViewModel(application: Application) : AndroidViewModel(application) {
         viewModelScope.launch {
             val newFav = !song.isFavorite
             playerController.updateSongFavorite(song.id, newFav)
-            repository.toggleFavorite(song)
+            val finalFav = repository.toggleFavorite(song)
+            playerController.updateSongFavorite(song.id, finalFav)
         }
     }
 

@@ -27,8 +27,8 @@ class MediaStoreScanner(private val context: Context) {
             MediaStore.Audio.Media.DATE_ADDED
         )
 
-        // Exclude system sounds/ringtones/recordings shorter than 25 seconds
-        val selection = "${MediaStore.Audio.Media.IS_MUSIC} != 0 AND ${MediaStore.Audio.Media.DURATION} >= 25000"
+        // Exclude system sounds/ringtones/alarms and files shorter than 5 seconds
+        val selection = "(${MediaStore.Audio.Media.IS_MUSIC} != 0 OR ${MediaStore.Audio.Media.DATA} LIKE '%.mp3' OR ${MediaStore.Audio.Media.DATA} LIKE '%.m4a' OR ${MediaStore.Audio.Media.DATA} LIKE '%.wav' OR ${MediaStore.Audio.Media.DATA} LIKE '%.aac') AND ${MediaStore.Audio.Media.DURATION} >= 5000 AND ${MediaStore.Audio.Media.IS_RINGTONE} == 0 AND ${MediaStore.Audio.Media.IS_NOTIFICATION} == 0 AND ${MediaStore.Audio.Media.IS_ALARM} == 0"
         val sortOrder = "${MediaStore.Audio.Media.TITLE} ASC"
 
         context.contentResolver.query(
@@ -96,24 +96,14 @@ class MediaStoreScanner(private val context: Context) {
 
     private fun isNoiseOrRecording(path: String, title: String): Boolean {
         val lowerPath = path.lowercase()
-        val lowerTitle = title.lowercase()
 
-        // Exclude WhatsApp voice notes and temporary audio dumps
-        if (lowerPath.contains("whatsapp voice notes") ||
-            lowerPath.contains("whatsapp/media/whatsapp voice notes") ||
-            lowerPath.contains("call_recorder") ||
-            lowerPath.contains("sound_recorder") ||
-            lowerPath.contains("/recordings/") ||
-            lowerPath.contains("/gravador/")
-        ) {
-            return true
-        }
-
-        // Exclude typical automated naming conventions for voice recordings (e.g., AUD-2026..., PTT-2026...)
-        if (lowerTitle.startsWith("aud-") ||
-            lowerTitle.startsWith("ptt-") ||
-            lowerTitle.startsWith("voice-") ||
-            lowerTitle.matches(Regex("""^\d{2}-\d{2}-\d{4}.*"""))
+        // Exclude system notification sounds, alarms and ringtones
+        if (lowerPath.contains("/ringtones/") ||
+            lowerPath.contains("/notifications/") ||
+            lowerPath.contains("/alarms/") ||
+            lowerPath.contains("/system/media/") ||
+            lowerPath.contains("/.cache/") ||
+            lowerPath.contains("temp_audio")
         ) {
             return true
         }

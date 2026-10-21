@@ -3,10 +3,10 @@
   "timestamp": 1792624118377,
   "total_songs": 303,
   "categories_summary": {
-    "Músicas Cristãs (Cantado)": 16,
-    "Músicas Cristãs (Playback)": 98,
-    "Músicas Dia a Dia": 154,
-    "Áudios de Reuniões": 35
+    "Músicas Cristãs (Cantado)": 26,
+    "Músicas Cristãs (Playback)": 113,
+    "Músicas Dia a Dia": 153,
+    "Áudios de Reuniões": 11
   },
   "folders": {
     "Músicas Cristãs (Cantado)": [
@@ -67,11 +67,46 @@
         "proposed_path": "/sdcard/Music/Músicas Cristãs (Cantado)/Mara Lima - Daniel(MP3_160K).mp3"
       },
       {
+        "id": 223180,
+        "title": "Eu Quero Ser Santo",
+        "artist": "Eyshila",
+        "current_path": "/storage/emulated/0/snaptube/download/SnapTube Audio/Eu quero ser santo - Eyshila(MP3_320K).mp3",
+        "proposed_path": "/sdcard/Music/Músicas Cristãs (Cantado)/Eu quero ser santo - Eyshila(MP3_320K).mp3"
+      },
+      {
+        "id": 183615,
+        "title": "Eu e Deus",
+        "artist": "Canção & Louvor",
+        "current_path": "/storage/emulated/0/Android/media/com.whatsapp/WhatsApp/Media/WhatsApp Audio/AUD-20260628-WA0002.m4a",
+        "proposed_path": "/sdcard/Music/Músicas Cristãs (Cantado)/AUD-20260628-WA0002.m4a"
+      },
+      {
+        "id": 189592,
+        "title": "Identidade",
+        "artist": "Anderson Freire, Bruna Karla",
+        "current_path": "/storage/emulated/0/Android/media/com.whatsapp/WhatsApp/Media/WhatsApp Audio/AUD-20260712-WA0004.m4a",
+        "proposed_path": "/sdcard/Music/Músicas Cristãs (Cantado)/AUD-20260712-WA0004.m4a"
+      },
+      {
+        "id": 178268,
+        "title": "Jó",
+        "artist": "Midian Lima",
+        "current_path": "/storage/emulated/0/Android/media/com.whatsapp/WhatsApp/Media/WhatsApp Audio/AUD-20260613-WA0019.m4a",
+        "proposed_path": "/sdcard/Music/Músicas Cristãs (Cantado)/AUD-20260613-WA0019.m4a"
+      },
+      {
         "id": 228587,
         "title": "Kalebe - Deus Te Ama",
         "artist": "Cantor Kalebe",
         "current_path": "/storage/emulated/0/snaptube/download/SnapTube Audio/Kalebe - Deus Te Ama(MP3_320K).mp3",
         "proposed_path": "/sdcard/Music/Músicas Cristãs (Cantado)/Kalebe - Deus Te Ama(MP3_320K).mp3"
+      },
+      {
+        "id": 183281,
+        "title": "Léa Mendonça - Chora que a Vitória Vem",
+        "artist": "Léa Mendonça",
+        "current_path": "/storage/emulated/0/Android/media/com.whatsapp/WhatsApp/Media/WhatsApp Audio/AUD-20260627-WA0003.m4a",
+        "proposed_path": "/sdcard/Music/Músicas Cristãs (Cantado)/AUD-20260627-WA0003.m4a"
       },
       {
         "id": 27172,
@@ -81,11 +116,39 @@
         "proposed_path": "/sdcard/Music/Músicas Cristãs (Cantado)/Elaine de Jesus - Na Unção de Deus _ O Crente Cheio da Unção (Ao Vivo)(MP3_160K).mp3"
       },
       {
+        "id": 180282,
+        "title": "Não há Deus Maior",
+        "artist": "Luiz De Carvalho",
+        "current_path": "/storage/emulated/0/Android/media/com.whatsapp/WhatsApp/Media/WhatsApp Audio/AUD-20260618-WA0028.m4a",
+        "proposed_path": "/sdcard/Music/Músicas Cristãs (Cantado)/AUD-20260618-WA0028.m4a"
+      },
+      {
+        "id": 211969,
+        "title": "O Noivo Virá",
+        "artist": "Damares",
+        "current_path": "/storage/emulated/0/Android/media/com.whatsapp/WhatsApp/Media/WhatsApp Audio/AUD-20260906-WA0003.m4a",
+        "proposed_path": "/sdcard/Music/Músicas Cristãs (Cantado)/AUD-20260906-WA0003.m4a"
+      },
+      {
+        "id": 124881,
+        "title": "Poder Pra Salvar (Mighty to Save)",
+        "artist": "Aline Barros",
+        "current_path": "/storage/emulated/0/snaptube/download/SnapTube Audio/Poder para salvar _ CD Caminho de Milagres _ Aline Barros(MP3_160K).mp3",
+        "proposed_path": "/sdcard/Music/Músicas Cristãs (Cantado)/Poder para salvar _ CD Caminho de Milagres _ Aline Barros(MP3_160K).mp3"
+      },
+      {
         "id": 183391,
         "title": "Posso Clamar",
         "artist": "Eyshila",
         "current_path": "/storage/emulated/0/snaptube/download/SnapTube Audio/Eyshila - Posso Clamar (Ao Vivo) - DVD 10 Anos Collection(MP3_160K).mp3",
         "proposed_path": "/sdcard/Music/Músicas Cristãs (Cantado)/Eyshila - Posso Clamar (Ao Vivo) - DVD 10 Anos Collection(MP3_160K).mp3"
+      },
+      {
+        "id": 209899,
+        "title": "Quase Meia-Noite - Ao Vivo",
+        "artist": "Vanilda Bordieri",
+        "current_path": "/storage/emulated/0/Android/media/com.whatsapp/WhatsApp/Media/WhatsApp Audio/AUD-20260830-WA0012.mp3",
+        "proposed_path": "/sdcard/Music/Músicas Cristãs (Cantado)/AUD-20260830-WA0012.mp3"
       },
       {
         "id": 47471,
@@ -107,6 +170,13 @@
         "artist": "Léo Jundi",
         "current_path": "/storage/emulated/0/snaptube/download/SnapTube Audio/Só em Jesus(MP3_160K).mp3",
         "proposed_path": "/sdcard/Music/Músicas Cristãs (Cantado)/Só em Jesus(MP3_160K).mp3"
+      },
+      {
+        "id": 194166,
+        "title": "Te Agradeço - Ao Vivo",
+        "artist": "Diante do Trono",
+        "current_path": "/storage/emulated/0/Android/media/com.whatsapp/WhatsApp/Media/WhatsApp Audio/AUD-20260725-WA0003.m4a",
+        "proposed_path": "/sdcard/Music/Músicas Cristãs (Cantado)/AUD-20260725-WA0003.m4a"
       },
       {
         "id": 32881,
@@ -137,6 +207,13 @@
         "artist": "Niel Nascimento",
         "current_path": "/storage/emulated/0/snaptube/download/playbacks/🎤 Coração Igual ao Teu (PLAYBACK LEGENDADO no Piano - TOM CONTRALTO _Db_) Diante do Trono(MP3_160K).mp3",
         "proposed_path": "/sdcard/Music/Músicas Cristãs (Playback)/🎤 Coração Igual ao Teu (PLAYBACK LEGENDADO no Piano - TOM CONTRALTO _Db_) Diante do Trono(MP3_160K).mp3"
+      },
+      {
+        "id": 181267,
+        "title": "PLAYBACK PIANO  SIGO CANTANDO (Versão Inédita) #cover TOM FEMININO (D)",
+        "artist": "Playback Sucessos",
+        "current_path": "/storage/emulated/0/Android/media/com.whatsapp/WhatsApp/Media/WhatsApp Audio/AUD-20260621-WA0006.m4a",
+        "proposed_path": "/sdcard/Music/Músicas Cristãs (Playback)/AUD-20260621-WA0006.m4a"
       },
       {
         "id": 214050,
@@ -186,6 +263,13 @@
         "artist": "Gabriel Guedes de Almeida",
         "current_path": "/storage/emulated/0/snaptube/download/playbacks/Gabriel Guedes - Vitorioso És (Clipe Oficial) _ Playback(MP3_160K).mp3",
         "proposed_path": "/sdcard/Music/Músicas Cristãs (Playback)/Gabriel Guedes - Vitorioso És (Clipe Oficial) _ Playback(MP3_160K).mp3"
+      },
+      {
+        "id": 194207,
+        "title": "Calma - Playback",
+        "artist": "Eliã Oliveira",
+        "current_path": "/storage/emulated/0/Android/media/com.whatsapp/WhatsApp/Media/WhatsApp Audio/AUD-20260725-WA0007.m4a",
+        "proposed_path": "/sdcard/Music/Músicas Cristãs (Playback)/AUD-20260725-WA0007.m4a"
       },
       {
         "id": 171817,
@@ -426,6 +510,13 @@
         "proposed_path": "/sdcard/Music/Músicas Cristãs (Playback)/Fiel a Mim - Eyshila (playback legendado)(MP3_160K).mp3"
       },
       {
+        "id": 194164,
+        "title": "Fiel a Mim (Playback)",
+        "artist": "Eyshila",
+        "current_path": "/storage/emulated/0/Android/media/com.whatsapp/WhatsApp/Media/WhatsApp Audio/AUD-20260725-WA0002.m4a",
+        "proposed_path": "/sdcard/Music/Músicas Cristãs (Playback)/AUD-20260725-WA0002.m4a"
+      },
+      {
         "id": 202421,
         "title": "Fiel a Mim (Playback)",
         "artist": "Eyshila",
@@ -461,6 +552,13 @@
         "proposed_path": "/sdcard/Music/Músicas Cristãs (Playback)/HOMEM DOS MILAGRES - MARA LIMA - PLAYBACK  Legendado(MP3_160K).mp3"
       },
       {
+        "id": 189587,
+        "title": "Identidade (Playback)",
+        "artist": "Anderson Freire",
+        "current_path": "/storage/emulated/0/Android/media/com.whatsapp/WhatsApp/Media/WhatsApp Audio/AUD-20260712-WA0002.m4a",
+        "proposed_path": "/sdcard/Music/Músicas Cristãs (Playback)/AUD-20260712-WA0002.m4a"
+      },
+      {
         "id": 163260,
         "title": "In Memorian",
         "artist": "Mara Lima",
@@ -487,6 +585,13 @@
         "artist": "Léa Mendonça",
         "current_path": "/storage/emulated/0/snaptube/download/playbacks/Chora Que A Vitória Vem - Léa Mendonça playback com letra(MP3_160K).mp3",
         "proposed_path": "/sdcard/Music/Músicas Cristãs (Playback)/Chora Que A Vitória Vem - Léa Mendonça playback com letra(MP3_160K).mp3"
+      },
+      {
+        "id": 182708,
+        "title": "Manancial (Eu Tenho Sede de Ti) (Playback)",
+        "artist": "Aline Barros",
+        "current_path": "/storage/emulated/0/Android/media/com.whatsapp/WhatsApp/Media/WhatsApp Audio/AUD-20260625-WA0005.m4a",
+        "proposed_path": "/sdcard/Music/Músicas Cristãs (Playback)/AUD-20260625-WA0005.m4a"
       },
       {
         "id": 157936,
@@ -545,6 +650,13 @@
         "proposed_path": "/sdcard/Music/Músicas Cristãs (Playback)/Não Há Deus Maior (Play Back)(MP3_160K).mp3"
       },
       {
+        "id": 189600,
+        "title": "Não Posso Desistir (Playback)",
+        "artist": "Cassiane",
+        "current_path": "/storage/emulated/0/Android/media/com.whatsapp/WhatsApp/Media/WhatsApp Audio/AUD-20260712-WA0005.m4a",
+        "proposed_path": "/sdcard/Music/Músicas Cristãs (Playback)/AUD-20260712-WA0005.m4a"
+      },
+      {
         "id": 126698,
         "title": "O Escudo - Playback",
         "artist": "Voz da Verdade",
@@ -578,6 +690,13 @@
         "artist": "Nani Azevedo",
         "current_path": "/storage/emulated/0/snaptube/download/playbacks/O Melhor Desta Terra (Playback)(MP3_320K).mp3",
         "proposed_path": "/sdcard/Music/Músicas Cristãs (Playback)/O Melhor Desta Terra (Playback)(MP3_320K).mp3"
+      },
+      {
+        "id": 211965,
+        "title": "O Noivo Virá - Playback",
+        "artist": "Damares",
+        "current_path": "/storage/emulated/0/Android/media/com.whatsapp/WhatsApp/Media/WhatsApp Audio/AUD-20260906-WA0001.m4a",
+        "proposed_path": "/sdcard/Music/Músicas Cristãs (Playback)/AUD-20260906-WA0001.m4a"
       },
       {
         "id": 204500,
@@ -643,6 +762,20 @@
         "proposed_path": "/sdcard/Music/Músicas Cristãs (Playback)/Posso Clamar (Playback)(MP3_160K).mp3"
       },
       {
+        "id": 194191,
+        "title": "Quando Oro - Playback",
+        "artist": "Canção & Louvor",
+        "current_path": "/storage/emulated/0/Android/media/com.whatsapp/WhatsApp/Media/WhatsApp Audio/AUD-20260725-WA0006.m4a",
+        "proposed_path": "/sdcard/Music/Músicas Cristãs (Playback)/AUD-20260725-WA0006.m4a"
+      },
+      {
+        "id": 211971,
+        "title": "Quase Meia Noite - Vanilda Bordieri playback com letra",
+        "artist": "Zelly Lima voz e play back",
+        "current_path": "/storage/emulated/0/Android/media/com.whatsapp/WhatsApp/Media/WhatsApp Audio/AUD-20260906-WA0004.m4a",
+        "proposed_path": "/sdcard/Music/Músicas Cristãs (Playback)/AUD-20260906-WA0004.m4a"
+      },
+      {
         "id": 163262,
         "title": "Quão grande é o meu Deus - playback",
         "artist": "Música Gospel",
@@ -685,6 +818,20 @@
         "proposed_path": "/sdcard/Music/Músicas Cristãs (Playback)/Santo Lugar (Playback)(MP3_160K).mp3"
       },
       {
+        "id": 189602,
+        "title": "Se For pra Ser - Playback",
+        "artist": "Canção e Louvor",
+        "current_path": "/storage/emulated/0/Android/media/com.whatsapp/WhatsApp/Media/WhatsApp Audio/AUD-20260712-WA0006.m4a",
+        "proposed_path": "/sdcard/Music/Músicas Cristãs (Playback)/AUD-20260712-WA0006.m4a"
+      },
+      {
+        "id": 160485,
+        "title": "Sem Jesus Não Dá - Playback",
+        "artist": "Noemi Nonato",
+        "current_path": "/storage/emulated/0/Android/media/com.whatsapp/WhatsApp/Media/WhatsApp Audio/AUD-20260503-WA0018.m4a",
+        "proposed_path": "/sdcard/Music/Músicas Cristãs (Playback)/AUD-20260503-WA0018.m4a"
+      },
+      {
         "id": 178312,
         "title": "Semente do Sangue (Playback)",
         "artist": "Mara Lima",
@@ -711,6 +858,20 @@
         "artist": "Renascer Praise",
         "current_path": "/storage/emulated/0/snaptube/download/playbacks/Ser reconhecido por Deus - Renascer Praise (playback legendado)(MP3_160K).mp3",
         "proposed_path": "/sdcard/Music/Músicas Cristãs (Playback)/Ser reconhecido por Deus - Renascer Praise (playback legendado)(MP3_160K).mp3"
+      },
+      {
+        "id": 189548,
+        "title": "Sou Deus - Jana de Paula - PLAY BACK - VÍDEO LETRA",
+        "artist": "Cléia Souza",
+        "current_path": "/storage/emulated/0/Android/media/com.whatsapp/WhatsApp/Media/WhatsApp Audio/AUD-20260712-WA0000.m4a",
+        "proposed_path": "/sdcard/Music/Músicas Cristãs (Playback)/AUD-20260712-WA0000.m4a"
+      },
+      {
+        "id": 157940,
+        "title": "Sou O Teu Deus (feat. Giselli Cristina) (Playback)",
+        "artist": "Rafaelli Cristina - Topic",
+        "current_path": "/storage/emulated/0/Android/media/com.whatsapp/WhatsApp/Media/WhatsApp Audio/AUD-20260426-WA0023.m4a",
+        "proposed_path": "/sdcard/Music/Músicas Cristãs (Playback)/AUD-20260426-WA0023.m4a"
       },
       {
         "id": 178692,
@@ -746,6 +907,13 @@
         "artist": "Trazendo a Arca",
         "current_path": "/storage/emulated/0/snaptube/download/SnapTube Audio/Te Louvarei - Ministério Toque no Altar(playback legendado)(M4A_128K).m4a",
         "proposed_path": "/sdcard/Music/Músicas Cristãs (Playback)/Te Louvarei - Ministério Toque no Altar(playback legendado)(M4A_128K).m4a"
+      },
+      {
+        "id": 157629,
+        "title": "Te Louvarei - Playback",
+        "artist": "Trazendo a Arca",
+        "current_path": "/storage/emulated/0/Android/media/com.whatsapp/WhatsApp/Media/WhatsApp Audio/AUD-20260425-WA0074.m4a",
+        "proposed_path": "/sdcard/Music/Músicas Cristãs (Playback)/AUD-20260425-WA0074.m4a"
       },
       {
         "id": 202367,
@@ -809,6 +977,13 @@
         "artist": "Elias Instrumental",
         "current_path": "/storage/emulated/0/snaptube/download/playbacks/Vitorioso És - Gabriel Guedes (Playback Original   Coral) [Ver.2](MP3_160K).mp3",
         "proposed_path": "/sdcard/Music/Músicas Cristãs (Playback)/Vitorioso És - Gabriel Guedes (Playback Original   Coral) [Ver.2](MP3_160K).mp3"
+      },
+      {
+        "id": 225334,
+        "title": "É QUASE MEIA NOITE. Vanilda bordieri. Playback(modificado)",
+        "artist": "NAJARA NOGUE",
+        "current_path": "/storage/emulated/0/Android/media/com.whatsapp/WhatsApp/Media/WhatsApp Audio/AUD-20261011-WA0038.m4a",
+        "proposed_path": "/sdcard/Music/Músicas Cristãs (Playback)/AUD-20261011-WA0038.m4a"
       }
     ],
     "Músicas Dia a Dia": [
@@ -1119,13 +1294,6 @@
         "artist": "Felipe Rodrigues - Topic",
         "current_path": "/storage/emulated/0/snaptube/download/SnapTube Audio/Era Eu (Ao Vivo)(M4A_128K).m4a",
         "proposed_path": "/sdcard/Music/Músicas Dia a Dia/Era Eu (Ao Vivo)(M4A_128K).m4a"
-      },
-      {
-        "id": 223180,
-        "title": "Eu Quero Ser Santo",
-        "artist": "Eyshila",
-        "current_path": "/storage/emulated/0/snaptube/download/SnapTube Audio/Eu quero ser santo - Eyshila(MP3_320K).mp3",
-        "proposed_path": "/sdcard/Music/Músicas Dia a Dia/Eu quero ser santo - Eyshila(MP3_320K).mp3"
       },
       {
         "id": 173920,
@@ -1541,13 +1709,6 @@
         "proposed_path": "/sdcard/Music/Músicas Dia a Dia/Deftones - Passenger [Official Visualizer](MP3_320K).mp3"
       },
       {
-        "id": 124881,
-        "title": "Poder Pra Salvar (Mighty to Save)",
-        "artist": "Aline Barros",
-        "current_path": "/storage/emulated/0/snaptube/download/SnapTube Audio/Poder para salvar _ CD Caminho de Milagres _ Aline Barros(MP3_160K).mp3",
-        "proposed_path": "/sdcard/Music/Músicas Dia a Dia/Poder para salvar _ CD Caminho de Milagres _ Aline Barros(MP3_160K).mp3"
-      },
-      {
         "id": 209916,
         "title": "Portões Celestiais",
         "artist": "Michelle Nascimento",
@@ -1588,6 +1749,13 @@
         "artist": "AngryLegionary",
         "current_path": "/storage/emulated/0/snaptube/download/SnapTube Audio/Saint Celestine Speech - Our Martyred Lady - Warhammer 40000(M4A_128K).m4a",
         "proposed_path": "/sdcard/Music/Músicas Dia a Dia/Saint Celestine Speech - Our Martyred Lady - Warhammer 40000(M4A_128K).m4a"
+      },
+      {
+        "id": 206291,
+        "title": "Samurai (feat. Stevie Wonder)",
+        "artist": "Djavan, Stevie Wonder",
+        "current_path": "/storage/emulated/0/snaptube/download/SnapTube Audio/Djavan - Samurai (Áudio Oficial) ft. Stevie Wonder(M4A_128K).m4a",
+        "proposed_path": "/sdcard/Music/Músicas Dia a Dia/Djavan - Samurai (Áudio Oficial) ft. Stevie Wonder(M4A_128K).m4a"
       },
       {
         "id": 223009,
@@ -1893,167 +2061,6 @@
     ],
     "Áudios de Reuniões": [
       {
-        "id": 181267,
-        "title": "PLAYBACK PIANO  SIGO CANTANDO (Versão Inédita) #cover TOM FEMININO (D)",
-        "artist": "Playback Sucessos",
-        "current_path": "/storage/emulated/0/Android/media/com.whatsapp/WhatsApp/Media/WhatsApp Audio/AUD-20260621-WA0006.m4a",
-        "proposed_path": "/sdcard/Music/Áudios de Reuniões/AUD-20260621-WA0006.m4a"
-      },
-      {
-        "id": 194207,
-        "title": "Calma - Playback",
-        "artist": "Eliã Oliveira",
-        "current_path": "/storage/emulated/0/Android/media/com.whatsapp/WhatsApp/Media/WhatsApp Audio/AUD-20260725-WA0007.m4a",
-        "proposed_path": "/sdcard/Music/Áudios de Reuniões/AUD-20260725-WA0007.m4a"
-      },
-      {
-        "id": 183615,
-        "title": "Eu e Deus",
-        "artist": "Canção & Louvor",
-        "current_path": "/storage/emulated/0/Android/media/com.whatsapp/WhatsApp/Media/WhatsApp Audio/AUD-20260628-WA0002.m4a",
-        "proposed_path": "/sdcard/Music/Áudios de Reuniões/AUD-20260628-WA0002.m4a"
-      },
-      {
-        "id": 194164,
-        "title": "Fiel a Mim (Playback)",
-        "artist": "Eyshila",
-        "current_path": "/storage/emulated/0/Android/media/com.whatsapp/WhatsApp/Media/WhatsApp Audio/AUD-20260725-WA0002.m4a",
-        "proposed_path": "/sdcard/Music/Áudios de Reuniões/AUD-20260725-WA0002.m4a"
-      },
-      {
-        "id": 189592,
-        "title": "Identidade",
-        "artist": "Anderson Freire, Bruna Karla",
-        "current_path": "/storage/emulated/0/Android/media/com.whatsapp/WhatsApp/Media/WhatsApp Audio/AUD-20260712-WA0004.m4a",
-        "proposed_path": "/sdcard/Music/Áudios de Reuniões/AUD-20260712-WA0004.m4a"
-      },
-      {
-        "id": 189587,
-        "title": "Identidade (Playback)",
-        "artist": "Anderson Freire",
-        "current_path": "/storage/emulated/0/Android/media/com.whatsapp/WhatsApp/Media/WhatsApp Audio/AUD-20260712-WA0002.m4a",
-        "proposed_path": "/sdcard/Music/Áudios de Reuniões/AUD-20260712-WA0002.m4a"
-      },
-      {
-        "id": 178268,
-        "title": "Jó",
-        "artist": "Midian Lima",
-        "current_path": "/storage/emulated/0/Android/media/com.whatsapp/WhatsApp/Media/WhatsApp Audio/AUD-20260613-WA0019.m4a",
-        "proposed_path": "/sdcard/Music/Áudios de Reuniões/AUD-20260613-WA0019.m4a"
-      },
-      {
-        "id": 183281,
-        "title": "Léa Mendonça - Chora que a Vitória Vem",
-        "artist": "Léa Mendonça",
-        "current_path": "/storage/emulated/0/Android/media/com.whatsapp/WhatsApp/Media/WhatsApp Audio/AUD-20260627-WA0003.m4a",
-        "proposed_path": "/sdcard/Music/Áudios de Reuniões/AUD-20260627-WA0003.m4a"
-      },
-      {
-        "id": 182708,
-        "title": "Manancial (Eu Tenho Sede de Ti) (Playback)",
-        "artist": "Aline Barros",
-        "current_path": "/storage/emulated/0/Android/media/com.whatsapp/WhatsApp/Media/WhatsApp Audio/AUD-20260625-WA0005.m4a",
-        "proposed_path": "/sdcard/Music/Áudios de Reuniões/AUD-20260625-WA0005.m4a"
-      },
-      {
-        "id": 189600,
-        "title": "Não Posso Desistir (Playback)",
-        "artist": "Cassiane",
-        "current_path": "/storage/emulated/0/Android/media/com.whatsapp/WhatsApp/Media/WhatsApp Audio/AUD-20260712-WA0005.m4a",
-        "proposed_path": "/sdcard/Music/Áudios de Reuniões/AUD-20260712-WA0005.m4a"
-      },
-      {
-        "id": 180282,
-        "title": "Não há Deus Maior",
-        "artist": "Luiz De Carvalho",
-        "current_path": "/storage/emulated/0/Android/media/com.whatsapp/WhatsApp/Media/WhatsApp Audio/AUD-20260618-WA0028.m4a",
-        "proposed_path": "/sdcard/Music/Áudios de Reuniões/AUD-20260618-WA0028.m4a"
-      },
-      {
-        "id": 211969,
-        "title": "O Noivo Virá",
-        "artist": "Damares",
-        "current_path": "/storage/emulated/0/Android/media/com.whatsapp/WhatsApp/Media/WhatsApp Audio/AUD-20260906-WA0003.m4a",
-        "proposed_path": "/sdcard/Music/Áudios de Reuniões/AUD-20260906-WA0003.m4a"
-      },
-      {
-        "id": 211965,
-        "title": "O Noivo Virá - Playback",
-        "artist": "Damares",
-        "current_path": "/storage/emulated/0/Android/media/com.whatsapp/WhatsApp/Media/WhatsApp Audio/AUD-20260906-WA0001.m4a",
-        "proposed_path": "/sdcard/Music/Áudios de Reuniões/AUD-20260906-WA0001.m4a"
-      },
-      {
-        "id": 194191,
-        "title": "Quando Oro - Playback",
-        "artist": "Canção & Louvor",
-        "current_path": "/storage/emulated/0/Android/media/com.whatsapp/WhatsApp/Media/WhatsApp Audio/AUD-20260725-WA0006.m4a",
-        "proposed_path": "/sdcard/Music/Áudios de Reuniões/AUD-20260725-WA0006.m4a"
-      },
-      {
-        "id": 211971,
-        "title": "Quase Meia Noite - Vanilda Bordieri playback com letra",
-        "artist": "Zelly Lima voz e play back",
-        "current_path": "/storage/emulated/0/Android/media/com.whatsapp/WhatsApp/Media/WhatsApp Audio/AUD-20260906-WA0004.m4a",
-        "proposed_path": "/sdcard/Music/Áudios de Reuniões/AUD-20260906-WA0004.m4a"
-      },
-      {
-        "id": 209899,
-        "title": "Quase Meia-Noite - Ao Vivo",
-        "artist": "Vanilda Bordieri",
-        "current_path": "/storage/emulated/0/Android/media/com.whatsapp/WhatsApp/Media/WhatsApp Audio/AUD-20260830-WA0012.mp3",
-        "proposed_path": "/sdcard/Music/Áudios de Reuniões/AUD-20260830-WA0012.mp3"
-      },
-      {
-        "id": 206291,
-        "title": "Samurai (feat. Stevie Wonder)",
-        "artist": "Djavan, Stevie Wonder",
-        "current_path": "/storage/emulated/0/snaptube/download/SnapTube Audio/Djavan - Samurai (Áudio Oficial) ft. Stevie Wonder(M4A_128K).m4a",
-        "proposed_path": "/sdcard/Music/Áudios de Reuniões/Djavan - Samurai (Áudio Oficial) ft. Stevie Wonder(M4A_128K).m4a"
-      },
-      {
-        "id": 189602,
-        "title": "Se For pra Ser - Playback",
-        "artist": "Canção e Louvor",
-        "current_path": "/storage/emulated/0/Android/media/com.whatsapp/WhatsApp/Media/WhatsApp Audio/AUD-20260712-WA0006.m4a",
-        "proposed_path": "/sdcard/Music/Áudios de Reuniões/AUD-20260712-WA0006.m4a"
-      },
-      {
-        "id": 160485,
-        "title": "Sem Jesus Não Dá - Playback",
-        "artist": "Noemi Nonato",
-        "current_path": "/storage/emulated/0/Android/media/com.whatsapp/WhatsApp/Media/WhatsApp Audio/AUD-20260503-WA0018.m4a",
-        "proposed_path": "/sdcard/Music/Áudios de Reuniões/AUD-20260503-WA0018.m4a"
-      },
-      {
-        "id": 189548,
-        "title": "Sou Deus - Jana de Paula - PLAY BACK - VÍDEO LETRA",
-        "artist": "Cléia Souza",
-        "current_path": "/storage/emulated/0/Android/media/com.whatsapp/WhatsApp/Media/WhatsApp Audio/AUD-20260712-WA0000.m4a",
-        "proposed_path": "/sdcard/Music/Áudios de Reuniões/AUD-20260712-WA0000.m4a"
-      },
-      {
-        "id": 157940,
-        "title": "Sou O Teu Deus (feat. Giselli Cristina) (Playback)",
-        "artist": "Rafaelli Cristina - Topic",
-        "current_path": "/storage/emulated/0/Android/media/com.whatsapp/WhatsApp/Media/WhatsApp Audio/AUD-20260426-WA0023.m4a",
-        "proposed_path": "/sdcard/Music/Áudios de Reuniões/AUD-20260426-WA0023.m4a"
-      },
-      {
-        "id": 194166,
-        "title": "Te Agradeço - Ao Vivo",
-        "artist": "Diante do Trono",
-        "current_path": "/storage/emulated/0/Android/media/com.whatsapp/WhatsApp/Media/WhatsApp Audio/AUD-20260725-WA0003.m4a",
-        "proposed_path": "/sdcard/Music/Áudios de Reuniões/AUD-20260725-WA0003.m4a"
-      },
-      {
-        "id": 157629,
-        "title": "Te Louvarei - Playback",
-        "artist": "Trazendo a Arca",
-        "current_path": "/storage/emulated/0/Android/media/com.whatsapp/WhatsApp/Media/WhatsApp Audio/AUD-20260425-WA0074.m4a",
-        "proposed_path": "/sdcard/Music/Áudios de Reuniões/AUD-20260425-WA0074.m4a"
-      },
-      {
         "id": 190843,
         "title": "Track-11 20260717-102859",
         "artist": "Desconhecido",
@@ -2129,13 +2136,6 @@
         "artist": "Desconhecido",
         "current_path": "/storage/emulated/0/Audio_Reunioes/Transcrever/processo transportador 20260714-085012.m4a",
         "proposed_path": "/sdcard/Music/Áudios de Reuniões/processo transportador 20260714-085012.m4a"
-      },
-      {
-        "id": 225334,
-        "title": "É QUASE MEIA NOITE. Vanilda bordieri. Playback(modificado)",
-        "artist": "NAJARA NOGUE",
-        "current_path": "/storage/emulated/0/Android/media/com.whatsapp/WhatsApp/Media/WhatsApp Audio/AUD-20261011-WA0038.m4a",
-        "proposed_path": "/sdcard/Music/Áudios de Reuniões/AUD-20261011-WA0038.m4a"
       }
     ]
   }

@@ -23,6 +23,7 @@ import androidx.compose.material.icons.filled.FavoriteBorder
 import androidx.compose.material.icons.filled.KeyboardArrowDown
 import androidx.compose.material.icons.filled.Pause
 import androidx.compose.material.icons.filled.PlayArrow
+import androidx.compose.material.icons.filled.PlaylistAdd
 import androidx.compose.material.icons.filled.Repeat
 import androidx.compose.material.icons.filled.RepeatOne
 import androidx.compose.material.icons.filled.Shuffle
@@ -83,7 +84,8 @@ fun ExpandedPlayerSheet(
     onSeekTo: (Long) -> Unit,
     onToggleShuffle: () -> Unit,
     onToggleRepeat: () -> Unit,
-    onToggleFavorite: () -> Unit
+    onToggleFavorite: () -> Unit,
+    onAddToPlaylist: () -> Unit = {}
 ) {
     val sheetState = rememberModalBottomSheetState(skipPartiallyExpanded = true)
 
@@ -157,13 +159,24 @@ fun ExpandedPlayerSheet(
                         )
                     }
 
-                    IconButton(onClick = onToggleFavorite) {
-                        Icon(
-                            imageVector = if (song.isFavorite) Icons.Default.Favorite else Icons.Default.FavoriteBorder,
-                            contentDescription = "Favoritar",
-                            tint = if (song.isFavorite) CyberAmber else SigilSilver,
-                            modifier = Modifier.size(26.dp)
-                        )
+                    Row(verticalAlignment = Alignment.CenterVertically) {
+                        IconButton(onClick = onToggleFavorite) {
+                            Icon(
+                                imageVector = if (song.isFavorite) Icons.Default.Favorite else Icons.Default.FavoriteBorder,
+                                contentDescription = "Favoritar",
+                                tint = if (song.isFavorite) CyberAmber else SigilSilver,
+                                modifier = Modifier.size(26.dp)
+                            )
+                        }
+
+                        IconButton(onClick = onAddToPlaylist) {
+                            Icon(
+                                imageVector = Icons.Default.PlaylistAdd,
+                                contentDescription = "Adicionar à pasta",
+                                tint = SigilSilver,
+                                modifier = Modifier.size(26.dp)
+                            )
+                        }
                     }
                 }
 

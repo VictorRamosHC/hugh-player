@@ -145,10 +145,26 @@ def classify_library(manifest_data):
         "coração igual ao teu", "coracao igual ao teu", "bendito é o rei", "bendito e o rei",
         "como na primeira vez", "consolador", "depois da cruz", "daniel", "a árvore e a cruz",
         "a arvore e a cruz", "atos 2", "agnus dei", "adorador", "senhor", "jesus", "deus",
-        "cristo", "evangelho", "harpa", "louvor", "gospel", "calvário", "calvario", "eterno presente"
+        "cristo", "evangelho", "harpa", "louvor", "gospel", "calvário", "calvario", "eterno presente",
+        "gloria", "glória", "hino", "adoração", "adoracao", "eyshila", "midian lima",
+        "léa mendonça", "lea mendonca", "aline barros", "cassiane", "luiz de carvalho",
+        "vanilda bordieri", "noemi nonato", "trazendo a arca", "najara nogue", "zelly lima",
+        "cléia souza", "cleia souza", "rafaelli cristina", "pregação", "pregacao", "orações", "oracoes"
     ]
     
-    playback_keywords = ["playback", "play back", "play-back", "p/b", "#cover tom", "instrumental"]
+    playback_keywords = [
+        "playback", "play back", "play-back", "p/b", "#cover tom", "instrumental",
+        "sem voz", "play_back", "karaoke", "karaokê", "tom contralto", "tom feminino", "tom masculino"
+    ]
+
+    meeting_folders = [
+        "audio_reunioes", "reunioes", "reuniões", "transcrever", "gravador", "recordings", "call_recorder"
+    ]
+
+    meeting_keywords = [
+        "reunião", "reuniao", "meeting", "ata ", "conferência", "conferencia",
+        "processo ", "problema de acesso", "boletim papo", "bot-boletim", "brainstorm", "briefing"
+    ]
 
     categories = {
         "Músicas Cristãs (Cantado)": [],
@@ -158,22 +174,24 @@ def classify_library(manifest_data):
     }
 
     for song in songs:
-        title = song.get("title", "").lower()
-        artist = song.get("artist", "").lower()
-        album = song.get("album", "").lower()
-        path = song.get("path", "").lower()
-        parent = song.get("parent_dir", "").lower()
+        title = song.get("title", "").strip().lower()
+        artist = song.get("artist", "").strip().lower()
+        album = song.get("album", "").strip().lower()
+        path = song.get("path", "").strip().lower()
+        parent = song.get("parent_dir", "").strip().lower()
 
         full_ctx = f"{title} {artist} {album} {path} {parent}"
 
-        is_playback = any(k in full_ctx for k in playback_keywords)
-        is_meeting = (
-            "whatsapp" in path or "wa00" in path or "aud-" in title or
-            "reuni" in full_ctx or "gravac" in full_ctx or "áudio" in full_ctx
+        is_explicit_meeting = (
+            parent in meeting_folders or
+            any(k in full_ctx for k in meeting_keywords) or
+            (artist in ["desconhecido", "unknown", ""] and (title.startswith("track-") or title.startswith("rec-") or "voice" in path))
         )
+
+        is_playback = any(k in full_ctx for k in playback_keywords) or parent == "playbacks"
         is_christian = any(k in full_ctx for k in christian_keywords)
 
-        if is_meeting:
+        if is_explicit_meeting and not is_playback and not is_christian:
             categories["Áudios de Reuniões"].append(song)
         elif is_playback:
             categories["Músicas Cristãs (Playback)"].append(song)

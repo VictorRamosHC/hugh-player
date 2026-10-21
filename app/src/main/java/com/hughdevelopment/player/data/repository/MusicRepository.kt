@@ -22,14 +22,20 @@ class MusicRepository(
     private val playlistDao: PlaylistDao
 ) {
     private val _rawSongs = MutableStateFlow<List<Song>>(emptyList())
+    private val _favoriteOverrides = MutableStateFlow<Map<Long, Boolean>>(emptyMap())
 
     fun getCurrentSongs(): List<Song> = _rawSongs.value
 
-    // Combine scanned songs with favorites from Room DB
-    val songs: Flow<List<Song>> = combine(_rawSongs, statsDao.getFavoriteStatsFlow()) { songList, favEntities ->
+    // Combine scanned songs with favorites from Room DB and instantaneous memory overrides
+    val songs: Flow<List<Song>> = combine(
+        _rawSongs,
+        statsDao.getFavoriteStatsFlow(),
+        _favoriteOverrides
+    ) { songList, favEntities, overrides ->
         val favIdSet = favEntities.map { it.songId }.toSet()
         songList.map { song ->
-            if (favIdSet.contains(song.id)) song.copy(isFavorite = true) else song.copy(isFavorite = false)
+            val isFav = overrides[song.id] ?: favIdSet.contains(song.id)
+            song.copy(isFavorite = isFav)
         }
     }
 
@@ -89,7 +95,11 @@ class MusicRepository(
     }
 
     suspend fun toggleFavorite(song: Song): Boolean {
-        return statsDao.toggleFavorite(song.id, song.title, song.artist)
+        val targetFav = !song.isFavorite
+        _favoriteOverrides.value = _favoriteOverrides.value + (song.id to targetFav)
+        val resultingFav = statsDao.toggleFavorite(song.id, song.title, song.artist)
+        _favoriteOverrides.value = _favoriteOverrides.value + (song.id to resultingFav)
+        return resultingFav
     }
 
     fun getListeningOverview(): Flow<ListeningOverview> {
@@ -167,20 +177,19 @@ class MusicRepository(
      * 4. Áudios de Reuniões
      */
     suspend fun autoOrganizeWithAiPresets(allSongs: List<Song>): Map<String, Int> {
-        // Ensure default 4 folders exist
+        // Ensure default 4 folders exist without duplicates
         val defaultFolders = listOf(
-            Triple("Músicas Cristãs (Cantado)", "CRISTÃS", "#F59E0B"),
-            Triple("Músicas Cristãs (Playback)", "PLAYBACK", "#06B6D4"),
+            Triple("Músicas Cristãs (Cantado)", "CRISTÃS (CANTADO)", "#F59E0B"),
+            Triple("Músicas Cristãs (Playback)", "CRISTÃS (PLAYBACK)", "#06B6D4"),
             Triple("Músicas Dia a Dia", "DIA A DIA", "#10B981"),
             Triple("Áudios de Reuniões", "REUNIÕES", "#8B5CF6")
         )
 
-        // Find or create each folder
+        // Find existing folder by name or create
         val folderIdMap = mutableMapOf<String, Long>()
         for ((name, cat, color) in defaultFolders) {
-            val existing = playlistDao.getAllPlaylistsFlow()
-            // We can check or insert
-            val id = playlistDao.insertPlaylist(
+            val existing = playlistDao.getPlaylistByName(name)
+            val id = existing?.id ?: playlistDao.insertPlaylist(
                 PlaylistEntity(
                     name = name,
                     category = cat,
@@ -190,7 +199,7 @@ class MusicRepository(
             folderIdMap[name] = id
         }
 
-        val christianKeywords = listOf(
+        val christianArtistsAndKeywords = listOf(
             "diante do trono", "niel nascimento", "nani azevedo", "mara lima", "gabriel guedes",
             "fhop", "anderson freire", "bruna karla", "julia vitória", "julia vitoria",
             "eliã oliveira", "elia oliveira", "canção & louvor", "cancao & louvor", "canção e louvor",
@@ -199,10 +208,26 @@ class MusicRepository(
             "coração igual ao teu", "coracao igual ao teu", "bendito é o rei", "bendito e o rei",
             "como na primeira vez", "consolador", "depois da cruz", "daniel", "a árvore e a cruz",
             "a arvore e a cruz", "atos 2", "agnus dei", "adorador", "senhor", "jesus", "deus",
-            "cristo", "evangelho", "harpa", "louvor", "gospel", "calvário", "calvario", "eterno presente"
+            "cristo", "evangelho", "harpa", "louvor", "gospel", "calvário", "calvario", "eterno presente",
+            "gloria", "glória", "hino", "adoração", "adoracao", "eyshila", "midian lima",
+            "léa mendonça", "lea mendonca", "aline barros", "cassiane", "luiz de carvalho",
+            "vanilda bordieri", "noemi nonato", "trazendo a arca", "najara nogue", "zelly lima",
+            "cléia souza", "cleia souza", "rafaelli cristina", "pregação", "pregacao", "orações", "oracoes"
         )
 
-        val playbackKeywords = listOf("playback", "play back", "play-back", "p/b", "#cover tom", "instrumental")
+        val playbackKeywords = listOf(
+            "playback", "play back", "play-back", "p/b", "#cover tom", "instrumental",
+            "sem voz", "play_back", "karaoke", "karaokê", "tom contralto", "tom feminino", "tom masculino"
+        )
+
+        val meetingFolderNames = listOf(
+            "audio_reunioes", "reunioes", "reuniões", "transcrever", "gravador", "recordings", "call_recorder"
+        )
+
+        val meetingKeywords = listOf(
+            "reunião", "reuniao", "meeting", "ata ", "conferência", "conferencia",
+            "processo ", "problema de acesso", "boletim papo", "bot-boletim", "brainstorm", "briefing"
+        )
 
         val cantadoId = folderIdMap["Músicas Cristãs (Cantado)"]!!
         val playbackId = folderIdMap["Músicas Cristãs (Playback)"]!!
@@ -219,17 +244,19 @@ class MusicRepository(
             val artistLower = song.artist.lowercase(Locale.ROOT)
             val albumLower = song.album.lowercase(Locale.ROOT)
             val pathLower = song.dataPath.lowercase(Locale.ROOT)
-            val fullContext = "$titleLower $artistLower $albumLower $pathLower"
+            val parentDir = java.io.File(song.dataPath).parentFile?.name?.lowercase(Locale.ROOT) ?: ""
+            val fullContext = "$titleLower $artistLower $albumLower $pathLower $parentDir"
 
-            val isPlayback = playbackKeywords.any { fullContext.contains(it) }
-            val isMeetingAudio = pathLower.contains("whatsapp") || pathLower.contains("wa00") ||
-                    titleLower.contains("aud-") || titleLower.contains("reuni") ||
-                    titleLower.contains("gravac") || titleLower.contains("áudio")
+            val isExplicitMeeting = meetingFolderNames.contains(parentDir) ||
+                    meetingKeywords.any { fullContext.contains(it) } ||
+                    ((artistLower in listOf("desconhecido", "unknown", "")) &&
+                            (titleLower.startsWith("track-") || titleLower.startsWith("rec-") || pathLower.contains("voice")))
 
-            val isChristian = christianKeywords.any { fullContext.contains(it) }
+            val isPlayback = playbackKeywords.any { fullContext.contains(it) } || parentDir == "playbacks"
+            val isChristian = christianArtistsAndKeywords.any { fullContext.contains(it) }
 
             when {
-                isMeetingAudio -> {
+                isExplicitMeeting && !isPlayback && !isChristian -> {
                     reunioesRefs.add(PlaylistSongCrossRef(reunioesId, song.id))
                 }
                 isPlayback -> {
