@@ -1006,7 +1006,8 @@ private fun AddSongsToFolderDialog(
 
 /**
  * Resolves the appropriate Brutalist Neoclassical cover for a playlist or folder
- * using normalized accent-insensitive keyword matching.
+ * using normalized accent-insensitive keyword matching. Name takes priority over category,
+ * preventing default generic categories (e.g. 'GERAL') from shadowing specific names.
  */
 fun getPlaylistCoverResource(name: String, category: String): Int? {
     fun normalize(text: String): String {
@@ -1015,31 +1016,51 @@ fun getPlaylistCoverResource(name: String, category: String): Int? {
             .lowercase(java.util.Locale.ROOT)
     }
 
-    val combined = "${normalize(name)} ${normalize(category)}"
+    val normName = normalize(name)
+    val normCat = normalize(category)
 
-    return when {
-        combined.contains("playback") || combined.contains("instrumental") ||
-            combined.contains("play back") || combined.contains("play-back") ||
-            combined.contains("karaoke") || combined.contains("sem voz") ||
-            combined.contains("backing") -> R.drawable.cover_christian_playback
+    fun match(target: String): Int? {
+        return when {
+            target.contains("playback") || target.contains("instrumental") ||
+                target.contains("play back") || target.contains("play-back") ||
+                target.contains("karaoke") || target.contains("sem voz") ||
+                target.contains("backing") -> R.drawable.cover_christian_playback
 
-        combined.contains("crista") || combined.contains("cantad") ||
-            combined.contains("gospel") || combined.contains("louvor") ||
-            combined.contains("hino") || combined.contains("adoracao") ||
-            combined.contains("worship") || combined.contains("sacr") ||
-            combined.contains("evangel") -> R.drawable.cover_christian_vocal
+            target.contains("reunia") || target.contains("reunio") ||
+                target.contains("meeting") || target.contains("ata") ||
+                target.contains("gravad") || target.contains("gravac") ||
+                target.contains("voice") || target.contains("voz") ||
+                target.contains("conferenc") || target.contains("briefing") -> R.drawable.cover_meetings_vault
 
-        combined.contains("dia a dia") || combined.contains("dia-a-dia") ||
-            combined.contains("cotidian") || combined.contains("rotina") ||
-            combined.contains("diari") || combined.contains("geral") ||
-            combined.contains("daily") || combined.contains("favorit") -> R.drawable.cover_daily_music
+            target.contains("crista") || target.contains("cantad") ||
+                target.contains("gospel") || target.contains("louvor") ||
+                target.contains("hino") || target.contains("adoracao") ||
+                target.contains("worship") || target.contains("sacr") ||
+                target.contains("evangel") -> R.drawable.cover_christian_vocal
 
-        combined.contains("reunia") || combined.contains("reunio") ||
-            combined.contains("meeting") || combined.contains("ata") ||
-            combined.contains("gravad") || combined.contains("gravac") ||
-            combined.contains("voice") || combined.contains("voz") ||
-            combined.contains("conferenc") || combined.contains("briefing") -> R.drawable.cover_meetings_vault
+            target.contains("dia a dia") || target.contains("dia-a-dia") ||
+                target.contains("cotidian") || target.contains("rotina") ||
+                target.contains("diari") || target.contains("daily") ||
+                target.contains("favorit") -> R.drawable.cover_daily_music
 
-        else -> null
+            else -> null
+        }
     }
+
+    // 1. Priority: check explicit playlist name
+    val fromName = match(normName)
+    if (fromName != null) return fromName
+
+    // 2. Secondary: check category if not generic default ('geral' or 'custom')
+    if (normCat != "geral" && normCat != "custom" && normCat.isNotBlank()) {
+        val fromCat = match(normCat)
+        if (fromCat != null) return fromCat
+    }
+
+    // 3. Fallback: if name explicitly contains 'geral' (e.g. "Músicas em Geral")
+    if (normName.contains("geral")) {
+        return R.drawable.cover_daily_music
+    }
+
+    return null
 }
