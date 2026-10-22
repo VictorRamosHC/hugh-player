@@ -2,17 +2,18 @@
 """
 Hugh Player // USB Agent Vault Bridge 🏛️⚡
 Hugh Development — Co-founders: Hugh & Atom
+Now officially: AETHER VAULT // Sovereign Offline Audio
 
 This CLI bridge connects your PC to your Android device via USB/ADB,
 allowing AI agents (Atom, Codex, ChatGPT, Hermes Agent) to:
 1. Pull the JSON music manifest from the phone.
-2. Inspect and organize music files on the phone's storage into Hugh's 4 categories:
+2. Inspect and organize music files on the phone's storage into the 4 categories:
    - Músicas Cristãs (Cantado)
    - Músicas Cristãs (Playback)
    - Músicas Dia a Dia
    - Áudios de Reuniões
 3. Generate plans, export categorized playlists, and execute ADB moves.
-4. Trigger Android MediaScanner so Hugh Player reflects changes instantly.
+4. Trigger Android MediaScanner so Aether Vault reflects changes instantly.
 """
 
 import sys
@@ -261,7 +262,7 @@ def run_test_ai():
     print(f"\n[4/4] Gerando Plano Estruturado em JSON & Scripts ADB...")
     plan_file = "hugh_ai_folders_plan.json"
     plan_data = {
-        "vault_version": "1.3.0",
+        "vault_version": "1.4.1",
         "timestamp": data.get("timestamp", 0),
         "total_songs": total_songs,
         "categories_summary": {k: len(v) for k, v in categories.items()},

@@ -126,6 +126,10 @@ Durante a auditoria e os testes de campo, foram identificados e eliminados 5 des
 * **Problema:** O auto-flush de estatísticas ocorria a cada 5 segundos de escuta contínua, concorrendo com a rolagem suave da biblioteca.
 * **Solução:** Ativação do modo `JournalMode.WRITE_AHEAD_LOGGING` (WAL) no `PlayerDatabase.kt`, permitindo leituras concorrentes em paralelo sem qualquer bloqueio de thread.
 
+### 6. Heurística Resiliente de Capas Neoclássicas e Versão de Pacote
+* **Problema:** A heurística de capas falhava em palavras no singular como "Reunião" (esperava "Reuniõ" plural), em termos sem acento ("Cristas", "Reuniao") e sinônimos usuais ("Louvores", "Hinos", "Instrumental"). Além disso, o pacote Android permanecia internamente na versão 1.3.0 (versionCode 4).
+* **Solução:** Implementação de `getPlaylistCoverResource()` com normalização NFD de diacríticos, abrangência ampla de sinônimos litúrgicos, instrumentais e corporativos, renderização consistente do banner da pasta mesmo quando vazia, máscara circular alfa em todos os mipmaps `ic_launcher_round.png`, e bump de versão para `versionCode = 6` e `versionName = "1.4.1"` no `app/build.gradle.kts` com validação por testes unitários no CI.
+
 ---
 
 ## 6. MAPA COMPLETO DE ARQUIVOS DO PROJETO
@@ -133,74 +137,78 @@ Durante a auditoria e os testes de campo, foram identificados e eliminados 5 des
 ```
 hugh-player/
 ├── .github/workflows/
-│   └── build-apk.yml               # CI/CD: Compilação em nuvem no GitHub Actions
+│   └── build-apk.yml               # CI/CD: Compilação e testes unitários no GitHub Actions
 ├── app/
-│   ├── src/main/
-│   │   ├── AndroidManifest.xml     # Zero internet permissions, Foreground Service Media3
-│   │   ├── res/
-│   │   │   ├── drawable/
-│   │   │   │   ├── bg_dashboard.jpg              # Wallpaper do Dashboard (1080x1080)
-│   │   │   │   ├── bg_expanded_player.jpg        # Wallpaper do Player Expandido (1080x1935)
-│   │   │   │   ├── bg_folders.jpg                # Wallpaper da tela de Pastas (1080x1935)
-│   │   │   │   ├── bg_library.jpg                # Wallpaper da Biblioteca (1080x1935)
-│   │   │   │   ├── bg_splash.jpg                 # Tela de abertura com busto de Hermes
-│   │   │   │   ├── cover_christian_playback.jpg  # Capa brutalista categoria Playback (800x800)
-│   │   │   │   ├── cover_christian_vocal.jpg     # Capa brutalista categoria Cantado (800x800)
-│   │   │   │   ├── cover_daily_music.jpg         # Capa brutalista categoria Dia a Dia (800x800)
-│   │   │   │   ├── cover_meetings_vault.jpg      # Capa brutalista categoria Reuniões (800x800)
-│   │   │   │   ├── icon.png                      # Ícone principal de alta resolução (512x512)
-│   │   │   │   ├── ic_launcher_foreground.png    # Foreground adaptativo (432x432)
-│   │   │   │   └── placeholder_statue.jpg        # Busto neoclássico dither (800x800)
-│   │   │   ├── mipmap-*/                         # Ícones adaptativos Android (mdpi a xxxhdpi)
-│   │   │   └── values/
-│   │   │       ├── colors.xml                    # Paleta de cores do sistema
-│   │   │       └── strings.xml                   # app_name = "Aether Vault"
-│   │   └── java/com/hughdevelopment/player/
-│   │       ├── HughPlayerApplication.kt          # Inicialização de DI manual e Coil ImageLoader
-│   │       ├── MainActivity.kt                   # Activity principal, permissões e navegação
-│   │       ├── data/
-│   │       │   ├── ai/
-│   │       │   │   └── AgentDataManager.kt       # Bridge USB/ADB para agentes locais de IA
-│   │       │   ├── db/
-│   │       │   │   ├── PlayerDatabase.kt         # Room DB v4 (WAL mode ativo)
-│   │       │   │   ├── SongDao.kt e Entities     # Entidades e queries SQL otimizadas
-│   │       │   │   ├── PlaylistDao.kt            # CRUD de pastas e referências cruzadas
-│   │       │   │   └── StatsDao.kt               # Estatísticas de telemetria local
-│   │       │   ├── model/
-│   │       │   │   ├── Song.kt                   # Modelo de dados de faixa de áudio
-│   │       │   │   ├── Playlist.kt               # Modelo de pastas e categorização
-│   │       │   │   └── ListeningOverview.kt      # Métricas e Ranks do Vault
-│   │       │   ├── repository/
-│   │       │   │   └── MusicRepository.kt        # Repositório central e preset de 4 pastas IA
-│   │       │   ├── settings/
-│   │       │   │   ├── SettingsManager.kt        # DataStore de configurações do usuário
-│   │       │   │   └── SettingsState.kt          # Rampa de fade, ordenação, opacidade
-│   │       │   └── source/
-│   │       │       └── MediaStoreScanner.kt      # Varredura do disco com isolamento de erros
-│   │       ├── service/
-│   │       │   ├── AudioFadeManager.kt           # Rampa de volume suave senoidal/logarítmica
-│   │       │   ├── MusicPlaybackService.kt       # MediaSessionService em foreground
-│   │       │   └── MusicPlayerController.kt      # Controle do ExoPlayer com rastreamento de intenção
-│   │       └── ui/
-│   │           ├── components/
-│   │           │   ├── ArtworkImage.kt           # Imagem com placeholder neoclássico e cache LRU
-│   │           │   ├── AudioVisualizerBars.kt    # Visualizador espectral em tempo real
-│   │           │   ├── CybersigilBackground.kt   # Padrão dither em Canvas nativo
-│   │           │   ├── ExpandedPlayerSheet.kt    # Player modal deslizante fullscreen
-│   │           │   ├── MiniPlayerBar.kt          # Barra de reprodução persistente inferior
-│   │           │   ├── NeoGlassModifier.kt       # Efeito de vidro fosco com bordas especulares
-│   │           │   └── SplashScreenView.kt       # Splash animada Cybersigilism
-│   │           ├── screens/
-│   │           │   ├── FoldersScreen.kt          # Gerenciamento de pastas com capas brutalistas
-│   │           │   ├── LibraryScreen.kt          # Lista de faixas com busca instantânea e filtros
-│   │           │   ├── SettingsScreen.kt         # Controles de rampa de áudio e diagnóstico local
-│   │           │   └── StatsDashboardScreen.kt   # Gamificação, Ranks de XP e Top Faixas
-│   │           ├── theme/
-│   │           │   ├── Color.kt                  # VoidBlack, KleinBlue, CyberAmber, etc.
-│   │           │   ├── Theme.kt                  # Tema Material3 imersivo escuro
-│   │           │   └── Type.kt                   # Tipografia monoespaçada brutalista
-│   │           └── viewmodel/
-│   │               └── MusicViewModel.kt         # Orquestrador reativo de UI e estado otimista
+│   ├── build.gradle.kts            # Configuração do app: v1.4.1 (Build 6) & JUnit 4
+│   ├── src/
+│   │   ├── test/java/com/hughdevelopment/player/ui/screens/
+│   │   │   └── PlaylistCoverResolverTest.kt  # Testes unitários de resolução de capas & diacríticos
+│   │   └── main/
+│   │       ├── AndroidManifest.xml     # Zero internet permissions, Foreground Service Media3
+│   │       ├── res/
+│   │       │   ├── drawable/
+│   │       │   │   ├── bg_dashboard.jpg              # Wallpaper do Dashboard (1080x1080)
+│   │       │   │   ├── bg_expanded_player.jpg        # Wallpaper do Player Expandido (1080x1935)
+│   │       │   │   ├── bg_folders.jpg                # Wallpaper da tela de Pastas (1080x1935)
+│   │       │   │   ├── bg_library.jpg                # Wallpaper da Biblioteca (1080x1935)
+│   │       │   │   ├── bg_splash.jpg                 # Tela de abertura com busto de Hermes
+│   │       │   │   ├── cover_christian_playback.jpg  # Capa brutalista categoria Playback (800x800)
+│   │       │   │   ├── cover_christian_vocal.jpg     # Capa brutalista categoria Cantado (800x800)
+│   │       │   │   ├── cover_daily_music.jpg         # Capa brutalista categoria Dia a Dia (800x800)
+│   │       │   │   ├── cover_meetings_vault.jpg      # Capa brutalista categoria Reuniões (800x800)
+│   │       │   │   ├── icon.png                      # Ícone principal de alta resolução (512x512)
+│   │       │   │   ├── ic_launcher_foreground.png    # Foreground adaptativo (432x432)
+│   │       │   │   └── placeholder_statue.jpg        # Busto neoclássico dither (800x800)
+│   │       │   ├── mipmap-*/                         # Ícones adaptativos Android (mdpi a xxxhdpi c/ máscara circular)
+│   │       │   └── values/
+│   │       │       ├── colors.xml                    # Paleta de cores do sistema
+│   │       │       └── strings.xml                   # app_name = "Aether Vault"
+│   │       └── java/com/hughdevelopment/player/
+│   │           ├── HughPlayerApplication.kt          # Inicialização de DI manual e Coil ImageLoader
+│   │           ├── MainActivity.kt                   # Activity principal, permissões e navegação
+│   │           ├── data/
+│   │           │   ├── ai/
+│   │           │   │   └── AgentDataManager.kt       # Bridge USB/ADB para agentes locais de IA (v1.4.1)
+│   │           │   ├── db/
+│   │           │   │   ├── PlayerDatabase.kt         # Room DB v4 (WAL mode ativo)
+│   │           │   │   ├── SongDao.kt e Entities     # Entidades e queries SQL otimizadas
+│   │           │   │   ├── PlaylistDao.kt            # CRUD de pastas e referências cruzadas
+│   │           │   │   └── StatsDao.kt               # Estatísticas de telemetria local
+│   │           ├── model/
+│   │           │   ├── Song.kt                   # Modelo de dados de faixa de áudio
+│   │           │   ├── Playlist.kt               # Modelo de pastas e categorização
+│   │           │   └── ListeningOverview.kt      # Métricas e Ranks do Vault
+│   │           ├── repository/
+│   │           │   └── MusicRepository.kt        # Repositório central e preset de 4 pastas IA
+│   │           ├── settings/
+│   │           │   ├── SettingsManager.kt        # DataStore de configurações do usuário
+│   │           │   └── SettingsState.kt          # Rampa de fade, ordenação, opacidade
+│   │           └── source/
+│   │               └── MediaStoreScanner.kt      # Varredura do disco com isolamento de erros
+│   │           ├── service/
+│   │           │   ├── AudioFadeManager.kt           # Rampa de volume suave senoidal/logarítmica
+│   │           │   ├── MusicPlaybackService.kt       # MediaSessionService em foreground
+│   │           │   └── MusicPlayerController.kt      # Controle do ExoPlayer com rastreamento de intenção
+│   │           └── ui/
+│   │               ├── components/
+│   │               │   ├── ArtworkImage.kt           # Imagem com placeholder neoclássico e cache LRU
+│   │               │   ├── AudioVisualizerBars.kt    # Visualizador espectral em tempo real
+│   │               │   ├── CybersigilBackground.kt   # Padrão dither em Canvas nativo
+│   │               │   ├── ExpandedPlayerSheet.kt    # Player modal deslizante fullscreen
+│   │               │   ├── MiniPlayerBar.kt          # Barra de reprodução persistente inferior
+│   │               │   ├── NeoGlassModifier.kt       # Efeito de vidro fosco com bordas especulares
+│   │               │   └── SplashScreenView.kt       # Splash animada Cybersigilism
+│   │               ├── screens/
+│   │               │   ├── FoldersScreen.kt          # Gerenciamento de pastas com capas brutalistas e resolver resiliente
+│   │               │   ├── LibraryScreen.kt          # Lista de faixas com busca instantânea e filtros
+│   │               │   ├── SettingsScreen.kt         # Controles de rampa de áudio e diagnóstico local
+│   │               │   └── StatsDashboardScreen.kt   # Gamificação, Ranks de XP e Top Faixas
+│   │               ├── theme/
+│   │               │   ├── Color.kt                  # VoidBlack, KleinBlue, CyberAmber, etc.
+│   │               │   ├── Theme.kt                  # Tema Material3 imersivo escuro
+│   │               │   └── Type.kt                   # Tipografia monoespaçada brutalista
+│   │               └── viewmodel/
+│   │                   └── MusicViewModel.kt         # Orquestrador reativo de UI e estado otimista
 └── docs/
     ├── ARCHITECTURE_AND_DECISIONS.md             # As 4 decisões estratégicas da diretoria
     ├── AUDITORIA_EXTERNA_CODEX_RESPOSTA.md       # Análise executiva da nota 86/100

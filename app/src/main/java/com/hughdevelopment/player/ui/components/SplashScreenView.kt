@@ -65,7 +65,7 @@ fun SplashScreenView(
         // High-contrast full neoclassical artwork
         Image(
             painter = painterResource(id = R.drawable.bg_splash),
-            contentDescription = "Hugh Player Splash",
+            contentDescription = "Aether Vault Splash",
             contentScale = ContentScale.Crop,
             modifier = Modifier.fillMaxSize()
         )

@@ -336,6 +336,47 @@ fun FoldersScreen(
                 }
             } else {
                 // --- Folder Detail View (Songs inside this folder) ---
+                val bannerCoverRes = remember(activePlaylist.name, activePlaylist.category) {
+                    getPlaylistCoverResource(activePlaylist.name, activePlaylist.category)
+                }
+
+                if (bannerCoverRes != null) {
+                    Box(
+                        modifier = Modifier
+                            .fillMaxWidth()
+                            .height(130.dp)
+                            .clip(RoundedCornerShape(10.dp))
+                            .border(1.dp, WireframeBorder.copy(alpha = 0.6f), RoundedCornerShape(10.dp))
+                    ) {
+                        Image(
+                            painter = painterResource(id = bannerCoverRes),
+                            contentDescription = null,
+                            contentScale = ContentScale.Crop,
+                            modifier = Modifier.fillMaxSize()
+                        )
+                        Box(
+                            modifier = Modifier
+                                .fillMaxSize()
+                                .background(
+                                    androidx.compose.ui.graphics.Brush.verticalGradient(
+                                        colors = listOf(Color.Transparent, VoidBlack.copy(alpha = 0.85f))
+                                    )
+                                )
+                                .padding(12.dp),
+                            contentAlignment = Alignment.BottomStart
+                        ) {
+                            Text(
+                                text = "${activePlaylist.name.uppercase()} • ${activePlaylist.songs.size} FAIXAS",
+                                color = SigilWhite,
+                                fontSize = 11.5.sp,
+                                fontWeight = FontWeight.Bold,
+                                fontFamily = FontFamily.Monospace
+                            )
+                        }
+                    }
+                    Spacer(modifier = Modifier.height(8.dp))
+                }
+
                 if (activePlaylist.songs.isEmpty()) {
                     Box(
                         modifier = Modifier
@@ -376,52 +417,6 @@ fun FoldersScreen(
                         contentPadding = PaddingValues(bottom = 120.dp),
                         verticalArrangement = Arrangement.spacedBy(6.dp)
                     ) {
-                        item {
-                            val bannerCoverRes = when {
-                                activePlaylist.name.contains("Playback", ignoreCase = true) || activePlaylist.category.contains("PLAYBACK", ignoreCase = true) -> R.drawable.cover_christian_playback
-                                activePlaylist.name.contains("Cristã", ignoreCase = true) || activePlaylist.category.contains("CANTADO", ignoreCase = true) -> R.drawable.cover_christian_vocal
-                                activePlaylist.name.contains("Dia a Dia", ignoreCase = true) || activePlaylist.category.contains("DIA A DIA", ignoreCase = true) -> R.drawable.cover_daily_music
-                                activePlaylist.name.contains("Reuniõ", ignoreCase = true) || activePlaylist.category.contains("REUNIÕES", ignoreCase = true) -> R.drawable.cover_meetings_vault
-                                else -> null
-                            }
-                            if (bannerCoverRes != null) {
-                                Box(
-                                    modifier = Modifier
-                                        .fillMaxWidth()
-                                        .height(130.dp)
-                                        .clip(RoundedCornerShape(10.dp))
-                                        .border(1.dp, WireframeBorder.copy(alpha = 0.6f), RoundedCornerShape(10.dp))
-                                ) {
-                                    Image(
-                                        painter = painterResource(id = bannerCoverRes),
-                                        contentDescription = null,
-                                        contentScale = ContentScale.Crop,
-                                        modifier = Modifier.fillMaxSize()
-                                    )
-                                    Box(
-                                        modifier = Modifier
-                                            .fillMaxSize()
-                                            .background(
-                                                androidx.compose.ui.graphics.Brush.verticalGradient(
-                                                    colors = listOf(Color.Transparent, VoidBlack.copy(alpha = 0.85f))
-                                                )
-                                            )
-                                            .padding(12.dp),
-                                        contentAlignment = Alignment.BottomStart
-                                    ) {
-                                        Text(
-                                            text = "${activePlaylist.name.uppercase()} • ${activePlaylist.songs.size} FAIXAS",
-                                            color = SigilWhite,
-                                            fontSize = 11.5.sp,
-                                            fontWeight = FontWeight.Bold,
-                                            fontFamily = FontFamily.Monospace
-                                        )
-                                    }
-                                }
-                                Spacer(modifier = Modifier.height(4.dp))
-                            }
-                        }
-
                         items(items = activePlaylist.songs, key = { it.id }) { song ->
                             Row(
                                 modifier = Modifier
@@ -524,13 +519,7 @@ private fun FolderCardItem(
     }
 
     val coverRes = remember(playlist.name, playlist.category) {
-        when {
-            playlist.name.contains("Playback", ignoreCase = true) || playlist.category.contains("PLAYBACK", ignoreCase = true) -> R.drawable.cover_christian_playback
-            playlist.name.contains("Cristã", ignoreCase = true) || playlist.category.contains("CANTADO", ignoreCase = true) -> R.drawable.cover_christian_vocal
-            playlist.name.contains("Dia a Dia", ignoreCase = true) || playlist.category.contains("DIA A DIA", ignoreCase = true) -> R.drawable.cover_daily_music
-            playlist.name.contains("Reuniõ", ignoreCase = true) || playlist.category.contains("REUNIÕES", ignoreCase = true) -> R.drawable.cover_meetings_vault
-            else -> null
-        }
+        getPlaylistCoverResource(playlist.name, playlist.category)
     }
 
     Row(
@@ -1013,4 +1002,44 @@ private fun AddSongsToFolderDialog(
             }
         }
     )
+}
+
+/**
+ * Resolves the appropriate Brutalist Neoclassical cover for a playlist or folder
+ * using normalized accent-insensitive keyword matching.
+ */
+fun getPlaylistCoverResource(name: String, category: String): Int? {
+    fun normalize(text: String): String {
+        return java.text.Normalizer.normalize(text, java.text.Normalizer.Form.NFD)
+            .replace(Regex("\\p{M}"), "")
+            .lowercase(java.util.Locale.ROOT)
+    }
+
+    val combined = "${normalize(name)} ${normalize(category)}"
+
+    return when {
+        combined.contains("playback") || combined.contains("instrumental") ||
+            combined.contains("play back") || combined.contains("play-back") ||
+            combined.contains("karaoke") || combined.contains("sem voz") ||
+            combined.contains("backing") -> R.drawable.cover_christian_playback
+
+        combined.contains("crista") || combined.contains("cantad") ||
+            combined.contains("gospel") || combined.contains("louvor") ||
+            combined.contains("hino") || combined.contains("adoracao") ||
+            combined.contains("worship") || combined.contains("sacr") ||
+            combined.contains("evangel") -> R.drawable.cover_christian_vocal
+
+        combined.contains("dia a dia") || combined.contains("dia-a-dia") ||
+            combined.contains("cotidian") || combined.contains("rotina") ||
+            combined.contains("diari") || combined.contains("geral") ||
+            combined.contains("daily") || combined.contains("favorit") -> R.drawable.cover_daily_music
+
+        combined.contains("reunia") || combined.contains("reunio") ||
+            combined.contains("meeting") || combined.contains("ata") ||
+            combined.contains("gravad") || combined.contains("gravac") ||
+            combined.contains("voice") || combined.contains("voz") ||
+            combined.contains("conferenc") || combined.contains("briefing") -> R.drawable.cover_meetings_vault
+
+        else -> null
+    }
 }

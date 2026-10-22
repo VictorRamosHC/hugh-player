@@ -47,7 +47,7 @@ class AgentDataManager(
             songsArray.put(item)
         }
 
-        root.put("vault_version", "1.3.0")
+        root.put("vault_version", "1.4.1")
         root.put("total_songs", songs.size)
         root.put("timestamp", System.currentTimeMillis())
         root.put("library", songsArray)
@@ -64,8 +64,12 @@ class AgentDataManager(
         if (!downloadDir.exists()) {
             downloadDir.mkdirs()
         }
-        val file = File(downloadDir, "hugh_vault_ai_manifest.json")
+        val file = File(downloadDir, "aether_vault_ai_manifest.json")
         file.writeText(json)
+        // Backwards compatibility with legacy scripts
+        try {
+            File(downloadDir, "hugh_vault_ai_manifest.json").writeText(json)
+        } catch (_: Exception) {}
         file.absolutePath
     }
 

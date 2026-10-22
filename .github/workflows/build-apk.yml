@@ -30,6 +30,9 @@ jobs:
       - name: Aceitar Licenças do Android SDK
         run: yes | $ANDROID_HOME/cmdline-tools/latest/bin/sdkmanager --licenses || true
 
+      - name: Executar Testes Unitarios
+        run: gradle :app:testDebugUnitTest --stacktrace
+
       - name: Compilar APK Debug
         run: gradle :app:assembleDebug --stacktrace
 

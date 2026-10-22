@@ -13,8 +13,8 @@ android {
         applicationId = "com.hughdevelopment.player"
         minSdk = 26
         targetSdk = 35
-        versionCode = 4
-        versionName = "1.3.0"
+        versionCode = 6
+        versionName = "1.4.1"
 
         testInstrumentationRunner = "androidx.test.runner.AndroidJUnitRunner"
         vectorDrawables {
@@ -87,4 +87,7 @@ dependencies {
 
     // Coil Image Loading (High-performance caching)
     implementation(libs.coil.compose)
+
+    // Unit Testing
+    testImplementation("junit:junit:4.13.2")
 }
