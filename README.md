@@ -63,6 +63,15 @@ Construído sob a identidade visual exclusiva **Cybersigilism Neoclássico** (in
 
 ---
 
+## Auditoria Externa Independente 🏛️
+O projeto foi submetido a uma auditoria técnica cega pela **ChatGPT & Codex Company**:
+* **Nota Oficial Recebida:** **86/100** ("Resultado Excepcional para Sprint de 1 Dia — Produto Funcional de Fundador")
+* **Destaques Positivos:** Arquitetura de intenção explícita (`isPlayIntended`), UI otimista instantânea (`_favoriteOverrides`), identidade visual Neoclássica dither 1-bit, pipeline ágil de CI/CD em nuvem (1m30s) e soberania 100% offline.
+* **Resiliência Preemptiva (Build v1.4.1 Hardened):** Antecipamos os apontamentos da auditoria implementando bounded `LruCache` (1000 itens) para capas, `WAL` (Write-Ahead Logging) no Room Database v4, índices B-Tree de busca, isolamento individual de exceções no scanner e painel de diagnóstico offline nas Configurações.
+* **Parecer Completo da Diretoria:** Consulte [AUDITORIA_EXTERNA_CODEX_RESPOSTA.md](docs/AUDITORIA_EXTERNA_CODEX_RESPOSTA.md).
+
+---
+
 ## Compilação e Instalação
 
 O projeto conta com automação completa de CI/CD via GitHub Actions. Qualquer push na branch `main` dispara o workflow `.github/workflows/build-apk.yml`, gerando o APK de depuração pronto para download nos artefatos da ação.
