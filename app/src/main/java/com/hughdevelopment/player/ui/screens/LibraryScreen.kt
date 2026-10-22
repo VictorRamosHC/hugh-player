@@ -60,6 +60,10 @@ import com.hughdevelopment.player.ui.components.ArtworkImage
 import com.hughdevelopment.player.ui.components.CybersigilBackground
 import com.hughdevelopment.player.ui.theme.CharcoalSurface
 import com.hughdevelopment.player.ui.theme.CyberAmber
+import com.hughdevelopment.player.ui.theme.KleinBlue
+import com.hughdevelopment.player.ui.theme.ObsidianGlass
+import com.hughdevelopment.player.ui.components.neoGlassCard
+import com.hughdevelopment.player.ui.components.activePlayingGlassCard
 import com.hughdevelopment.player.ui.theme.HermeticCyan
 import com.hughdevelopment.player.ui.theme.MutedStone
 import com.hughdevelopment.player.ui.theme.SigilSilver
@@ -153,7 +157,7 @@ fun LibraryScreen(
                     )
                     Text(
                         text = "OFFLINE VAULT • ${songs.size} TRACKS",
-                        color = HermeticCyan,
+                        color = KleinBlue,
                         fontSize = 11.sp,
                         fontFamily = FontFamily.Monospace
                     )
@@ -433,10 +437,10 @@ private fun SortChip(
     Box(
         modifier = Modifier
             .clip(RoundedCornerShape(4.dp))
-            .background(if (isSelected) CyberAmber else CharcoalSurface)
+            .background(if (isSelected) KleinBlue else ObsidianGlass.copy(alpha = 0.8f))
             .border(
                 width = 1.dp,
-                color = if (isSelected) CyberAmber else WireframeBorder,
+                color = if (isSelected) KleinBlue else WireframeBorder,
                 shape = RoundedCornerShape(4.dp)
             )
             .clickable { onClick() }
@@ -444,7 +448,7 @@ private fun SortChip(
     ) {
         Text(
             text = label,
-            color = if (isSelected) VoidBlack else SigilSilver,
+            color = if (isSelected) SigilWhite else SigilSilver,
             fontSize = 10.5.sp,
             fontWeight = if (isSelected) FontWeight.Bold else FontWeight.Medium,
             fontFamily = FontFamily.Monospace,
@@ -466,13 +470,7 @@ private fun SongRowItem(
         modifier = Modifier
             .fillMaxWidth()
             .padding(vertical = 3.dp)
-            .clip(RoundedCornerShape(8.dp))
-            .background(if (isSelected) CharcoalSurface else VoidBlack)
-            .border(
-                width = 1.dp,
-                color = if (isSelected) CyberAmber else WireframeBorder.copy(alpha = 0.4f),
-                shape = RoundedCornerShape(8.dp)
-            )
+            .then(if (isSelected) Modifier.activePlayingGlassCard(cornerRadius = 8.dp) else Modifier.neoGlassCard(cornerRadius = 8.dp, backgroundColor = ObsidianGlass.copy(alpha = 0.70f), borderWidth = 0.8.dp))
             .clickable { onClick() }
             .padding(8.dp),
         verticalAlignment = Alignment.CenterVertically

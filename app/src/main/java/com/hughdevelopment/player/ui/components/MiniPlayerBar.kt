@@ -36,6 +36,10 @@ import androidx.compose.ui.unit.sp
 import com.hughdevelopment.player.data.model.Song
 import com.hughdevelopment.player.ui.theme.CharcoalSurface
 import com.hughdevelopment.player.ui.theme.CyberAmber
+import com.hughdevelopment.player.ui.theme.KleinBlue
+import com.hughdevelopment.player.ui.theme.ObsidianGlass
+import com.hughdevelopment.player.ui.theme.SpecularGlassRimTop
+import com.hughdevelopment.player.ui.theme.SpecularGlassRimBottom
 import com.hughdevelopment.player.ui.theme.HermeticCyan
 import com.hughdevelopment.player.ui.theme.MutedStone
 import com.hughdevelopment.player.ui.theme.SigilSilver
@@ -58,9 +62,13 @@ fun MiniPlayerBar(
         modifier = modifier
             .fillMaxWidth()
             .padding(horizontal = 10.dp, vertical = 6.dp)
-            .clip(RoundedCornerShape(12.dp))
-            .background(CharcoalSurface)
-            .border(1.2.dp, WireframeBorder, RoundedCornerShape(12.dp))
+            .neoGlassCard(
+                cornerRadius = 10.dp,
+                backgroundColor = ObsidianGlass,
+                borderWidth = 1.2.dp,
+                topRimColor = SpecularGlassRimTop,
+                bottomRimColor = if (isPlaying) KleinBlue else SpecularGlassRimBottom
+            )
             .clickable { onBarClick() }
     ) {
         Column {
@@ -85,14 +93,14 @@ fun MiniPlayerBar(
                     Text(
                         text = currentSong.title,
                         color = SigilWhite,
-                        fontSize = 13.sp,
-                        fontWeight = FontWeight.SemiBold,
-                        fontFamily = FontFamily.Monospace,
+                        fontSize = 13.5.sp,
+                        fontWeight = FontWeight.Bold,
+                        fontFamily = FontFamily.SansSerif,
                         maxLines = 1,
                         overflow = TextOverflow.Ellipsis
                     )
                     Text(
-                        text = currentSong.artist,
+                        text = "TRACK // ${currentSong.artist}",
                         color = MutedStone,
                         fontSize = 11.sp,
                         fontFamily = FontFamily.Monospace,
@@ -160,7 +168,7 @@ fun MiniPlayerBar(
                 modifier = Modifier
                     .fillMaxWidth()
                     .height(2.5.dp),
-                color = CyberAmber,
+                color = KleinBlue,
                 trackColor = WireframeBorder.copy(alpha = 0.5f)
             )
         }

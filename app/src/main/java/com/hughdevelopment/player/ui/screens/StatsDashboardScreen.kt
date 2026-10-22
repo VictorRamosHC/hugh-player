@@ -50,6 +50,10 @@ import com.hughdevelopment.player.data.model.TopSongSummary
 import com.hughdevelopment.player.ui.components.CybersigilBackground
 import com.hughdevelopment.player.ui.theme.CharcoalSurface
 import com.hughdevelopment.player.ui.theme.CyberAmber
+import com.hughdevelopment.player.ui.theme.KleinBlue
+import com.hughdevelopment.player.ui.theme.ObsidianGlass
+import com.hughdevelopment.player.ui.theme.SpecularGlassRimTop
+import com.hughdevelopment.player.ui.components.neoGlassCard
 import com.hughdevelopment.player.ui.theme.HermeticCyan
 import com.hughdevelopment.player.ui.theme.MutedStone
 import com.hughdevelopment.player.ui.theme.SigilSilver
@@ -369,9 +373,13 @@ private fun MetricCard(
 ) {
     Box(
         modifier = modifier
-            .clip(RoundedCornerShape(10.dp))
-            .background(CharcoalSurface)
-            .border(1.dp, WireframeBorder, RoundedCornerShape(10.dp))
+            .neoGlassCard(
+                cornerRadius = 10.dp,
+                backgroundColor = ObsidianGlass,
+                borderWidth = 1.dp,
+                topRimColor = SpecularGlassRimTop,
+                bottomRimColor = accentColor.copy(alpha = 0.35f)
+            )
             .padding(12.dp)
     ) {
         Column {

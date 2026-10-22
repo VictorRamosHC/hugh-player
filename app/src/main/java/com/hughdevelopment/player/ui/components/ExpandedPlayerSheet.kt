@@ -59,6 +59,7 @@ import com.hughdevelopment.player.R
 import com.hughdevelopment.player.data.model.Song
 import com.hughdevelopment.player.ui.theme.CharcoalSurface
 import com.hughdevelopment.player.ui.theme.CyberAmber
+import com.hughdevelopment.player.ui.theme.KleinBlue
 import com.hughdevelopment.player.ui.theme.HermeticCyan
 import com.hughdevelopment.player.ui.theme.MutedStone
 import com.hughdevelopment.player.ui.theme.SigilSilver
@@ -225,8 +226,8 @@ fun ExpandedPlayerSheet(
                     text = song.title,
                     color = SigilWhite,
                     fontSize = 20.sp,
-                    fontWeight = FontWeight.Bold,
-                    fontFamily = FontFamily.Monospace,
+                    fontWeight = FontWeight.Black,
+                    fontFamily = FontFamily.SansSerif,
                     maxLines = 1,
                     overflow = TextOverflow.Ellipsis,
                     textAlign = TextAlign.Center
@@ -254,8 +255,8 @@ fun ExpandedPlayerSheet(
                         .padding(horizontal = 8.dp),
                     barCount = 30,
                     height = 32.dp,
-                    activeColor = CyberAmber,
-                    secondaryColor = HermeticCyan
+                    activeColor = KleinBlue,
+                    secondaryColor = CyberAmber
                 )
 
                 Spacer(modifier = Modifier.height(16.dp))
@@ -275,7 +276,7 @@ fun ExpandedPlayerSheet(
                     modifier = Modifier.fillMaxWidth(),
                     colors = SliderDefaults.colors(
                         thumbColor = SigilWhite,
-                        activeTrackColor = CyberAmber,
+                        activeTrackColor = KleinBlue,
                         inactiveTrackColor = WireframeBorder
                     )
                 )
@@ -337,7 +338,7 @@ fun ExpandedPlayerSheet(
                             .size(68.dp)
                             .clip(CircleShape)
                             .background(SigilWhite)
-                            .border(2.5.dp, CyberAmber, CircleShape),
+                            .border(2.5.dp, KleinBlue, CircleShape),
                         contentAlignment = Alignment.Center
                     ) {
                         IconButton(
