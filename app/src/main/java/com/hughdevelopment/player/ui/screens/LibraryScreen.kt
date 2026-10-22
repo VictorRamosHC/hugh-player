@@ -148,7 +148,7 @@ fun LibraryScreen(
             ) {
                 Column(modifier = Modifier.weight(1f)) {
                     Text(
-                        text = "HUGH // PLAYER",
+                        text = "AETHER // VAULT",
                         color = SigilWhite,
                         fontSize = 20.sp,
                         fontWeight = FontWeight.Black,
@@ -156,7 +156,7 @@ fun LibraryScreen(
                         letterSpacing = 2.sp
                     )
                     Text(
-                        text = "OFFLINE VAULT • ${songs.size} TRACKS",
+                        text = "SOVEREIGN AUDIO • ${songs.size} TRACKS",
                         color = KleinBlue,
                         fontSize = 11.sp,
                         fontFamily = FontFamily.Monospace

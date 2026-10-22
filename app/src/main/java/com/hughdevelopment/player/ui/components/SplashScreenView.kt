@@ -95,7 +95,7 @@ fun SplashScreenView(
             horizontalAlignment = Alignment.CenterHorizontally
         ) {
             Text(
-                text = "HUGH // PLAYER",
+                text = "AETHER // VAULT",
                 color = SigilWhite,
                 fontSize = 22.sp,
                 fontWeight = FontWeight.Black,
@@ -106,9 +106,9 @@ fun SplashScreenView(
             Spacer(modifier = Modifier.height(4.dp))
 
             Text(
-                text = "OFFLINE VAULT • NEOCLASSICAL CORE",
+                text = "SOVEREIGN OFFLINE AUDIO • HUGH & ATOM",
                 color = CyberAmber,
-                fontSize = 11.sp,
+                fontSize = 10.5.sp,
                 fontFamily = FontFamily.Monospace,
                 letterSpacing = 1.5.sp
             )

@@ -437,7 +437,7 @@ fun SettingsScreen(
                 contentAlignment = Alignment.Center
             ) {
                 Text(
-                    text = "HUGH PLAYER // VERSION 1.4.1 CORE\nHUGH DEVELOPMENT • CO-FOUNDERS: HUGH & ATOM",
+                    text = "AETHER VAULT // VERSION 1.4.1 CORE\nSOVEREIGN OFFLINE AUDIO • CO-FOUNDERS: HUGH & ATOM",
                     color = MutedStone.copy(alpha = 0.6f),
                     fontSize = 10.sp,
                     fontFamily = FontFamily.Monospace,

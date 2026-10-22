@@ -120,7 +120,7 @@ fun FoldersScreen(
             .background(VoidBlack)
     ) {
         Image(
-            painter = painterResource(id = R.drawable.bg_library),
+            painter = painterResource(id = R.drawable.bg_folders),
             contentDescription = null,
             contentScale = ContentScale.Crop,
             modifier = Modifier
@@ -160,7 +160,7 @@ fun FoldersScreen(
 
                 Column(modifier = Modifier.weight(1f)) {
                     Text(
-                        text = if (activePlaylist != null) activePlaylist.name else "HUGH // PASTAS & PLAYLISTS",
+                        text = if (activePlaylist != null) activePlaylist.name else "AETHER // PASTAS & PLAYLISTS",
                         color = SigilWhite,
                         fontSize = 16.sp,
                         fontWeight = FontWeight.Bold,
@@ -374,8 +374,54 @@ fun FoldersScreen(
                     LazyColumn(
                         modifier = Modifier.fillMaxSize(),
                         contentPadding = PaddingValues(bottom = 120.dp),
-                        verticalArrangement = Arrangement.spacedBy(4.dp)
+                        verticalArrangement = Arrangement.spacedBy(6.dp)
                     ) {
+                        item {
+                            val bannerCoverRes = when {
+                                activePlaylist.name.contains("Playback", ignoreCase = true) || activePlaylist.category.contains("PLAYBACK", ignoreCase = true) -> R.drawable.cover_christian_playback
+                                activePlaylist.name.contains("Cristã", ignoreCase = true) || activePlaylist.category.contains("CANTADO", ignoreCase = true) -> R.drawable.cover_christian_vocal
+                                activePlaylist.name.contains("Dia a Dia", ignoreCase = true) || activePlaylist.category.contains("DIA A DIA", ignoreCase = true) -> R.drawable.cover_daily_music
+                                activePlaylist.name.contains("Reuniõ", ignoreCase = true) || activePlaylist.category.contains("REUNIÕES", ignoreCase = true) -> R.drawable.cover_meetings_vault
+                                else -> null
+                            }
+                            if (bannerCoverRes != null) {
+                                Box(
+                                    modifier = Modifier
+                                        .fillMaxWidth()
+                                        .height(130.dp)
+                                        .clip(RoundedCornerShape(10.dp))
+                                        .border(1.dp, WireframeBorder.copy(alpha = 0.6f), RoundedCornerShape(10.dp))
+                                ) {
+                                    Image(
+                                        painter = painterResource(id = bannerCoverRes),
+                                        contentDescription = null,
+                                        contentScale = ContentScale.Crop,
+                                        modifier = Modifier.fillMaxSize()
+                                    )
+                                    Box(
+                                        modifier = Modifier
+                                            .fillMaxSize()
+                                            .background(
+                                                androidx.compose.ui.graphics.Brush.verticalGradient(
+                                                    colors = listOf(Color.Transparent, VoidBlack.copy(alpha = 0.85f))
+                                                )
+                                            )
+                                            .padding(12.dp),
+                                        contentAlignment = Alignment.BottomStart
+                                    ) {
+                                        Text(
+                                            text = "${activePlaylist.name.uppercase()} • ${activePlaylist.songs.size} FAIXAS",
+                                            color = SigilWhite,
+                                            fontSize = 11.5.sp,
+                                            fontWeight = FontWeight.Bold,
+                                            fontFamily = FontFamily.Monospace
+                                        )
+                                    }
+                                }
+                                Spacer(modifier = Modifier.height(4.dp))
+                            }
+                        }
+
                         items(items = activePlaylist.songs, key = { it.id }) { song ->
                             Row(
                                 modifier = Modifier
@@ -477,6 +523,16 @@ private fun FolderCardItem(
         }
     }
 
+    val coverRes = remember(playlist.name, playlist.category) {
+        when {
+            playlist.name.contains("Playback", ignoreCase = true) || playlist.category.contains("PLAYBACK", ignoreCase = true) -> R.drawable.cover_christian_playback
+            playlist.name.contains("Cristã", ignoreCase = true) || playlist.category.contains("CANTADO", ignoreCase = true) -> R.drawable.cover_christian_vocal
+            playlist.name.contains("Dia a Dia", ignoreCase = true) || playlist.category.contains("DIA A DIA", ignoreCase = true) -> R.drawable.cover_daily_music
+            playlist.name.contains("Reuniõ", ignoreCase = true) || playlist.category.contains("REUNIÕES", ignoreCase = true) -> R.drawable.cover_meetings_vault
+            else -> null
+        }
+    }
+
     Row(
         modifier = Modifier
             .fillMaxWidth()
@@ -493,18 +549,33 @@ private fun FolderCardItem(
     ) {
         Box(
             modifier = Modifier
-                .size(46.dp)
+                .size(48.dp)
                 .clip(RoundedCornerShape(8.dp))
-                .background(accentColor.copy(alpha = 0.15f))
                 .border(1.dp, accentColor.copy(alpha = 0.5f), RoundedCornerShape(8.dp)),
             contentAlignment = Alignment.Center
         ) {
-            Icon(
-                imageVector = Icons.Default.Folder,
-                contentDescription = null,
-                tint = accentColor,
-                modifier = Modifier.size(26.dp)
-            )
+            if (coverRes != null) {
+                Image(
+                    painter = painterResource(id = coverRes),
+                    contentDescription = null,
+                    contentScale = ContentScale.Crop,
+                    modifier = Modifier.fillMaxSize()
+                )
+            } else {
+                Box(
+                    modifier = Modifier
+                        .fillMaxSize()
+                        .background(accentColor.copy(alpha = 0.15f)),
+                    contentAlignment = Alignment.Center
+                ) {
+                    Icon(
+                        imageVector = Icons.Default.Folder,
+                        contentDescription = null,
+                        tint = accentColor,
+                        modifier = Modifier.size(26.dp)
+                    )
+                }
+            }
         }
 
         Spacer(modifier = Modifier.width(12.dp))

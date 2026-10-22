@@ -151,7 +151,7 @@ fun ExpandedPlayerSheet(
                             .padding(horizontal = 10.dp, vertical = 5.dp)
                     ) {
                         Text(
-                            text = if (isFadeActive) "HUGH // 0x01 CORE • FADE ACTIVE" else "HUGH // 0x01 CORE • RAW CUT",
+                            text = if (isFadeActive) "AETHER // 0x01 CORE • FADE ACTIVE" else "AETHER // 0x01 CORE • RAW CUT",
                             color = CyberAmber,
                             fontSize = 10.sp,
                             fontFamily = FontFamily.Monospace,
