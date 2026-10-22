@@ -11,7 +11,7 @@ import androidx.room.RoomDatabase
         PlaylistEntity::class,
         PlaylistSongCrossRef::class
     ],
-    version = 3,
+    version = 4,
     exportSchema = false
 )
 abstract class PlayerDatabase : RoomDatabase() {
@@ -29,7 +29,10 @@ abstract class PlayerDatabase : RoomDatabase() {
                     context.applicationContext,
                     PlayerDatabase::class.java,
                     "hugh_player_stats.db"
-                ).fallbackToDestructiveMigration().build()
+                )
+                .setJournalMode(JournalMode.WRITE_AHEAD_LOGGING)
+                .fallbackToDestructiveMigration()
+                .build()
                 INSTANCE = instance
                 instance
             }

@@ -1,9 +1,15 @@
 package com.hughdevelopment.player.data.db
 
 import androidx.room.Entity
+import androidx.room.Index
 import androidx.room.PrimaryKey
 
-@Entity(tableName = "playlists")
+@Entity(
+    tableName = "playlists",
+    indices = [
+        Index(value = ["name"], unique = false)
+    ]
+)
 data class PlaylistEntity(
     @PrimaryKey(autoGenerate = true)
     val id: Long = 0,
@@ -15,7 +21,11 @@ data class PlaylistEntity(
 
 @Entity(
     tableName = "playlist_songs",
-    primaryKeys = ["playlistId", "songId"]
+    primaryKeys = ["playlistId", "songId"],
+    indices = [
+        Index(value = ["playlistId"]),
+        Index(value = ["songId"])
+    ]
 )
 data class PlaylistSongCrossRef(
     val playlistId: Long,

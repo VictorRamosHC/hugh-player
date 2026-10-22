@@ -1,6 +1,7 @@
 package com.hughdevelopment.player.ui.components
 
 import android.net.Uri
+import android.util.LruCache
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.fillMaxSize
@@ -26,12 +27,19 @@ import coil.size.Scale
 import coil.size.Size
 import com.hughdevelopment.player.R
 import com.hughdevelopment.player.ui.theme.CyberAmber
-import java.util.Collections
 
 object ArtworkCacheRegistry {
-    // In-memory set of URIs that failed loading (e.g. invalid MediaStore albumart IDs)
-    // Synchronized to prevent concurrent modification during fast fling scrolling
-    val failedUris: MutableSet<Uri> = Collections.synchronizedSet(HashSet<Uri>())
+    // Thread-safe bounded LRU cache limited to 1,000 entries
+    // Eliminates unbounded memory growth in huge 10,000+ track libraries
+    private val lruFailedCache = LruCache<Uri, Boolean>(1000)
+
+    fun isFailed(uri: Uri): Boolean = synchronized(this) {
+        lruFailedCache.get(uri) == true
+    }
+
+    fun markFailed(uri: Uri) = synchronized(this) {
+        lruFailedCache.put(uri, true)
+    }
 }
 
 @Composable
@@ -42,7 +50,7 @@ fun ArtworkImage(
     accentColor: Color = CyberAmber,
     targetDimensionPx: Int = 128
 ) {
-    val isKnownFailed = artworkUri == null || ArtworkCacheRegistry.failedUris.contains(artworkUri)
+    val isKnownFailed = artworkUri == null || ArtworkCacheRegistry.isFailed(artworkUri)
     var isLoadFailed by remember(artworkUri) { mutableStateOf(isKnownFailed) }
 
     Box(modifier = modifier.clip(RoundedCornerShape(cornerRadius))) {
@@ -64,7 +72,7 @@ fun ArtworkImage(
                 contentDescription = "Capa do Álbum",
                 contentScale = ContentScale.Crop,
                 onError = {
-                    ArtworkCacheRegistry.failedUris.add(artworkUri)
+                    ArtworkCacheRegistry.markFailed(artworkUri)
                     isLoadFailed = true
                 },
                 modifier = Modifier.fillMaxSize()

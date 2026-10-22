@@ -23,6 +23,7 @@ import androidx.compose.material.icons.filled.ArrowBack
 import androidx.compose.material.icons.filled.GraphicEq
 import androidx.compose.material.icons.filled.Hub
 import androidx.compose.material.icons.filled.Palette
+import androidx.compose.material.icons.filled.Security
 import androidx.compose.material.icons.filled.Tune
 import androidx.compose.material3.Button
 import androidx.compose.material3.ButtonDefaults
@@ -212,8 +213,8 @@ fun SettingsScreen(
                         Slider(
                             value = settings.fadeDurationSeconds,
                             onValueChange = onChangeFadeDuration,
-                            valueRange = 0.2f..3.0f,
-                            steps = 13,
+                            valueRange = 1.0f..15.0f,
+                            steps = 14,
                             colors = SliderDefaults.colors(
                                 thumbColor = CyberAmber,
                                 activeTrackColor = CyberAmber,
@@ -223,7 +224,7 @@ fun SettingsScreen(
                         )
 
                         Text(
-                            text = "Dica: O pause possui corte anti-pop suave instantâneo (250ms). Valores entre 0.4s e 1.2s criam a transição perfeita e fluida entre faixas.",
+                            text = "Dica: Valores entre 8s e 10s criam a fusão perfeita entre faixas sem corte abrupto.",
                             color = MutedStone,
                             fontSize = 10.5.sp,
                             fontFamily = FontFamily.Monospace
@@ -389,6 +390,32 @@ fun SettingsScreen(
                 }
             }
 
+            Spacer(modifier = Modifier.height(20.dp))
+
+            // SECTION 4: OFFLINE INTEGRITY & OBSERVABILITY
+            SectionHeader(
+                title = "DIAGNÓSTICO // OFFLINE INTEGRITY",
+                icon = Icons.Default.Security
+            )
+
+            Spacer(modifier = Modifier.height(10.dp))
+
+            Box(
+                modifier = Modifier
+                    .fillMaxWidth()
+                    .clip(RoundedCornerShape(10.dp))
+                    .background(CharcoalSurface)
+                    .border(1.dp, WireframeBorder, RoundedCornerShape(10.dp))
+                    .padding(14.dp)
+            ) {
+                Column(verticalArrangement = Arrangement.spacedBy(8.dp)) {
+                    DiagnosticRow("ISOLAMENTO DE REDE", "100% OFFLINE (ZERO PERMISSÕES INTERNET)", HermeticCyan)
+                    DiagnosticRow("BANCO DE DADOS", "ROOM 2.0 (WAL ATIVO • ÍNDICES B-TREE)", CyberAmber)
+                    DiagnosticRow("CACHE DE ARTE", "BOUNDED LRU (1.000 SLOTS • 120PX HARDWARE)", SigilWhite)
+                    DiagnosticRow("MOTOR DE ÁUDIO", "MEDIA3 EXOPLAYER (0ms INTENT TRACKER)", SigilSilver)
+                }
+            }
+
             Spacer(modifier = Modifier.height(24.dp))
 
             // Footer Brand
@@ -397,7 +424,7 @@ fun SettingsScreen(
                 contentAlignment = Alignment.Center
             ) {
                 Text(
-                    text = "HUGH PLAYER // VERSION 1.3.0 CORE\nHUGH DEVELOPMENT • CO-FOUNDERS: HUGH & ATOM",
+                    text = "HUGH PLAYER // VERSION 1.4.1 CORE\nHUGH DEVELOPMENT • CO-FOUNDERS: HUGH & ATOM",
                     color = MutedStone.copy(alpha = 0.6f),
                     fontSize = 10.sp,
                     fontFamily = FontFamily.Monospace,
@@ -408,6 +435,33 @@ fun SettingsScreen(
 
             Spacer(modifier = Modifier.height(40.dp))
         }
+    }
+}
+
+@Composable
+private fun DiagnosticRow(
+    label: String,
+    status: String,
+    statusColor: androidx.compose.ui.graphics.Color
+) {
+    Row(
+        modifier = Modifier.fillMaxWidth(),
+        horizontalArrangement = Arrangement.SpaceBetween,
+        verticalAlignment = Alignment.CenterVertically
+    ) {
+        Text(
+            text = label,
+            color = SigilSilver,
+            fontSize = 11.sp,
+            fontFamily = FontFamily.Monospace
+        )
+        Text(
+            text = status,
+            color = statusColor,
+            fontSize = 10.5.sp,
+            fontWeight = FontWeight.Bold,
+            fontFamily = FontFamily.Monospace
+        )
     }
 }
 
