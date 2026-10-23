@@ -9,15 +9,17 @@ import androidx.room.RoomDatabase
     entities = [
         StatsEntity::class,
         PlaylistEntity::class,
-        PlaylistSongCrossRef::class
+        PlaylistSongCrossRef::class,
+        DailyListeningEntity::class
     ],
-    version = 4,
+    version = 5,
     exportSchema = false
 )
 abstract class PlayerDatabase : RoomDatabase() {
 
     abstract fun statsDao(): StatsDao
     abstract fun playlistDao(): PlaylistDao
+    abstract fun dailyListeningDao(): DailyListeningDao
 
     companion object {
         @Volatile

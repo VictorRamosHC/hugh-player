@@ -5,12 +5,12 @@ import coil.ImageLoader
 import coil.ImageLoaderFactory
 import coil.disk.DiskCache
 import coil.memory.MemoryCache
-import coil.util.DebugLogger
 import com.hughdevelopment.player.data.ai.AgentDataManager
 import com.hughdevelopment.player.data.db.PlayerDatabase
 import com.hughdevelopment.player.data.repository.MusicRepository
 import com.hughdevelopment.player.data.settings.SettingsManager
 import com.hughdevelopment.player.data.source.MediaStoreScanner
+import com.hughdevelopment.player.notifications.VaultNotificationHelper
 
 class HughPlayerApplication : Application(), ImageLoaderFactory {
 
@@ -28,10 +28,17 @@ class HughPlayerApplication : Application(), ImageLoaderFactory {
 
     override fun onCreate() {
         super.onCreate()
+        VaultNotificationHelper.initNotificationChannel(this)
         database = PlayerDatabase.getInstance(this)
         settingsManager = SettingsManager.getInstance(this)
         val scanner = MediaStoreScanner(this)
-        repository = MusicRepository(scanner, database.statsDao(), database.playlistDao())
+        repository = MusicRepository(
+            scanner = scanner,
+            statsDao = database.statsDao(),
+            playlistDao = database.playlistDao(),
+            dailyListeningDao = database.dailyListeningDao(),
+            context = this
+        )
         agentDataManager = AgentDataManager(this, repository)
     }
 

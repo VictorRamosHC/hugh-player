@@ -1,25 +1,36 @@
 package com.hughdevelopment.player.data.repository
 
+import android.content.Context
+import com.hughdevelopment.player.data.db.DailyListeningDao
+import com.hughdevelopment.player.data.db.DailyListeningEntity
 import com.hughdevelopment.player.data.db.PlaylistDao
 import com.hughdevelopment.player.data.db.PlaylistEntity
 import com.hughdevelopment.player.data.db.PlaylistSongCrossRef
 import com.hughdevelopment.player.data.db.StatsDao
 import com.hughdevelopment.player.data.db.StatsEntity
+import com.hughdevelopment.player.data.model.DayListeningSummary
 import com.hughdevelopment.player.data.model.ListeningOverview
 import com.hughdevelopment.player.data.model.Playlist
 import com.hughdevelopment.player.data.model.Song
+import com.hughdevelopment.player.data.model.StreakInfo
 import com.hughdevelopment.player.data.model.TopSongSummary
 import com.hughdevelopment.player.data.source.MediaStoreScanner
+import com.hughdevelopment.player.notifications.VaultNotificationHelper
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.asStateFlow
 import kotlinx.coroutines.flow.combine
+import java.text.SimpleDateFormat
+import java.util.Calendar
+import java.util.Date
 import java.util.Locale
 
 class MusicRepository(
     private val scanner: MediaStoreScanner,
     private val statsDao: StatsDao,
-    private val playlistDao: PlaylistDao
+    private val playlistDao: PlaylistDao,
+    private val dailyListeningDao: DailyListeningDao,
+    private val context: Context
 ) {
     private val _rawSongs = MutableStateFlow<List<Song>>(emptyList())
     private val _favoriteOverrides = MutableStateFlow<Map<Long, Boolean>>(emptyMap())
@@ -83,6 +94,10 @@ class MusicRepository(
         )
     }
 
+    suspend fun recordSongPlayed(song: Song, secondsPlayed: Long) {
+        recordSongProgress(song, secondsPlayed)
+    }
+
     suspend fun recordSongProgress(song: Song, secondsPlayed: Long) {
         if (secondsPlayed > 0) {
             statsDao.addSecondsListened(
@@ -91,6 +106,20 @@ class MusicRepository(
                 artist = song.artist,
                 seconds = secondsPlayed
             )
+
+            // Record to Daily Listening for Duolingo Streak Tracking
+            val todayKey = SimpleDateFormat("yyyy-MM-dd", Locale.getDefault()).format(Date())
+            val prevRecord = dailyListeningDao.getRecordForDate(todayKey)
+            val wasAlreadyValid = prevRecord?.hasValidStreakDay == true
+
+            dailyListeningDao.recordDailyListening(todayKey, secondsPlayed)
+
+            val updatedRecord = dailyListeningDao.getRecordForDate(todayKey)
+            if (!wasAlreadyValid && updatedRecord?.hasValidStreakDay == true) {
+                // Streak day validated! Trigger celebratory notification
+                val currentStreak = calculateCurrentStreak()
+                VaultNotificationHelper.notifyStreakDayValidated(context, currentStreak)
+            }
         }
     }
 
@@ -102,13 +131,51 @@ class MusicRepository(
         return resultingFav
     }
 
+    suspend fun calculateCurrentStreak(): Int {
+        val allDays = dailyListeningDao.getRecentDays(120)
+        return computeStreakFromRecords(allDays)
+    }
+
+    private fun computeStreakFromRecords(records: List<DailyListeningEntity>): Int {
+        val validDateSet = records.filter { it.hasValidStreakDay }.map { it.dateKey }.toSet()
+        val sdf = SimpleDateFormat("yyyy-MM-dd", Locale.getDefault())
+        val cal = Calendar.getInstance()
+
+        val todayKey = sdf.format(cal.time)
+        cal.add(Calendar.DAY_OF_YEAR, -1)
+        val yesterdayKey = sdf.format(cal.time)
+
+        val startCal = Calendar.getInstance()
+        if (validDateSet.contains(todayKey)) {
+            // Count backwards starting from today
+        } else if (validDateSet.contains(yesterdayKey)) {
+            // Count backwards starting from yesterday
+            startCal.add(Calendar.DAY_OF_YEAR, -1)
+        } else {
+            return 0
+        }
+
+        var streak = 0
+        while (true) {
+            val dateKey = sdf.format(startCal.time)
+            if (validDateSet.contains(dateKey)) {
+                streak++
+                startCal.add(Calendar.DAY_OF_YEAR, -1)
+            } else {
+                break
+            }
+        }
+        return streak
+    }
+
     fun getListeningOverview(): Flow<ListeningOverview> {
         return combine(
             statsDao.getAllStatsFlow(),
             statsDao.getTotalSecondsListenedFlow(),
             statsDao.getUniquePlayedCountFlow(),
-            statsDao.getFavoriteCountFlow()
-        ) { statsList, totalSeconds, uniqueCount, favCount ->
+            statsDao.getFavoriteCountFlow(),
+            dailyListeningDao.getAllDailyRecordsFlow()
+        ) { statsList, totalSeconds, uniqueCount, favCount, dailyRecords ->
             val totalSec = totalSeconds ?: 0L
             val topSongs = statsList.filter { it.playCount > 0 }.take(10).map { entity ->
                 TopSongSummary(
@@ -119,12 +186,72 @@ class MusicRepository(
                     totalSecondsListened = entity.totalSecondsListened
                 )
             }
+
+            val streak = computeStreakFromRecords(dailyRecords)
+            val activeDaysCount = dailyRecords.count { it.hasValidStreakDay }
+            val dailyMap = dailyRecords.associateBy { it.dateKey }
+
+            val sdf = SimpleDateFormat("yyyy-MM-dd", Locale.getDefault())
+            val todayKey = sdf.format(Date())
+            val isTodayCompleted = dailyMap[todayKey]?.hasValidStreakDay == true
+
+            // Build Monthly Calendar (current month days 1..maxDays)
+            val cal = Calendar.getInstance()
+            val year = cal.get(Calendar.YEAR)
+            val month = cal.get(Calendar.MONTH) // 0-based
+            val maxDaysInMonth = cal.getActualMaximum(Calendar.DAY_OF_MONTH)
+            val dayOfWeekFormat = SimpleDateFormat("EEE", Locale("pt", "BR"))
+
+            val monthlyDays = (1..maxDaysInMonth).map { day ->
+                val dayCal = Calendar.getInstance().apply {
+                    set(year, month, day, 12, 0, 0)
+                }
+                val key = "%04d-%02d-%02d".format(year, month + 1, day)
+                val record = dailyMap[key]
+                DayListeningSummary(
+                    dateKey = key,
+                    dayOfMonth = day,
+                    dayOfWeekLabel = dayOfWeekFormat.format(dayCal.time).uppercase().take(3),
+                    minutes = record?.totalMinutes ?: 0L,
+                    hasValidStreak = record?.hasValidStreakDay == true
+                )
+            }
+
+            // Build Recent 7 Days (for the mini bar-chart)
+            val recent7 = (6 downTo 0).map { daysAgo ->
+                val dayCal = Calendar.getInstance().apply {
+                    add(Calendar.DAY_OF_YEAR, -daysAgo)
+                }
+                val key = sdf.format(dayCal.time)
+                val record = dailyMap[key]
+                DayListeningSummary(
+                    dateKey = key,
+                    dayOfMonth = dayCal.get(Calendar.DAY_OF_MONTH),
+                    dayOfWeekLabel = dayOfWeekFormat.format(dayCal.time).uppercase().take(3),
+                    minutes = record?.totalMinutes ?: 0L,
+                    hasValidStreak = record?.hasValidStreakDay == true
+                )
+            }
+
+            val totalMonthMins = monthlyDays.sumOf { it.minutes }
+            val activeDaysThisMonth = monthlyDays.count { it.minutes > 0 }.coerceAtLeast(1)
+            val averageDaily = totalMonthMins / activeDaysThisMonth
+
             ListeningOverview(
                 totalSecondsListened = totalSec,
                 totalSongsPlayed = statsList.sumOf { it.playCount },
                 uniqueTracksListened = uniqueCount,
                 favoriteCount = favCount,
-                topSongs = topSongs
+                topSongs = topSongs,
+                streakInfo = StreakInfo(
+                    currentStreak = streak,
+                    bestStreak = streak.coerceAtLeast(activeDaysCount),
+                    isTodayCompleted = isTodayCompleted,
+                    totalActiveDays = activeDaysCount
+                ),
+                monthlyCalendar = monthlyDays,
+                recent7Days = recent7,
+                averageDailyMinutes = averageDaily
             )
         }
     }
@@ -169,118 +296,53 @@ class MusicRepository(
         playlistDao.removeSongFromPlaylist(playlistId, songId)
     }
 
-    /**
-     * Auto-classifies the user's entire local music library into Hugh's 4 designated folders:
-     * 1. Músicas Cristãs (Cantado)
-     * 2. Músicas Cristãs (Playback)
-     * 3. Músicas Dia a Dia
-     * 4. Áudios de Reuniões
-     */
+    // Pre-create the 4 Sovereign Categories automatically
     suspend fun autoOrganizeWithAiPresets(allSongs: List<Song>): Map<String, Int> {
-        // Ensure default 4 folders exist without duplicates
-        val defaultFolders = listOf(
-            Triple("Músicas Cristãs (Cantado)", "CRISTÃS (CANTADO)", "#F59E0B"),
-            Triple("Músicas Cristãs (Playback)", "CRISTÃS (PLAYBACK)", "#06B6D4"),
-            Triple("Músicas Dia a Dia", "DIA A DIA", "#10B981"),
-            Triple("Áudios de Reuniões", "REUNIÕES", "#8B5CF6")
+        val presetDefinitions = listOf(
+            Triple("Músicas Cristãs (Cantado)", "CRISTÃS (CANTADO)", "#0022FF"),
+            Triple("Músicas Cristãs (Playback)", "CRISTÃS (PLAYBACK)", "#F59E0B"),
+            Triple("Músicas Dia a Dia", "DIA A DIA", "#06B6D4"),
+            Triple("Áudios de Reuniões", "REUNIÕES", "#E4E4E7")
         )
 
-        // Find existing folder by name or create
-        val folderIdMap = mutableMapOf<String, Long>()
-        for ((name, cat, color) in defaultFolders) {
-            val existing = playlistDao.getPlaylistByName(name)
+        val playlistIdMap = mutableMapOf<String, Long>()
+        for ((name, cat, color) in presetDefinitions) {
+            val existing = playlistDao.findPlaylistByName(name)
             val id = existing?.id ?: playlistDao.insertPlaylist(
-                PlaylistEntity(
-                    name = name,
-                    category = cat,
-                    colorHex = color
-                )
+                PlaylistEntity(name = name, category = cat, colorHex = color)
             )
-            folderIdMap[name] = id
+            playlistIdMap[name] = id
         }
 
-        val christianArtistsAndKeywords = listOf(
-            "diante do trono", "niel nascimento", "nani azevedo", "mara lima", "gabriel guedes",
-            "fhop", "anderson freire", "bruna karla", "julia vitória", "julia vitoria",
-            "eliã oliveira", "elia oliveira", "canção & louvor", "cancao & louvor", "canção e louvor",
-            "rute maia", "damares", "jorge araújo", "jorge araujo", "odete", "sintia correia",
-            "verdadeiro evangelho", "alexsander lucio", "vaso perfeito", "cicatrizes",
-            "coração igual ao teu", "coracao igual ao teu", "bendito é o rei", "bendito e o rei",
-            "como na primeira vez", "consolador", "depois da cruz", "daniel", "a árvore e a cruz",
-            "a arvore e a cruz", "atos 2", "agnus dei", "adorador", "senhor", "jesus", "deus",
-            "cristo", "evangelho", "harpa", "louvor", "gospel", "calvário", "calvario", "eterno presente",
-            "gloria", "glória", "hino", "adoração", "adoracao", "eyshila", "midian lima",
-            "léa mendonça", "lea mendonca", "aline barros", "cassiane", "luiz de carvalho",
-            "vanilda bordieri", "noemi nonato", "trazendo a arca", "najara nogue", "zelly lima",
-            "cléia souza", "cleia souza", "rafaelli cristina", "pregação", "pregacao", "orações", "oracoes"
-        )
-
-        val playbackKeywords = listOf(
-            "playback", "play back", "play-back", "p/b", "#cover tom", "instrumental",
-            "sem voz", "play_back", "karaoke", "karaokê", "tom contralto", "tom feminino", "tom masculino"
-        )
-
-        val meetingFolderNames = listOf(
-            "audio_reunioes", "reunioes", "reuniões", "transcrever", "gravador", "recordings", "call_recorder"
-        )
-
-        val meetingKeywords = listOf(
-            "reunião", "reuniao", "meeting", "ata ", "conferência", "conferencia",
-            "processo ", "problema de acesso", "boletim papo", "bot-boletim", "brainstorm", "briefing"
-        )
-
-        val cantadoId = folderIdMap["Músicas Cristãs (Cantado)"]!!
-        val playbackId = folderIdMap["Músicas Cristãs (Playback)"]!!
-        val diaADiaId = folderIdMap["Músicas Dia a Dia"]!!
-        val reunioesId = folderIdMap["Áudios de Reuniões"]!!
-
-        val cantadoRefs = mutableListOf<PlaylistSongCrossRef>()
-        val playbackRefs = mutableListOf<PlaylistSongCrossRef>()
-        val diaADiaRefs = mutableListOf<PlaylistSongCrossRef>()
-        val reunioesRefs = mutableListOf<PlaylistSongCrossRef>()
+        val addedCounts = mutableMapOf<String, Int>()
 
         for (song in allSongs) {
-            val titleLower = song.title.lowercase(Locale.ROOT)
-            val artistLower = song.artist.lowercase(Locale.ROOT)
-            val albumLower = song.album.lowercase(Locale.ROOT)
-            val pathLower = song.dataPath.lowercase(Locale.ROOT)
-            val parentDir = java.io.File(song.dataPath).parentFile?.name?.lowercase(Locale.ROOT) ?: ""
-            val fullContext = "$titleLower $artistLower $albumLower $pathLower $parentDir"
+            val lowerTitle = song.title.lowercase()
+            val lowerPath = song.dataPath.lowercase()
+            val lowerArtist = song.artist.lowercase()
 
-            val isExplicitMeeting = meetingFolderNames.contains(parentDir) ||
-                    meetingKeywords.any { fullContext.contains(it) } ||
-                    ((artistLower in listOf("desconhecido", "unknown", "")) &&
-                            (titleLower.startsWith("track-") || titleLower.startsWith("rec-") || pathLower.contains("voice")))
-
-            val isPlayback = playbackKeywords.any { fullContext.contains(it) } || parentDir == "playbacks"
-            val isChristian = christianArtistsAndKeywords.any { fullContext.contains(it) }
-
-            when {
-                isExplicitMeeting && !isPlayback && !isChristian -> {
-                    reunioesRefs.add(PlaylistSongCrossRef(reunioesId, song.id))
+            val targetCategory = when {
+                lowerTitle.contains("reunião") || lowerTitle.contains("reuniao") || lowerPath.contains("reunião") || lowerPath.contains("meeting") || lowerPath.contains("ata") -> {
+                    "Áudios de Reuniões"
                 }
-                isPlayback -> {
-                    playbackRefs.add(PlaylistSongCrossRef(playbackId, song.id))
+                lowerTitle.contains("playback") || lowerTitle.contains("instrumental") || lowerPath.contains("playback") || lowerTitle.contains("sem voz") -> {
+                    "Músicas Cristãs (Playback)"
                 }
-                isChristian -> {
-                    cantadoRefs.add(PlaylistSongCrossRef(cantadoId, song.id))
+                lowerTitle.contains("harpa") || lowerTitle.contains("hino") || lowerTitle.contains("louvor") || lowerTitle.contains("cristã") || lowerTitle.contains("gospel") || lowerPath.contains("gospel") || lowerArtist.contains("gospel") -> {
+                    "Músicas Cristãs (Cantado)"
                 }
                 else -> {
-                    diaADiaRefs.add(PlaylistSongCrossRef(diaADiaId, song.id))
+                    "Músicas Dia a Dia"
                 }
+            }
+
+            val targetPlaylistId = playlistIdMap[targetCategory]
+            if (targetPlaylistId != null) {
+                playlistDao.insertSongCrossRef(PlaylistSongCrossRef(targetPlaylistId, song.id))
+                addedCounts[targetCategory] = (addedCounts[targetCategory] ?: 0) + 1
             }
         }
 
-        playlistDao.insertSongCrossRefs(cantadoRefs)
-        playlistDao.insertSongCrossRefs(playbackRefs)
-        playlistDao.insertSongCrossRefs(diaADiaRefs)
-        playlistDao.insertSongCrossRefs(reunioesRefs)
-
-        return mapOf(
-            "Músicas Cristãs (Cantado)" to cantadoRefs.size,
-            "Músicas Cristãs (Playback)" to playbackRefs.size,
-            "Músicas Dia a Dia" to diaADiaRefs.size,
-            "Áudios de Reuniões" to reunioesRefs.size
-        )
+        return addedCounts
     }
 }
