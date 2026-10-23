@@ -12,6 +12,9 @@ interface StatsDao {
     @Query("SELECT * FROM playback_stats ORDER BY play_count DESC")
     fun getAllStatsFlow(): Flow<List<StatsEntity>>
 
+    @Query("SELECT * FROM playback_stats")
+    suspend fun getAllStatsList(): List<StatsEntity>
+
     @Query("SELECT * FROM playback_stats WHERE is_favorite = 1")
     fun getFavoriteStatsFlow(): Flow<List<StatsEntity>>
 

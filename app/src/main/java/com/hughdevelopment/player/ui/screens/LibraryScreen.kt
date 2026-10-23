@@ -81,6 +81,7 @@ import com.hughdevelopment.player.data.model.Playlist
 import com.hughdevelopment.player.data.model.ListeningOverview
 import com.hughdevelopment.player.ui.components.HermesPetBanner
 import com.hughdevelopment.player.ui.components.HermesDialogueSheet
+import com.hughdevelopment.player.ui.theme.LocalVaultTheme
 
 @Composable
 fun LibraryScreen(
@@ -106,6 +107,7 @@ fun LibraryScreen(
     modifier: Modifier = Modifier
 ) {
     val context = LocalContext.current
+    val currentTheme = LocalVaultTheme.current
     var songToAddToPlaylist by remember { mutableStateOf<Song?>(null) }
     var searchQuery by remember { mutableStateOf("") }
     var showHermesSheet by remember { mutableStateOf(false) }
@@ -155,17 +157,17 @@ fun LibraryScreen(
             ) {
                 Column(modifier = Modifier.weight(1f)) {
                     Text(
-                        text = "AETHER // VAULT",
-                        color = SigilWhite,
-                        fontSize = 20.sp,
+                        text = currentTheme.lexicon.brandHeader,
+                        color = currentTheme.textPrimary,
+                        fontSize = 18.sp,
                         fontWeight = FontWeight.Black,
                         fontFamily = FontFamily.Monospace,
-                        letterSpacing = 2.sp
+                        letterSpacing = 1.5.sp
                     )
                     Text(
-                        text = "SOVEREIGN AUDIO • ${songs.size} TRACKS",
-                        color = KleinBlue,
-                        fontSize = 11.sp,
+                        text = "${currentTheme.lexicon.brandSub} • ${songs.size} TRACKS",
+                        color = currentTheme.primaryAccent,
+                        fontSize = 10.5.sp,
                         fontFamily = FontFamily.Monospace
                     )
                 }

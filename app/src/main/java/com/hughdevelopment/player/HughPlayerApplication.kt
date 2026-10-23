@@ -5,6 +5,7 @@ import coil.ImageLoader
 import coil.ImageLoaderFactory
 import coil.disk.DiskCache
 import coil.memory.MemoryCache
+import com.hughdevelopment.player.data.backup.VaultBackupManager
 import com.hughdevelopment.player.data.ai.AgentDataManager
 import com.hughdevelopment.player.data.db.PlayerDatabase
 import com.hughdevelopment.player.data.repository.MusicRepository
@@ -26,6 +27,9 @@ class HughPlayerApplication : Application(), ImageLoaderFactory {
     lateinit var settingsManager: SettingsManager
         private set
 
+    lateinit var backupManager: VaultBackupManager
+        private set
+
     override fun onCreate() {
         super.onCreate()
         VaultNotificationHelper.initNotificationChannel(this)
@@ -40,6 +44,7 @@ class HughPlayerApplication : Application(), ImageLoaderFactory {
             context = this
         )
         agentDataManager = AgentDataManager(this, repository)
+        backupManager = VaultBackupManager(this, repository, settingsManager)
     }
 
     override fun newImageLoader(): ImageLoader {

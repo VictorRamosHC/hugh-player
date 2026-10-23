@@ -13,8 +13,8 @@ android {
         applicationId = "com.hughdevelopment.player"
         minSdk = 26
         targetSdk = 35
-        versionCode = 9
-        versionName = "1.4.4"
+        versionCode = 10
+        versionName = "1.4.5"
 
         testInstrumentationRunner = "androidx.test.runner.AndroidJUnitRunner"
         vectorDrawables {
@@ -22,10 +22,20 @@ android {
         }
     }
 
+    signingConfigs {
+        create("hughSigning") {
+            storeFile = file("keystore/hugh_vault.keystore")
+            storePassword = "hughdevelopment"
+            keyAlias = "hughvaultkey"
+            keyPassword = "hughdevelopment"
+        }
+    }
+
     buildTypes {
         release {
             isMinifyEnabled = true
             isShrinkResources = true
+            signingConfig = signingConfigs.getByName("hughSigning")
             proguardFiles(
                 getDefaultProguardFile("proguard-android-optimize.txt"),
                 "proguard-rules.pro"
@@ -34,6 +44,7 @@ android {
         debug {
             applicationIdSuffix = ".debug"
             isDebuggable = true
+            signingConfig = signingConfigs.getByName("hughSigning")
         }
     }
 

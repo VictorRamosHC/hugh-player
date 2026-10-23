@@ -5,6 +5,7 @@ import android.content.Context
 import androidx.lifecycle.AndroidViewModel
 import androidx.lifecycle.viewModelScope
 import com.hughdevelopment.player.HughPlayerApplication
+import com.hughdevelopment.player.data.backup.BackupImportResult
 import com.hughdevelopment.player.data.model.ListeningOverview
 import com.hughdevelopment.player.data.model.Playlist
 import com.hughdevelopment.player.data.model.Song
@@ -25,6 +26,7 @@ class MusicViewModel(application: Application) : AndroidViewModel(application) {
     private val app = application as HughPlayerApplication
     val repository = app.repository
     val agentManager = app.agentDataManager
+    val backupManager = app.backupManager
     val settingsManager = SettingsManager.getInstance(application)
 
     val settings: StateFlow<SettingsState> = settingsManager.settings
@@ -289,6 +291,10 @@ class MusicViewModel(application: Application) : AndroidViewModel(application) {
         settingsManager.setPlayerWallpaperAlpha(alpha)
     }
 
+    fun setThemeId(themeId: String) {
+        settingsManager.setThemeId(themeId)
+    }
+
     fun exportAiManifest(context: Context, onResult: (String) -> Unit) {
         viewModelScope.launch {
             try {
@@ -297,6 +303,25 @@ class MusicViewModel(application: Application) : AndroidViewModel(application) {
             } catch (e: Exception) {
                 onResult("Erro: ${e.message}")
             }
+        }
+    }
+
+    fun exportBackup(onResult: (String) -> Unit) {
+        viewModelScope.launch {
+            try {
+                val file = backupManager.exportBackupToFile()
+                onResult(file.absolutePath)
+            } catch (e: Exception) {
+                onResult("Erro: ${e.message}")
+            }
+        }
+    }
+
+    fun importBackup(jsonString: String, onResult: (BackupImportResult) -> Unit) {
+        viewModelScope.launch {
+            val res = backupManager.importBackupFromJson(jsonString)
+            loadLocalMusic()
+            onResult(res)
         }
     }
 

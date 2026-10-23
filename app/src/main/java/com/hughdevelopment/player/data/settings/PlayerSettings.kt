@@ -20,7 +20,8 @@ data class SettingsState(
     val folderSortOrder: SortOrder = SortOrder.DATE_ADDED_DESC,
     val libraryWallpaperAlpha: Float = 0.30f,
     val playerWallpaperAlpha: Float = 0.35f,
-    val isHapticEnabled: Boolean = true
+    val isHapticEnabled: Boolean = true,
+    val activeThemeId: String = "AETHER_CLASSIC"
 )
 
 class SettingsManager(context: Context) {
@@ -51,6 +52,7 @@ class SettingsManager(context: Context) {
         val libAlpha = prefs.getFloat(KEY_LIB_ALPHA, 0.30f)
         val playerAlpha = prefs.getFloat(KEY_PLAYER_ALPHA, 0.35f)
         val haptic = prefs.getBoolean(KEY_HAPTIC, true)
+        val themeId = prefs.getString(KEY_THEME_ID, "AETHER_CLASSIC") ?: "AETHER_CLASSIC"
 
         return SettingsState(
             isFadeEnabled = fadeEnabled,
@@ -59,8 +61,14 @@ class SettingsManager(context: Context) {
             folderSortOrder = folderSortOrder,
             libraryWallpaperAlpha = libAlpha,
             playerWallpaperAlpha = playerAlpha,
-            isHapticEnabled = haptic
+            isHapticEnabled = haptic,
+            activeThemeId = themeId
         )
+    }
+
+    fun setThemeId(themeId: String) {
+        prefs.edit().putString(KEY_THEME_ID, themeId).apply()
+        _settings.value = _settings.value.copy(activeThemeId = themeId)
     }
 
     fun setFadeEnabled(enabled: Boolean) {
@@ -134,6 +142,7 @@ class SettingsManager(context: Context) {
         private const val KEY_LIB_ALPHA = "key_lib_alpha"
         private const val KEY_PLAYER_ALPHA = "key_player_alpha"
         private const val KEY_HAPTIC = "key_haptic"
+        private const val KEY_THEME_ID = "key_theme_id"
 
         private const val KEY_LAST_SONG_ID = "key_last_song_id"
         private const val KEY_LAST_POSITION_MS = "key_last_position_ms"

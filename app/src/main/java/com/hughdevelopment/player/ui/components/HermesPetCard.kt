@@ -60,6 +60,7 @@ import com.hughdevelopment.player.ui.theme.SigilWhite
 import com.hughdevelopment.player.ui.theme.SpecularGlassRimTop
 import com.hughdevelopment.player.ui.theme.VoidBlack
 import com.hughdevelopment.player.ui.theme.WireframeBorder
+import com.hughdevelopment.player.ui.theme.LocalVaultTheme
 
 @Composable
 fun HermesPetBanner(
@@ -69,6 +70,7 @@ fun HermesPetBanner(
     onOpenChat: () -> Unit,
     modifier: Modifier = Modifier
 ) {
+    val theme = LocalVaultTheme.current
     val quip = remember(overview, songsCount, playlistsCount) {
         HermesPetEngine.getDynamicGreeting(overview, songsCount, playlistsCount)
     }
@@ -77,10 +79,10 @@ fun HermesPetBanner(
         modifier = modifier
             .fillMaxWidth()
             .neoGlassCard(
-                cornerRadius = 10.dp,
+                cornerRadius = theme.cardCornerRadius,
                 backgroundColor = ObsidianGlass,
                 borderWidth = 1.dp,
-                topRimColor = HermeticCyan.copy(alpha = 0.8f),
+                topRimColor = theme.primaryAccent.copy(alpha = 0.8f),
                 bottomRimColor = SpecularGlassRimTop
             )
             .clickable { onOpenChat() }
@@ -93,7 +95,7 @@ fun HermesPetBanner(
             // Stylized Neoclassical Bust Glyph for Hermes
             StatueGlyphView(
                 modifier = Modifier.size(46.dp),
-                accentColor = HermeticCyan
+                accentColor = theme.primaryAccent
             )
 
             Spacer(modifier = Modifier.width(12.dp))
@@ -101,15 +103,15 @@ fun HermesPetBanner(
             Column(modifier = Modifier.weight(1f)) {
                 Row(verticalAlignment = Alignment.CenterVertically) {
                     Text(
-                        text = "HERMES // COMPANHEIRO IA",
-                        color = HermeticCyan,
+                        text = theme.lexicon.petName,
+                        color = theme.primaryAccent,
                         fontSize = 11.5.sp,
                         fontWeight = FontWeight.Bold,
                         fontFamily = FontFamily.Monospace,
                         letterSpacing = 1.sp
                     )
                     Spacer(modifier = Modifier.width(6.dp))
-                    Text(text = "🏛️", fontSize = 11.sp)
+                    Text(text = if (theme.isBrutalistSharp) "🔴" else "🏛️", fontSize = 11.sp)
                 }
 
                 Spacer(modifier = Modifier.height(2.dp))
@@ -128,15 +130,15 @@ fun HermesPetBanner(
 
             Box(
                 modifier = Modifier
-                    .clip(CircleShape)
+                    .clip(if (theme.isBrutalistSharp) RoundedCornerShape(2.dp) else CircleShape)
                     .background(CharcoalSurface)
-                    .border(1.dp, HermeticCyan.copy(alpha = 0.5f), CircleShape)
+                    .border(1.dp, theme.primaryAccent.copy(alpha = 0.5f), if (theme.isBrutalistSharp) RoundedCornerShape(2.dp) else CircleShape)
                     .padding(8.dp)
             ) {
                 Icon(
                     imageVector = Icons.Default.AutoAwesome,
                     contentDescription = "Conversar",
-                    tint = CyberAmber,
+                    tint = theme.secondaryAccent,
                     modifier = Modifier.size(16.dp)
                 )
             }
@@ -154,6 +156,7 @@ fun HermesDialogueSheet(
     onAutoOrganize: () -> Unit,
     onPlayFavorites: () -> Unit
 ) {
+    val theme = LocalVaultTheme.current
     val sheetState = rememberModalBottomSheetState(skipPartiallyExpanded = true)
     var userInput by remember { mutableStateOf("") }
 
@@ -191,21 +194,21 @@ fun HermesDialogueSheet(
                     Row(verticalAlignment = Alignment.CenterVertically) {
                         StatueGlyphView(
                             modifier = Modifier.size(36.dp),
-                            accentColor = HermeticCyan
+                            accentColor = theme.primaryAccent
                         )
                         Spacer(modifier = Modifier.width(10.dp))
                         Column {
                             Text(
-                                text = "HERMES // DIALOGUE CORE",
-                                color = SigilWhite,
-                                fontSize = 14.sp,
+                                text = theme.lexicon.petName,
+                                color = theme.textPrimary,
+                                fontSize = 13.sp,
                                 fontWeight = FontWeight.Bold,
                                 fontFamily = FontFamily.Monospace
                             )
                             Text(
-                                text = "IA SOBERANA 100% OFFLINE • ZERO CLOUD",
-                                color = HermeticCyan,
-                                fontSize = 10.sp,
+                                text = theme.lexicon.petSubtitle,
+                                color = theme.primaryAccent,
+                                fontSize = 9.5.sp,
                                 fontFamily = FontFamily.Monospace
                             )
                         }

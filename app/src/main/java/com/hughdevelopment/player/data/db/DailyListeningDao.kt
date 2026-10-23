@@ -12,6 +12,9 @@ interface DailyListeningDao {
     @Query("SELECT * FROM daily_listening ORDER BY date_key DESC")
     fun getAllDailyRecordsFlow(): Flow<List<DailyListeningEntity>>
 
+    @Query("SELECT * FROM daily_listening ORDER BY date_key ASC")
+    suspend fun getAllDailyRecordsList(): List<DailyListeningEntity>
+
     @Query("SELECT * FROM daily_listening WHERE date_key LIKE :monthPrefix ORDER BY date_key ASC")
     fun getRecordsForMonthFlow(monthPrefix: String): Flow<List<DailyListeningEntity>>
 

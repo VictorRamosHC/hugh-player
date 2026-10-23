@@ -26,11 +26,11 @@ import java.util.Date
 import java.util.Locale
 
 class MusicRepository(
-    private val scanner: MediaStoreScanner,
-    private val statsDao: StatsDao,
-    private val playlistDao: PlaylistDao,
-    private val dailyListeningDao: DailyListeningDao,
-    private val context: Context
+    val scanner: MediaStoreScanner,
+    val statsDao: StatsDao,
+    val playlistDao: PlaylistDao,
+    val dailyListeningDao: DailyListeningDao,
+    val context: Context
 ) {
     private val _rawSongs = MutableStateFlow<List<Song>>(emptyList())
     private val _favoriteOverrides = MutableStateFlow<Map<Long, Boolean>>(emptyMap())

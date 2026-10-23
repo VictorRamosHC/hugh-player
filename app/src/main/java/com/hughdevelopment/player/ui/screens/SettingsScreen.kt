@@ -1,9 +1,13 @@
 package com.hughdevelopment.player.ui.screens
 
+import android.net.Uri
 import android.widget.Toast
+import androidx.activity.compose.rememberLauncherForActivityResult
+import androidx.activity.result.contract.ActivityResultContracts
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.background
 import androidx.compose.foundation.border
+import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
@@ -16,13 +20,17 @@ import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.layout.width
 import androidx.compose.foundation.rememberScrollState
+import androidx.compose.foundation.shape.CircleShape
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.foundation.verticalScroll
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.ArrowBack
+import androidx.compose.material.icons.filled.AutoAwesome
+import androidx.compose.material.icons.filled.Backup
 import androidx.compose.material.icons.filled.GraphicEq
 import androidx.compose.material.icons.filled.Hub
 import androidx.compose.material.icons.filled.Palette
+import androidx.compose.material.icons.filled.Restore
 import androidx.compose.material.icons.filled.Security
 import androidx.compose.material.icons.filled.Tune
 import androidx.compose.material3.Button
@@ -51,6 +59,7 @@ import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import com.hughdevelopment.player.R
+import com.hughdevelopment.player.data.backup.BackupImportResult
 import com.hughdevelopment.player.data.settings.SettingsState
 import com.hughdevelopment.player.ui.components.CybersigilBackground
 import com.hughdevelopment.player.ui.theme.CharcoalSurface
@@ -63,6 +72,7 @@ import com.hughdevelopment.player.ui.theme.HermeticCyan
 import com.hughdevelopment.player.ui.theme.MutedStone
 import com.hughdevelopment.player.ui.theme.SigilSilver
 import com.hughdevelopment.player.ui.theme.SigilWhite
+import com.hughdevelopment.player.ui.theme.VaultThemes
 import com.hughdevelopment.player.ui.theme.VoidBlack
 import com.hughdevelopment.player.ui.theme.WireframeBorder
 
@@ -75,11 +85,34 @@ fun SettingsScreen(
     onChangeLibraryAlpha: (Float) -> Unit,
     onChangePlayerAlpha: (Float) -> Unit,
     onExportAiManifest: ((String) -> Unit) -> Unit,
+    onSelectTheme: (String) -> Unit = {},
+    onExportBackup: ((String) -> Unit) -> Unit = {},
+    onImportBackup: (String, (BackupImportResult) -> Unit) -> Unit = { _, _ -> },
     modifier: Modifier = Modifier
 ) {
     val context = LocalContext.current
     var exportStatusText by remember { mutableStateOf<String?>(null) }
+    var backupStatusText by remember { mutableStateOf<String?>(null) }
     val scrollState = rememberScrollState()
+
+    val filePickerLauncher = rememberLauncherForActivityResult(
+        contract = ActivityResultContracts.GetContent()
+    ) { uri: Uri? ->
+        if (uri != null) {
+            try {
+                val inputStream = context.contentResolver.openInputStream(uri)
+                val jsonString = inputStream?.bufferedReader()?.use { it.readText() } ?: ""
+                if (jsonString.isNotBlank()) {
+                    onImportBackup(jsonString) { result ->
+                        backupStatusText = result.message
+                        Toast.makeText(context, result.message, Toast.LENGTH_LONG).show()
+                    }
+                }
+            } catch (e: Exception) {
+                Toast.makeText(context, "Erro ao carregar backup: ${e.message}", Toast.LENGTH_LONG).show()
+            }
+        }
+    }
 
     Box(
         modifier = modifier
@@ -242,6 +275,105 @@ fun SettingsScreen(
 
             Spacer(modifier = Modifier.height(20.dp))
 
+            // THEME MARKETPLACE // COFRE DE IDENTIDADES VISUAIS
+            SectionHeader(
+                title = "COFRE DE TEMAS // MERCADO DE IDENTIDADES",
+                icon = Icons.Default.AutoAwesome
+            )
+
+            Spacer(modifier = Modifier.height(10.dp))
+
+            Column(verticalArrangement = Arrangement.spacedBy(10.dp)) {
+                VaultThemes.AllThemes.forEach { theme ->
+                    val isSelected = settings.activeThemeId.equals(theme.id.name, ignoreCase = true)
+                    Box(
+                        modifier = Modifier
+                            .fillMaxWidth()
+                            .clip(RoundedCornerShape(8.dp))
+                            .background(CharcoalSurface)
+                            .border(
+                                width = if (isSelected) 1.5.dp else 1.dp,
+                                color = if (isSelected) theme.primaryAccent else WireframeBorder,
+                                shape = RoundedCornerShape(8.dp)
+                            )
+                            .clickable { onSelectTheme(theme.id.name) }
+                            .padding(14.dp)
+                    ) {
+                        Row(
+                            modifier = Modifier.fillMaxWidth(),
+                            verticalAlignment = Alignment.CenterVertically
+                        ) {
+                            Row(
+                                horizontalArrangement = Arrangement.spacedBy(4.dp),
+                                verticalAlignment = Alignment.CenterVertically
+                            ) {
+                                Box(
+                                    modifier = Modifier
+                                        .size(16.dp)
+                                        .clip(CircleShape)
+                                        .background(theme.primaryAccent)
+                                )
+                                Box(
+                                    modifier = Modifier
+                                        .size(16.dp)
+                                        .clip(CircleShape)
+                                        .background(theme.secondaryAccent)
+                                )
+                            }
+
+                            Spacer(modifier = Modifier.width(12.dp))
+
+                            Column(modifier = Modifier.weight(1f)) {
+                                Row(verticalAlignment = Alignment.CenterVertically) {
+                                    Text(
+                                        text = theme.displayName,
+                                        color = if (isSelected) theme.primaryAccent else SigilWhite,
+                                        fontSize = 13.5.sp,
+                                        fontWeight = FontWeight.Bold,
+                                        fontFamily = FontFamily.Monospace
+                                    )
+                                    Spacer(modifier = Modifier.width(6.dp))
+                                    Text(
+                                        text = theme.badgeTag,
+                                        color = MutedStone,
+                                        fontSize = 10.sp,
+                                        fontFamily = FontFamily.Monospace
+                                    )
+                                }
+                                Spacer(modifier = Modifier.height(3.dp))
+                                Text(
+                                    text = theme.description,
+                                    color = MutedStone,
+                                    fontSize = 11.sp,
+                                    fontFamily = FontFamily.Monospace,
+                                    lineHeight = 15.sp
+                                )
+                            }
+
+                            Spacer(modifier = Modifier.width(8.dp))
+
+                            Box(
+                                modifier = Modifier
+                                    .clip(RoundedCornerShape(4.dp))
+                                    .background(if (isSelected) theme.primaryAccent else CharcoalSurface)
+                                    .border(1.dp, if (isSelected) theme.primaryAccent else WireframeBorder, RoundedCornerShape(4.dp))
+                                    .padding(horizontal = 8.dp, vertical = 4.dp)
+                            ) {
+                                Text(
+                                    text = if (isSelected) "ATIVO" else "ATIVAR",
+                                    color = if (isSelected) VoidBlack else SigilSilver,
+                                    fontSize = 10.sp,
+                                    fontWeight = FontWeight.Bold,
+                                    fontFamily = FontFamily.Monospace
+                                )
+                            }
+                        }
+                    }
+                }
+            }
+
+            Spacer(modifier = Modifier.height(20.dp))
+
             // SECTION 2: VISUAL WALLPAPER OPACITY
             SectionHeader(
                 title = "PERSONALIZAÇÃO VISUAL & CONTRASTE",
@@ -392,6 +524,100 @@ fun SettingsScreen(
                         Spacer(modifier = Modifier.height(8.dp))
                         Text(
                             text = exportStatusText!!,
+                            color = HermeticCyan,
+                            fontSize = 11.sp,
+                            fontFamily = FontFamily.Monospace
+                        )
+                    }
+                }
+            }
+
+            Spacer(modifier = Modifier.height(20.dp))
+
+            // SECTION: SOVEREIGN BACKUP & RESTORE
+            SectionHeader(
+                title = "COFRE DE DADOS // BACKUP & RESTAURAÇÃO JSON",
+                icon = Icons.Default.Backup
+            )
+
+            Spacer(modifier = Modifier.height(10.dp))
+
+            Box(
+                modifier = Modifier
+                    .fillMaxWidth()
+                    .clip(RoundedCornerShape(10.dp))
+                    .background(CharcoalSurface)
+                    .border(1.dp, WireframeBorder, RoundedCornerShape(10.dp))
+                    .padding(14.dp)
+            ) {
+                Column {
+                    Text(
+                        text = "Soberania Total: Zero Perda de Dados",
+                        color = SigilWhite,
+                        fontSize = 13.5.sp,
+                        fontWeight = FontWeight.Bold,
+                        fontFamily = FontFamily.Monospace
+                    )
+                    Spacer(modifier = Modifier.height(4.dp))
+                    Text(
+                        text = "Exporte todo o seu histórico (ofensivas, pastas, favoritos e estatísticas) para um arquivo JSON portável. Restaure a qualquer momento, mesmo ao trocar de celular.",
+                        color = MutedStone,
+                        fontSize = 11.sp,
+                        fontFamily = FontFamily.Monospace
+                    )
+
+                    Spacer(modifier = Modifier.height(12.dp))
+
+                    Row(
+                        modifier = Modifier.fillMaxWidth(),
+                        horizontalArrangement = Arrangement.spacedBy(10.dp)
+                    ) {
+                        Button(
+                            onClick = {
+                                onExportBackup { path ->
+                                    backupStatusText = "Backup gerado em:\n$path"
+                                    Toast.makeText(context, "Backup salvo na pasta Downloads!", Toast.LENGTH_LONG).show()
+                                }
+                            },
+                            colors = ButtonDefaults.buttonColors(
+                                containerColor = KleinBlue,
+                                contentColor = SigilWhite
+                            ),
+                            shape = RoundedCornerShape(6.dp),
+                            modifier = Modifier.weight(1f)
+                        ) {
+                            Text(
+                                text = "EXPORTAR JSON",
+                                fontSize = 11.sp,
+                                fontWeight = FontWeight.Bold,
+                                fontFamily = FontFamily.Monospace
+                            )
+                        }
+
+                        Button(
+                            onClick = {
+                                filePickerLauncher.launch("*/*")
+                            },
+                            colors = ButtonDefaults.buttonColors(
+                                containerColor = CyberAmber,
+                                contentColor = VoidBlack
+                            ),
+                            shape = RoundedCornerShape(6.dp),
+                            modifier = Modifier.weight(1f)
+                        ) {
+                            Text(
+                                text = "RESTAURAR JSON",
+                                fontSize = 11.sp,
+                                fontWeight = FontWeight.Bold,
+                                fontFamily = FontFamily.Monospace
+                            )
+                        }
+                    }
+
+                    if (backupStatusText != null) {
+                        Spacer(modifier = Modifier.height(8.dp))
+                        Text(
+                            text = backupStatusText!!,
                             color = HermeticCyan,
                             fontSize = 11.sp,
                             fontFamily = FontFamily.Monospace

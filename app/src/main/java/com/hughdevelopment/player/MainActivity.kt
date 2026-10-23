@@ -69,7 +69,12 @@ class MainActivity : ComponentActivity() {
         checkAndRequestPermissions()
 
         setContent {
-            HughPlayerTheme {
+            val settings by viewModel.settings.collectAsState()
+            val currentTheme = remember(settings.activeThemeId) {
+                com.hughdevelopment.player.ui.theme.VaultThemes.fromId(settings.activeThemeId)
+            }
+
+            HughPlayerTheme(themeConfig = currentTheme) {
                 MainScreen(
                     viewModel = viewModel,
                     isPermissionsSettled = isPermissionsSettled.value,
@@ -245,7 +250,10 @@ fun MainScreen(
                         onChangeFadeDuration = { viewModel.setFadeDuration(it) },
                         onChangeLibraryAlpha = { viewModel.setLibraryWallpaperAlpha(it) },
                         onChangePlayerAlpha = { viewModel.setPlayerWallpaperAlpha(it) },
-                        onExportAiManifest = onExportAiManifest
+                        onExportAiManifest = onExportAiManifest,
+                        onSelectTheme = { viewModel.setThemeId(it) },
+                        onExportBackup = { viewModel.exportBackup(it) },
+                        onImportBackup = { json, cb -> viewModel.importBackup(json, cb) }
                     )
                 }
             }

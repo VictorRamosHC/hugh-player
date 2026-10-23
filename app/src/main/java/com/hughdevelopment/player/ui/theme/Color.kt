@@ -25,3 +25,13 @@ val SpecularGlassRimTop = Color(0x66FFFFFF)    // Top-edge light refraction (App
 val SpecularGlassRimMid = Color(0x18FFFFFF)    // Side-edge translucent falloff
 val SpecularGlassRimBottom = Color(0x350022FF) // Bottom-edge Klein Blue reflection
 val HairlineGlassBorder = Color(0x28FFFFFF)
+
+// Arasaka Corporate Pantheon Palette
+val ArasakaCrimson = Color(0xFFFF003C)      // Neon Cyberpunk 2077 Arasaka Red
+val ArasakaCrimsonGlow = Color(0x4DFF003C)  // Red ambient backlight
+val ImperialBrass = Color(0xFFD4AF37)       // Antique Gold / Corporate Relic Gold
+val MarbleWhite = Color(0xFFF0F0F2)         // Pure Cold Marble
+val MonolithVoid = Color(0xFF030305)        // Pure Deep Void
+val CorporateSteel = Color(0xFF0D0D12)      // Heavy Server Enclosure
+val ArasakaBorder = Color(0xFF330B14)       // Dark Crimson Edge
+val ArasakaReticle = Color(0xFFFF1744)      // Corner HUD Crosshairs
