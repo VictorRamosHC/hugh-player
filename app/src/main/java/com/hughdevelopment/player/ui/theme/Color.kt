@@ -35,3 +35,13 @@ val MonolithVoid = Color(0xFF030305)        // Pure Deep Void
 val CorporateSteel = Color(0xFF0D0D12)      // Heavy Server Enclosure
 val ArasakaBorder = Color(0xFF330B14)       // Dark Crimson Edge
 val ArasakaReticle = Color(0xFFFF1744)      // Corner HUD Crosshairs
+
+// Delamain AI Core Corporate Palette
+val DelamainCyan = Color(0xFF00E5FF)        // Electric Neon Blue
+val DelamainCyanGlow = Color(0x4000E5FF)    // Ambient backlight glow
+val DelamainPlatinum = Color(0xFFE0E7FF)    // Silver Platinum
+val DelamainGraphite = Color(0xFF0A0B10)    // Matte Graphite Dark
+val DelamainSurface = Color(0xFF12141F)     // Corporate Console Surface
+val DelamainBorder = Color(0xFF1E2438)      // Geometric Precision Border
+val DelamainMuted = Color(0xFF828FA3)       // Cold Slate Muted
+

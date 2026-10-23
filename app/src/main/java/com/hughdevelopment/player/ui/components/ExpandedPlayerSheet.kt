@@ -1,11 +1,19 @@
 package com.hughdevelopment.player.ui.components
 
+import androidx.compose.animation.AnimatedContent
+import androidx.compose.animation.core.animateFloatAsState
+import androidx.compose.animation.core.tween
+import androidx.compose.animation.fadeIn
+import androidx.compose.animation.fadeOut
+import androidx.compose.animation.togetherWith
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.background
 import androidx.compose.foundation.border
+import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
+import androidx.compose.foundation.layout.PaddingValues
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.aspectRatio
@@ -15,15 +23,20 @@ import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.layout.width
+import androidx.compose.foundation.lazy.LazyColumn
+import androidx.compose.foundation.lazy.itemsIndexed
+import androidx.compose.foundation.lazy.rememberLazyListState
 import androidx.compose.foundation.shape.CircleShape
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material.icons.Icons
+import androidx.compose.material.icons.automirrored.filled.Article
+import androidx.compose.material.icons.automirrored.filled.PlaylistAdd
 import androidx.compose.material.icons.filled.Favorite
 import androidx.compose.material.icons.filled.FavoriteBorder
 import androidx.compose.material.icons.filled.KeyboardArrowDown
+import androidx.compose.material.icons.filled.MusicNote
 import androidx.compose.material.icons.filled.Pause
 import androidx.compose.material.icons.filled.PlayArrow
-import androidx.compose.material.icons.filled.PlaylistAdd
 import androidx.compose.material.icons.filled.Repeat
 import androidx.compose.material.icons.filled.RepeatOne
 import androidx.compose.material.icons.filled.Shuffle
@@ -38,6 +51,7 @@ import androidx.compose.material3.SliderDefaults
 import androidx.compose.material3.Text
 import androidx.compose.material3.rememberModalBottomSheetState
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
@@ -46,6 +60,9 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.alpha
 import androidx.compose.ui.draw.clip
+import androidx.compose.ui.graphics.Brush
+import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.graphics.graphicsLayer
 import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.text.font.FontFamily
@@ -57,6 +74,9 @@ import androidx.compose.ui.unit.sp
 import androidx.media3.common.Player
 import com.hughdevelopment.player.R
 import com.hughdevelopment.player.data.model.Song
+import com.hughdevelopment.player.lyrics.LrcLine
+import com.hughdevelopment.player.lyrics.LrcParser
+import com.hughdevelopment.player.lyrics.LyricsRepository
 import com.hughdevelopment.player.ui.theme.CharcoalSurface
 import com.hughdevelopment.player.ui.theme.CyberAmber
 import com.hughdevelopment.player.ui.theme.KleinBlue
@@ -98,6 +118,18 @@ fun ExpandedPlayerSheet(
     } else 0f
 
     val displayedPositionMs = draggingProgress?.let { (it * durationMs).toLong() } ?: currentPositionMs
+
+    // Lyrics State & Discovery
+    val lyricsRepository = remember { LyricsRepository.default }
+    var showLyrics by remember { mutableStateOf(false) }
+    var lyrics by remember(song.id, song.dataPath) { mutableStateOf<List<LrcLine>?>(null) }
+    var hasLoadedLyrics by remember(song.id, song.dataPath) { mutableStateOf(false) }
+
+    LaunchedEffect(song.id, song.dataPath) {
+        hasLoadedLyrics = false
+        lyrics = lyricsRepository.getLyricsForSong(song)
+        hasLoadedLyrics = true
+    }
 
     ModalBottomSheet(
         onDismissRequest = onDismiss,
@@ -161,6 +193,16 @@ fun ExpandedPlayerSheet(
                     }
 
                     Row(verticalAlignment = Alignment.CenterVertically) {
+                        // Toggle between Artwork view and Synced Lyrics view
+                        IconButton(onClick = { showLyrics = !showLyrics }) {
+                            Icon(
+                                imageVector = if (showLyrics) Icons.Default.MusicNote else Icons.AutoMirrored.Filled.Article,
+                                contentDescription = if (showLyrics) "Ver Capa" else "Ver Letras",
+                                tint = if (showLyrics) CyberAmber else if (lyrics != null) HermeticCyan else SigilSilver,
+                                modifier = Modifier.size(26.dp)
+                            )
+                        }
+
                         IconButton(onClick = onToggleFavorite) {
                             Icon(
                                 imageVector = if (song.isFavorite) Icons.Default.Favorite else Icons.Default.FavoriteBorder,
@@ -172,7 +214,7 @@ fun ExpandedPlayerSheet(
 
                         IconButton(onClick = onAddToPlaylist) {
                             Icon(
-                                imageVector = Icons.Default.PlaylistAdd,
+                                imageVector = Icons.AutoMirrored.Filled.PlaylistAdd,
                                 contentDescription = "Adicionar à pasta",
                                 tint = SigilSilver,
                                 modifier = Modifier.size(26.dp)
@@ -183,39 +225,109 @@ fun ExpandedPlayerSheet(
 
                 Spacer(modifier = Modifier.height(16.dp))
 
-                // Big Album Artwork with Cybernetic Frame & Neoclassical Fallback
-                Box(
-                    modifier = Modifier
-                        .fillMaxWidth(0.85f)
-                        .aspectRatio(1f)
-                        .clip(RoundedCornerShape(18.dp))
-                        .border(1.5.dp, WireframeBorder, RoundedCornerShape(18.dp))
-                        .background(CharcoalSurface)
-                ) {
-                    ArtworkImage(
-                        artworkUri = song.albumArtUri,
-                        modifier = Modifier.fillMaxSize(),
-                        cornerRadius = 18.dp,
-                        accentColor = CyberAmber,
-                        targetDimensionPx = 480
-                    )
+                // Central Visual Container: Seamless transition between Artwork & Synced Lyrics
+                AnimatedContent(
+                    targetState = showLyrics,
+                    transitionSpec = {
+                        fadeIn(animationSpec = tween(280)) togetherWith fadeOut(animationSpec = tween(280))
+                    },
+                    label = "PlayerArtworkLyricsSwitch"
+                ) { isLyricsView ->
+                    if (!isLyricsView) {
+                        // Big Album Artwork with Cybernetic Frame & Neoclassical Fallback
+                        Box(
+                            modifier = Modifier
+                                .fillMaxWidth(0.85f)
+                                .aspectRatio(1f)
+                                .clip(RoundedCornerShape(18.dp))
+                                .border(1.5.dp, WireframeBorder, RoundedCornerShape(18.dp))
+                                .background(CharcoalSurface)
+                                .clickable { showLyrics = true }
+                        ) {
+                            ArtworkImage(
+                                artworkUri = song.albumArtUri,
+                                modifier = Modifier.fillMaxSize(),
+                                cornerRadius = 18.dp,
+                                accentColor = CyberAmber,
+                                targetDimensionPx = 480
+                            )
 
-                    // Overlay HUD Coordinate Tag
-                    Box(
-                        modifier = Modifier
-                            .align(Alignment.BottomStart)
-                            .padding(8.dp)
-                            .clip(RoundedCornerShape(4.dp))
-                            .background(VoidBlack.copy(alpha = 0.75f))
-                            .padding(horizontal = 6.dp, vertical = 2.dp)
-                    ) {
-                        Text(
-                            text = "OFFLINE VAULT // LOSSLESS",
-                            color = HermeticCyan,
-                            fontSize = 9.sp,
-                            fontFamily = FontFamily.Monospace,
-                            fontWeight = FontWeight.Bold
-                        )
+                            // Overlay HUD Coordinate Tag
+                            Box(
+                                modifier = Modifier
+                                    .align(Alignment.BottomStart)
+                                    .padding(8.dp)
+                                    .clip(RoundedCornerShape(4.dp))
+                                    .background(VoidBlack.copy(alpha = 0.75f))
+                                    .padding(horizontal = 6.dp, vertical = 2.dp)
+                            ) {
+                                Text(
+                                    text = "OFFLINE VAULT // LOSSLESS",
+                                    color = HermeticCyan,
+                                    fontSize = 9.sp,
+                                    fontFamily = FontFamily.Monospace,
+                                    fontWeight = FontWeight.Bold
+                                )
+                            }
+
+                            // Synced Lyrics Available Badge
+                            Box(
+                                modifier = Modifier
+                                    .align(Alignment.TopEnd)
+                                    .padding(8.dp)
+                                    .clip(RoundedCornerShape(4.dp))
+                                    .border(
+                                        1.dp,
+                                        if (lyrics != null) HermeticCyan.copy(alpha = 0.7f) else WireframeBorder,
+                                        RoundedCornerShape(4.dp)
+                                    )
+                                    .background(VoidBlack.copy(alpha = 0.85f))
+                                    .padding(horizontal = 7.dp, vertical = 3.dp)
+                            ) {
+                                Text(
+                                    text = if (lyrics != null) "LRC • SYNC" else "LRC",
+                                    color = if (lyrics != null) HermeticCyan else MutedStone,
+                                    fontSize = 9.sp,
+                                    fontFamily = FontFamily.Monospace,
+                                    fontWeight = FontWeight.Bold
+                                )
+                            }
+                        }
+                    } else {
+                        // Synchronized Lyrics Container with Neoclassical Frame
+                        Box(
+                            modifier = Modifier
+                                .fillMaxWidth(0.88f)
+                                .aspectRatio(1f)
+                                .clip(RoundedCornerShape(18.dp))
+                                .border(1.5.dp, CyberAmber.copy(alpha = 0.7f), RoundedCornerShape(18.dp))
+                                .background(CharcoalSurface)
+                        ) {
+                            val currentLyrics = lyrics
+                            if (hasLoadedLyrics && currentLyrics.isNullOrEmpty()) {
+                                // Neoclassical Empty State (R2)
+                                EmptyLyricsState(onDismiss = { showLyrics = false })
+                            } else if (!currentLyrics.isNullOrEmpty()) {
+                                // Real-Time Synchronized Lyrics View (R2)
+                                SynchronizedLyricsList(
+                                    lines = currentLyrics,
+                                    currentPositionMs = currentPositionMs,
+                                    onSeekTo = onSeekTo,
+                                    onDismiss = { showLyrics = false }
+                                )
+                            } else {
+                                // Subtle loading glyph
+                                Box(
+                                    modifier = Modifier.fillMaxSize(),
+                                    contentAlignment = Alignment.Center
+                                ) {
+                                    StatueGlyphView(
+                                        modifier = Modifier.size(90.dp),
+                                        accentColor = CyberAmber
+                                    )
+                                }
+                            }
+                        }
                     }
                 }
 
@@ -383,6 +495,216 @@ fun ExpandedPlayerSheet(
                     }
                 }
             }
+        }
+    }
+}
+
+/**
+ * Real-time synchronized scrolling lyrics list with active line highlight and tap-to-seek.
+ */
+@Composable
+private fun SynchronizedLyricsList(
+    lines: List<LrcLine>,
+    currentPositionMs: Long,
+    onSeekTo: (Long) -> Unit,
+    onDismiss: () -> Unit
+) {
+    val listState = rememberLazyListState()
+
+    // Real-time active line index
+    val activeLineIndex = remember(lines, currentPositionMs) {
+        LrcParser.getActiveLineIndex(lines, currentPositionMs)
+    }
+
+    // Auto-scroll effect: smoothly scroll to active item
+    LaunchedEffect(activeLineIndex) {
+        if (activeLineIndex >= 0 && !listState.isScrollInProgress) {
+            listState.animateScrollToItem(
+                index = activeLineIndex,
+                scrollOffset = 0
+            )
+        }
+    }
+
+    Box(modifier = Modifier.fillMaxSize()) {
+        LazyColumn(
+            state = listState,
+            modifier = Modifier.fillMaxSize(),
+            contentPadding = PaddingValues(vertical = 110.dp, horizontal = 12.dp),
+            verticalArrangement = Arrangement.spacedBy(8.dp),
+            horizontalAlignment = Alignment.CenterHorizontally
+        ) {
+            itemsIndexed(lines) { index, line ->
+                val isActive = (index == activeLineIndex)
+                SynchronizedLyricItem(
+                    line = line,
+                    isActive = isActive,
+                    onClick = { onSeekTo(line.timeMs) }
+                )
+            }
+        }
+
+        // Top soft edge gradient
+        Box(
+            modifier = Modifier
+                .align(Alignment.TopCenter)
+                .fillMaxWidth()
+                .height(32.dp)
+                .background(
+                    Brush.verticalGradient(
+                        colors = listOf(CharcoalSurface, Color.Transparent)
+                    )
+                )
+        )
+
+        // Bottom soft edge gradient
+        Box(
+            modifier = Modifier
+                .align(Alignment.BottomCenter)
+                .fillMaxWidth()
+                .height(32.dp)
+                .background(
+                    Brush.verticalGradient(
+                        colors = listOf(Color.Transparent, CharcoalSurface)
+                    )
+                )
+        )
+
+        // Bottom HUD Coordinate / Return Tag
+        Row(
+            modifier = Modifier
+                .align(Alignment.BottomStart)
+                .padding(8.dp)
+                .clip(RoundedCornerShape(4.dp))
+                .background(VoidBlack.copy(alpha = 0.85f))
+                .border(1.dp, CyberAmber.copy(alpha = 0.4f), RoundedCornerShape(4.dp))
+                .clickable { onDismiss() }
+                .padding(horizontal = 6.dp, vertical = 2.dp),
+            verticalAlignment = Alignment.CenterVertically
+        ) {
+            Text(
+                text = "LRC SYNC // TOQUE PARA SALTAR • VER CAPA",
+                color = CyberAmber,
+                fontSize = 9.sp,
+                fontFamily = FontFamily.Monospace,
+                fontWeight = FontWeight.Bold
+            )
+        }
+    }
+}
+
+/**
+ * Individual lyric stanza item with high-contrast active highlight and animated alpha/scale.
+ */
+@Composable
+private fun SynchronizedLyricItem(
+    line: LrcLine,
+    isActive: Boolean,
+    onClick: () -> Unit
+) {
+    val animatedAlpha by animateFloatAsState(
+        targetValue = if (isActive) 1.0f else 0.40f,
+        animationSpec = tween(durationMillis = 200),
+        label = "LyricAlpha"
+    )
+
+    val animatedScale by animateFloatAsState(
+        targetValue = if (isActive) 1.04f else 1.0f,
+        animationSpec = tween(durationMillis = 200),
+        label = "LyricScale"
+    )
+
+    Box(
+        modifier = Modifier
+            .fillMaxWidth()
+            .clip(RoundedCornerShape(8.dp))
+            .then(
+                if (isActive) {
+                    Modifier
+                        .background(VoidBlack.copy(alpha = 0.70f))
+                        .border(1.dp, CyberAmber.copy(alpha = 0.65f), RoundedCornerShape(8.dp))
+                } else {
+                    Modifier
+                }
+            )
+            .clickable(onClick = onClick)
+            .padding(horizontal = 14.dp, vertical = 7.dp),
+        contentAlignment = Alignment.Center
+    ) {
+        Text(
+            text = line.text.ifEmpty { "♪" },
+            color = if (isActive) CyberAmber else SigilWhite,
+            fontSize = if (isActive) 17.sp else 14.sp,
+            fontWeight = if (isActive) FontWeight.Bold else FontWeight.Normal,
+            fontFamily = FontFamily.SansSerif,
+            textAlign = TextAlign.Center,
+            lineHeight = if (isActive) 22.sp else 18.sp,
+            modifier = Modifier
+                .alpha(animatedAlpha)
+                .graphicsLayer(scaleX = animatedScale, scaleY = animatedScale)
+        )
+    }
+}
+
+/**
+ * Neoclassical art empty state when no local .LRC file is found.
+ */
+@Composable
+private fun EmptyLyricsState(
+    onDismiss: () -> Unit
+) {
+    Column(
+        modifier = Modifier
+            .fillMaxSize()
+            .padding(16.dp),
+        horizontalAlignment = Alignment.CenterHorizontally,
+        verticalArrangement = Arrangement.Center
+    ) {
+        StatueGlyphView(
+            modifier = Modifier.size(115.dp),
+            accentColor = CyberAmber
+        )
+
+        Spacer(modifier = Modifier.height(14.dp))
+
+        Text(
+            text = "Letras locais não encontradas",
+            color = SigilWhite,
+            fontSize = 13.sp,
+            fontFamily = FontFamily.Monospace,
+            fontWeight = FontWeight.Bold,
+            textAlign = TextAlign.Center
+        )
+
+        Spacer(modifier = Modifier.height(6.dp))
+
+        Text(
+            text = "Adicione um arquivo .lrc na mesma pasta do áudio ou no diretório Music/Lyrics.",
+            color = MutedStone,
+            fontSize = 11.sp,
+            fontFamily = FontFamily.Monospace,
+            textAlign = TextAlign.Center,
+            lineHeight = 15.sp,
+            modifier = Modifier.padding(horizontal = 8.dp)
+        )
+
+        Spacer(modifier = Modifier.height(12.dp))
+
+        Box(
+            modifier = Modifier
+                .clip(RoundedCornerShape(4.dp))
+                .border(1.dp, WireframeBorder, RoundedCornerShape(4.dp))
+                .background(VoidBlack.copy(alpha = 0.7f))
+                .clickable { onDismiss() }
+                .padding(horizontal = 10.dp, vertical = 5.dp)
+        ) {
+            Text(
+                text = "VOLTAR PARA A CAPA",
+                color = HermeticCyan,
+                fontSize = 10.sp,
+                fontFamily = FontFamily.Monospace,
+                fontWeight = FontWeight.Bold
+            )
         }
     }
 }

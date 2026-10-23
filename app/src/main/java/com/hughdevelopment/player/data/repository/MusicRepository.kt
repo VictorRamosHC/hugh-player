@@ -15,6 +15,7 @@ import com.hughdevelopment.player.data.model.Song
 import com.hughdevelopment.player.data.model.StreakInfo
 import com.hughdevelopment.player.data.model.TopSongSummary
 import com.hughdevelopment.player.data.source.MediaStoreScanner
+import com.hughdevelopment.player.hermes.HermesVoiceManager
 import com.hughdevelopment.player.notifications.VaultNotificationHelper
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.MutableStateFlow
@@ -116,9 +117,12 @@ class MusicRepository(
 
             val updatedRecord = dailyListeningDao.getRecordForDate(todayKey)
             if (!wasAlreadyValid && updatedRecord?.hasValidStreakDay == true) {
-                // Streak day validated! Trigger celebratory notification
+                // Streak day validated! Trigger celebratory notification and Hermes voice quip
                 val currentStreak = calculateCurrentStreak()
                 VaultNotificationHelper.notifyStreakDayValidated(context, currentStreak)
+                try {
+                    HermesVoiceManager.getInstance(context).speakStreakCelebration(currentStreak)
+                } catch (_: Exception) {}
             }
         }
     }

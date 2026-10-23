@@ -60,6 +60,7 @@ import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import com.hughdevelopment.player.R
 import com.hughdevelopment.player.data.backup.BackupImportResult
+import com.hughdevelopment.player.data.settings.SettingsManager
 import com.hughdevelopment.player.data.settings.SettingsState
 import com.hughdevelopment.player.ui.components.CybersigilBackground
 import com.hughdevelopment.player.ui.theme.CharcoalSurface
@@ -88,6 +89,7 @@ fun SettingsScreen(
     onSelectTheme: (String) -> Unit = {},
     onExportBackup: ((String) -> Unit) -> Unit = {},
     onImportBackup: (String, (BackupImportResult) -> Unit) -> Unit = { _, _ -> },
+    onToggleHermesVoice: ((Boolean) -> Unit)? = null,
     modifier: Modifier = Modifier
 ) {
     val context = LocalContext.current
@@ -270,6 +272,68 @@ fun SettingsScreen(
                             fontFamily = FontFamily.Monospace
                         )
                     }
+                }
+            }
+
+            Spacer(modifier = Modifier.height(20.dp))
+
+            // SECTION: HERMES // VOZ SOBERANA (TTS OFFLINE)
+            SectionHeader(
+                title = "HERMES // VOZ SOBERANA (TTS OFFLINE)",
+                icon = Icons.Default.AutoAwesome
+            )
+
+            Spacer(modifier = Modifier.height(10.dp))
+
+            Box(
+                modifier = Modifier
+                    .fillMaxWidth()
+                    .neoGlassCard(
+                        cornerRadius = 10.dp,
+                        backgroundColor = ObsidianGlass,
+                        borderWidth = 1.dp,
+                        topRimColor = SpecularGlassRimTop
+                    )
+                    .padding(14.dp)
+            ) {
+                Row(
+                    modifier = Modifier.fillMaxWidth(),
+                    horizontalArrangement = Arrangement.SpaceBetween,
+                    verticalAlignment = Alignment.CenterVertically
+                ) {
+                    Column(modifier = Modifier.weight(1f)) {
+                        Text(
+                            text = "Voz Nativa Hermes: Verbalizar saudações e ofensivas offline",
+                            color = SigilWhite,
+                            fontSize = 14.sp,
+                            fontWeight = FontWeight.SemiBold,
+                            fontFamily = FontFamily.Monospace
+                        )
+                        Spacer(modifier = Modifier.height(3.dp))
+                        Text(
+                            text = if (settings.isHermesVoiceEnabled)
+                                "Ativada (Síntese local sem internet • Fala saudações, ofensivas e promoções de rank)"
+                            else
+                                "Desativada (Modo silencioso)",
+                            color = if (settings.isHermesVoiceEnabled) HermeticCyan else MutedStone,
+                            fontSize = 11.sp,
+                            fontFamily = FontFamily.Monospace
+                        )
+                    }
+
+                    Switch(
+                        checked = settings.isHermesVoiceEnabled,
+                        onCheckedChange = { isEnabled ->
+                            onToggleHermesVoice?.invoke(isEnabled)
+                                ?: SettingsManager.getInstance(context).setHermesVoiceEnabled(isEnabled)
+                        },
+                        colors = SwitchDefaults.colors(
+                            checkedThumbColor = VoidBlack,
+                            checkedTrackColor = CyberAmber,
+                            uncheckedThumbColor = MutedStone,
+                            uncheckedTrackColor = CharcoalSurface
+                        )
+                    )
                 }
             }
 

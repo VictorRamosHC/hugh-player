@@ -9,13 +9,16 @@ import androidx.media3.session.MediaController
 import androidx.media3.session.SessionToken
 import com.google.common.util.concurrent.ListenableFuture
 import com.google.common.util.concurrent.MoreExecutors
+import com.hughdevelopment.player.audio.AudioEffectManager
 import com.hughdevelopment.player.data.model.Song
+import com.hughdevelopment.player.data.settings.EqualizerPreset
 import com.hughdevelopment.player.data.settings.SettingsManager
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.Job
 import kotlinx.coroutines.delay
 import kotlinx.coroutines.flow.MutableStateFlow
+import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.flow.asStateFlow
 import kotlinx.coroutines.isActive
 import kotlinx.coroutines.launch
@@ -29,6 +32,8 @@ class MusicPlayerController(
     private var controllerFuture: ListenableFuture<MediaController>? = null
     private var mediaController: MediaController? = null
     private var fadeManager: AudioFadeManager? = null
+
+    val audioEffectManager = AudioEffectManager.getInstance(context)
 
     var isFadeEnabled: Boolean = true
     var fadeDurationMs: Long = 800L
@@ -56,6 +61,15 @@ class MusicPlayerController(
     private val _repeatMode = MutableStateFlow(Player.REPEAT_MODE_OFF)
     val repeatMode = _repeatMode.asStateFlow()
 
+    // --- Audio DSP Equalizer & BassBoost Flows ---
+    val equalizerEnabled: StateFlow<Boolean> = audioEffectManager.isEnabled
+    val equalizerPreset: StateFlow<EqualizerPreset> = audioEffectManager.currentPreset
+    val equalizerBandLevels: StateFlow<List<Int>> = audioEffectManager.bandLevels
+    val bassBoostStrength: StateFlow<Int> = audioEffectManager.bassBoostStrength
+    val equalizerCenterFrequencies: StateFlow<List<Int>> = audioEffectManager.centerFrequencies
+    val equalizerBandLevelRange: StateFlow<IntRange> = audioEffectManager.bandLevelRange
+    val isAudioEffectSupported: StateFlow<Boolean> = audioEffectManager.isSupported
+
     private var progressTrackingJob: Job? = null
     private var secondsAccumulatedForCurrentSong = 0L
     private var isPlayIntended = false
@@ -65,6 +79,10 @@ class MusicPlayerController(
             context,
             ComponentName(context, MusicPlaybackService::class.java)
         )
+
+        if (MusicPlaybackService.activeAudioSessionId > 0) {
+            audioEffectManager.bindAudioSession(MusicPlaybackService.activeAudioSessionId)
+        }
 
         controllerFuture = MediaController.Builder(context, sessionToken).buildAsync()
         controllerFuture?.addListener({
@@ -397,6 +415,27 @@ class MusicPlayerController(
         } catch (e: Exception) {
             // Ignore if context is unbinding
         }
+    }
+
+    // --- Audio DSP Controls ---
+    fun setEqualizerEnabled(enabled: Boolean) {
+        audioEffectManager.setEnabled(enabled)
+    }
+
+    fun setEqualizerPreset(preset: EqualizerPreset) {
+        audioEffectManager.setPreset(preset)
+    }
+
+    fun setEqualizerBandLevel(bandIndex: Int, levelMillibels: Int) {
+        audioEffectManager.setBandLevel(bandIndex, levelMillibels)
+    }
+
+    fun setEqualizerBandLevels(levels: List<Int>) {
+        audioEffectManager.setBandLevels(levels)
+    }
+
+    fun setBassBoostStrength(strength: Int) {
+        audioEffectManager.setBassBoost(strength)
     }
 
     fun release() {

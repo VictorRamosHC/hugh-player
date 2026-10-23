@@ -1,8 +1,11 @@
 package com.hughdevelopment.player.data.ai
 
+import android.content.Context
 import com.hughdevelopment.player.data.model.ListeningOverview
 import com.hughdevelopment.player.data.model.Playlist
 import com.hughdevelopment.player.data.model.Song
+import com.hughdevelopment.player.data.model.SovereignRank
+import com.hughdevelopment.player.hermes.HermesVoiceManager
 import java.util.Calendar
 
 /**
@@ -11,9 +14,79 @@ import java.util.Calendar
  * Technical Co-CEO Decision:
  * 100% Offline, Zero Cloud Dependencies, Zero API Keys, Zero Cost.
  * A context-aware stateful heuristic conversational agent with procedural personality,
- * telemetric observation and direct vault action dispatching.
+ * telemetric observation, native offline TTS voice synthesis and direct vault action dispatching.
  */
 object HermesPetEngine {
+
+    var isVoiceEnabled: Boolean
+        get() = HermesVoiceManager.getInstance().isHermesVoiceEnabled
+        set(value) {
+            HermesVoiceManager.getInstance().isHermesVoiceEnabled = value
+        }
+
+    /**
+     * Initializes the native offline Android TTS engine via HermesVoiceManager.
+     */
+    fun initializeVoice(context: Context, enabled: Boolean = true) {
+        HermesVoiceManager.init(context, enabled)
+    }
+
+    /**
+     * Speaks the provided text offline if voice is enabled.
+     */
+    fun speak(text: String, utteranceId: String = "hermes_${System.currentTimeMillis()}") {
+        HermesVoiceManager.getInstance().speak(text, utteranceId)
+    }
+
+    /**
+     * Speaks a short offline greeting quip based on current listening telemetry.
+     */
+    fun speakGreeting(overview: ListeningOverview, songsCount: Int, playlistsCount: Int) {
+        val quip = getDynamicGreeting(overview, songsCount, playlistsCount)
+        speak(quip, "greeting_quip")
+    }
+
+    /**
+     * Speaks a direct greeting to the user.
+     */
+    fun speakGreeting(userName: String = "Soberano") {
+        HermesVoiceManager.getInstance().speakGreeting(userName)
+    }
+
+    /**
+     * Celebrates streak milestone or daily completion.
+     */
+    fun speakStreakCelebration(streakDays: Int) {
+        HermesVoiceManager.getInstance().speakStreakCelebration(streakDays)
+    }
+
+    /**
+     * Celebrates rank ascension.
+     */
+    fun speakRankPromotion(rank: SovereignRank) {
+        HermesVoiceManager.getInstance().speakRankPromotion(rank)
+    }
+
+    /**
+     * Celebrates rank ascension by rank title string.
+     */
+    fun speakRankPromotion(newRank: String) {
+        HermesVoiceManager.getInstance().speakRankPromotion(newRank)
+    }
+
+    /**
+     * Strips emojis, hashtags, and markdown cyber-sigils for natural voice pronunciation.
+     */
+    fun sanitizeForSpeech(input: String): String {
+        return HermesVoiceManager.sanitize(input)
+    }
+
+    /**
+     * Releases native TTS resources.
+     */
+    fun shutdown() {
+        HermesVoiceManager.getInstance().shutdown()
+    }
 
     data class HermesMessage(
         val sender: String, // "Hermes" or "User"
@@ -95,7 +168,7 @@ object HermesPetEngine {
     ): HermesMessage {
         val q = query.trim().lowercase()
 
-        return when {
+        val response = when {
             q.contains("ofensiva") || q.contains("streak") || q.contains("dias") -> {
                 val s = overview.streakInfo.currentStreak
                 val msg = if (overview.streakInfo.isTodayCompleted) {
@@ -155,5 +228,7 @@ object HermesPetEngine {
                 )
             }
         }
+        speak(response.text)
+        return response
     }
 }

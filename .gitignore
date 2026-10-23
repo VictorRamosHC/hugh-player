@@ -16,3 +16,6 @@ local.properties
 build/
 app/build/
 .kotlin/
+
+.agents/
+

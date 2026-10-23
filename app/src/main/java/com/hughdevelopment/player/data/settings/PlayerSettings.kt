@@ -13,6 +13,26 @@ enum class SortOrder(val label: String) {
     FAVORITES_FIRST("FAVORITAS")
 }
 
+enum class EqualizerPreset(
+    val id: String,
+    val displayName: String,
+    val bandLevels: List<Int>,
+    val bassBoost: Int
+) {
+    FLAT("FLAT", "Flat", listOf(0, 0, 0, 0, 0), 0),
+    VOCAL_CLARITY("VOCAL_CLARITY", "Vocal Clarity", listOf(-200, 300, 800, 1200, 400), 100),
+    SUB_BASS_BRUTALIST("SUB_BASS_BRUTALIST", "Sub-Bass Brutalist", listOf(1400, 900, -200, -400, 200), 900),
+    ACOUSTIC_WORSHIP("ACOUSTIC_WORSHIP", "Acoustic Worship", listOf(400, 200, -100, 600, 1000), 250),
+    PODCAST_ENHANCER("PODCAST_ENHANCER", "Podcast Enhancer", listOf(-400, 600, 1000, 800, -300), 0),
+    CUSTOM("CUSTOM", "Custom", listOf(0, 0, 0, 0, 0), 0);
+
+    companion object {
+        fun fromId(id: String): EqualizerPreset {
+            return entries.find { it.id.equals(id, ignoreCase = true) } ?: FLAT
+        }
+    }
+}
+
 data class SettingsState(
     val isFadeEnabled: Boolean = true,
     val fadeDurationSeconds: Float = 0.8f,
@@ -21,7 +41,12 @@ data class SettingsState(
     val libraryWallpaperAlpha: Float = 0.30f,
     val playerWallpaperAlpha: Float = 0.35f,
     val isHapticEnabled: Boolean = true,
-    val activeThemeId: String = "AETHER_CLASSIC"
+    val activeThemeId: String = "AETHER_CLASSIC",
+    val equalizerEnabled: Boolean = false,
+    val equalizerPreset: EqualizerPreset = EqualizerPreset.FLAT,
+    val equalizerBandLevels: List<Int> = EqualizerPreset.FLAT.bandLevels,
+    val bassBoostStrength: Int = EqualizerPreset.FLAT.bassBoost,
+    val isHermesVoiceEnabled: Boolean = true
 )
 
 class SettingsManager(context: Context) {
@@ -54,6 +79,23 @@ class SettingsManager(context: Context) {
         val haptic = prefs.getBoolean(KEY_HAPTIC, true)
         val themeId = prefs.getString(KEY_THEME_ID, "AETHER_CLASSIC") ?: "AETHER_CLASSIC"
 
+        val eqEnabled = prefs.getBoolean(KEY_EQ_ENABLED, false)
+        val eqPresetName = prefs.getString(KEY_EQ_PRESET, EqualizerPreset.FLAT.id) ?: EqualizerPreset.FLAT.id
+        val eqPreset = EqualizerPreset.fromId(eqPresetName)
+        val bandsStr = prefs.getString(KEY_EQ_BANDS, null)
+        val eqBandLevels = if (!bandsStr.isNullOrEmpty()) {
+            try {
+                val parsed = bandsStr.split(",").map { it.trim().toInt() }
+                if (parsed.size == 5) parsed else eqPreset.bandLevels
+            } catch (e: Exception) {
+                eqPreset.bandLevels
+            }
+        } else {
+            eqPreset.bandLevels
+        }
+        val bassStrength = prefs.getInt(KEY_BASS_BOOST, eqPreset.bassBoost).coerceIn(0, 1000)
+        val hermesVoice = prefs.getBoolean(KEY_HERMES_VOICE_ENABLED, true)
+
         return SettingsState(
             isFadeEnabled = fadeEnabled,
             fadeDurationSeconds = fadeDuration,
@@ -62,7 +104,12 @@ class SettingsManager(context: Context) {
             libraryWallpaperAlpha = libAlpha,
             playerWallpaperAlpha = playerAlpha,
             isHapticEnabled = haptic,
-            activeThemeId = themeId
+            activeThemeId = themeId,
+            equalizerEnabled = eqEnabled,
+            equalizerPreset = eqPreset,
+            equalizerBandLevels = eqBandLevels,
+            bassBoostStrength = bassStrength,
+            isHermesVoiceEnabled = hermesVoice
         )
     }
 
@@ -133,6 +180,70 @@ class SettingsManager(context: Context) {
         return if (id > 0) id else null
     }
 
+    // --- Equalizer & Audio DSP Settings ---
+    fun setEqualizerEnabled(enabled: Boolean) {
+        prefs.edit().putBoolean(KEY_EQ_ENABLED, enabled).apply()
+        _settings.value = _settings.value.copy(equalizerEnabled = enabled)
+    }
+
+    fun setEqualizerPreset(preset: EqualizerPreset) {
+        val newLevels = if (preset != EqualizerPreset.CUSTOM) preset.bandLevels else _settings.value.equalizerBandLevels
+        val newBass = if (preset != EqualizerPreset.CUSTOM) preset.bassBoost else _settings.value.bassBoostStrength
+        prefs.edit()
+            .putString(KEY_EQ_PRESET, preset.id)
+            .putString(KEY_EQ_BANDS, newLevels.joinToString(","))
+            .putInt(KEY_BASS_BOOST, newBass)
+            .apply()
+        _settings.value = _settings.value.copy(
+            equalizerPreset = preset,
+            equalizerBandLevels = newLevels,
+            bassBoostStrength = newBass
+        )
+    }
+
+    fun setEqualizerBandLevel(bandIndex: Int, levelMillibels: Int) {
+        if (bandIndex !in 0..4) return
+        val current = _settings.value.equalizerBandLevels.toMutableList()
+        val clamped = levelMillibels.coerceIn(-1500, 1500)
+        current[bandIndex] = clamped
+        prefs.edit()
+            .putString(KEY_EQ_PRESET, EqualizerPreset.CUSTOM.id)
+            .putString(KEY_EQ_BANDS, current.joinToString(","))
+            .apply()
+        _settings.value = _settings.value.copy(
+            equalizerPreset = EqualizerPreset.CUSTOM,
+            equalizerBandLevels = current
+        )
+    }
+
+    fun setEqualizerBandLevels(levels: List<Int>) {
+        if (levels.size != 5) return
+        val clamped = levels.map { it.coerceIn(-1500, 1500) }
+        prefs.edit()
+            .putString(KEY_EQ_PRESET, EqualizerPreset.CUSTOM.id)
+            .putString(KEY_EQ_BANDS, clamped.joinToString(","))
+            .apply()
+        _settings.value = _settings.value.copy(
+            equalizerPreset = EqualizerPreset.CUSTOM,
+            equalizerBandLevels = clamped
+        )
+    }
+
+    fun setBassBoostStrength(strength: Int) {
+        val clamped = strength.coerceIn(0, 1000)
+        prefs.edit().putInt(KEY_BASS_BOOST, clamped).apply()
+        _settings.value = _settings.value.copy(bassBoostStrength = clamped)
+    }
+
+    // --- Hermes Voice Engine Setting ---
+    fun setHermesVoiceEnabled(enabled: Boolean) {
+        prefs.edit().putBoolean(KEY_HERMES_VOICE_ENABLED, enabled).apply()
+        _settings.value = _settings.value.copy(isHermesVoiceEnabled = enabled)
+        try {
+            com.hughdevelopment.player.hermes.HermesVoiceManager.getInstance().isHermesVoiceEnabled = enabled
+        } catch (_: Exception) {}
+    }
+
     companion object {
         private const val PREFS_NAME = "hugh_player_vault_prefs"
         private const val KEY_FADE_ENABLED = "key_fade_enabled"
@@ -143,6 +254,12 @@ class SettingsManager(context: Context) {
         private const val KEY_PLAYER_ALPHA = "key_player_alpha"
         private const val KEY_HAPTIC = "key_haptic"
         private const val KEY_THEME_ID = "key_theme_id"
+        private const val KEY_HERMES_VOICE_ENABLED = "key_hermes_voice_enabled"
+
+        private const val KEY_EQ_ENABLED = "key_eq_enabled"
+        private const val KEY_EQ_PRESET = "key_eq_preset"
+        private const val KEY_EQ_BANDS = "key_eq_bands"
+        private const val KEY_BASS_BOOST = "key_bass_boost"
 
         private const val KEY_LAST_SONG_ID = "key_last_song_id"
         private const val KEY_LAST_POSITION_MS = "key_last_position_ms"

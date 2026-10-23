@@ -7,7 +7,8 @@ import androidx.compose.ui.unit.dp
 
 enum class VaultThemeId {
     AETHER_CLASSIC,
-    ARASAKA_PANTHEON
+    ARASAKA_PANTHEON,
+    DELAMAIN_AI_CORE
 }
 
 data class VaultLexicon(
@@ -19,7 +20,11 @@ data class VaultLexicon(
     val streakTitle: String,
     val offlineBadge: String,
     val petName: String,
-    val petSubtitle: String
+    val petSubtitle: String,
+    val nowPlaying: String = "EM REPRODUÇÃO // ATIVO",
+    val queue: String = "FILA DE REPRODUÇÃO",
+    val settings: String = "CONFIGURAÇÕES",
+    val hermesStatus: String = "HERMES // STATUS"
 )
 
 data class VaultThemeConfig(
@@ -68,7 +73,11 @@ object VaultThemes {
             streakTitle = "OFENSIVA SOBERANA",
             offlineBadge = "100% OFFLINE",
             petName = "HERMES // COMPANHEIRO IA",
-            petSubtitle = "IA SOBERANA 100% OFFLINE • ZERO CLOUD"
+            petSubtitle = "IA SOBERANA 100% OFFLINE • ZERO CLOUD",
+            nowPlaying = "TOCANDO AGORA // ATIVO",
+            queue = "FILA DE REPRODUÇÃO",
+            settings = "CONFIGURAÇÕES",
+            hermesStatus = "HERMES ONLINE"
         )
     )
 
@@ -97,18 +106,57 @@ object VaultThemes {
             streakTitle = "SINCRONIA DE REDE 99.8%",
             offlineBadge = "未接続 // AIR-GAPPED",
             petName = "HERMES-01 // IA DE CONFORMIDADE ARASAKA",
-            petSubtitle = "DIRETRIZ CORPORATIVA • ZERO VAZAMENTO"
+            petSubtitle = "DIRETRIZ CORPORATIVA • ZERO VAZAMENTO",
+            nowPlaying = "荒坂再生 // EXECUÇÃO ATIVA",
+            queue = "FILA DE TRANSMISSÃO",
+            settings = "CENTRAL DE DIRETRIZES",
+            hermesStatus = "ARASAKA COMPLIANCE"
         )
     )
 
-    val AllThemes = listOf(Classic, ArasakaPantheon)
+    val DelamainAiCore = VaultThemeConfig(
+        id = VaultThemeId.DELAMAIN_AI_CORE,
+        displayName = "DELAMAIN AI CORE",
+        badgeTag = "CORPORATE // AI EXECUTIVE",
+        description = "Minimalismo corporativo de inteligência artificial: azul neon elétrico, platina e concierge executivo Delamain.",
+        primaryAccent = DelamainCyan,
+        accentGlow = DelamainCyanGlow,
+        secondaryAccent = DelamainPlatinum,
+        tertiaryAccent = DelamainCyan,
+        backgroundColor = DelamainGraphite,
+        surfaceColor = DelamainSurface,
+        cardBorderColor = DelamainBorder,
+        textPrimary = DelamainPlatinum,
+        textMuted = DelamainMuted,
+        cardCornerRadius = 4.dp,
+        isBrutalistSharp = true,
+        lexicon = VaultLexicon(
+            brandHeader = "DELAMAIN // AI CORE",
+            brandSub = "REDE DE TRANSPORTE SONORO",
+            libraryTitle = "REDE DE ÁUDIO EXECUTIVA",
+            foldersTitle = "ROTAS & DIRETÓRIOS",
+            favoritesTitle = "PASSAGEIROS VIP // PRIORITÁRIOS",
+            streakTitle = "CONCIERGE ON-LINE 100%",
+            offlineBadge = "SISTEMA ISOLADO // EXECUTIVO",
+            petName = "DELAMAIN // CONCIERGE IA",
+            petSubtitle = "SERVIÇO EXECUTIVO DE ÁUDIO • SEGURANÇA MÁXIMA",
+            nowPlaying = "TRANSPORTE SONORO // ATIVO",
+            queue = "REDE DE DADOS",
+            settings = "CENTRAL DE COMANDOS",
+            hermesStatus = "DELAMAIN CONCIERGE"
+        )
+    )
+
+    val AllThemes = listOf(Classic, ArasakaPantheon, DelamainAiCore)
 
     fun fromId(id: String): VaultThemeConfig {
         return when (id.uppercase()) {
             VaultThemeId.ARASAKA_PANTHEON.name -> ArasakaPantheon
+            VaultThemeId.DELAMAIN_AI_CORE.name, "DELAMAIN", "DELAMAIN_AI" -> DelamainAiCore
             else -> Classic
         }
     }
 }
 
 val LocalVaultTheme = staticCompositionLocalOf { VaultThemes.Classic }
+

@@ -7,9 +7,11 @@ import androidx.media3.common.C
 import androidx.media3.common.MediaItem
 import androidx.media3.common.Player
 import androidx.media3.exoplayer.ExoPlayer
+import androidx.media3.exoplayer.analytics.AnalyticsListener
 import androidx.media3.session.MediaSession
 import androidx.media3.session.MediaSessionService
 import com.hughdevelopment.player.MainActivity
+import com.hughdevelopment.player.audio.AudioEffectManager
 
 class MusicPlaybackService : MediaSessionService() {
 
@@ -24,11 +26,32 @@ class MusicPlaybackService : MediaSessionService() {
             .setUsage(C.USAGE_MEDIA)
             .build()
 
-        player = ExoPlayer.Builder(this)
+        val exo = ExoPlayer.Builder(this)
             .setAudioAttributes(audioAttributes, /* handleAudioFocus= */ true)
             .setHandleAudioBecomingNoisy(true)
             .setWakeMode(C.WAKE_MODE_LOCAL)
             .build()
+        player = exo
+
+        // Bind native AudioEffectManager to ExoPlayer's audioSessionId
+        val audioEffectManager = AudioEffectManager.getInstance(this)
+        val initialSessionId = exo.audioSessionId
+        if (initialSessionId > 0) {
+            activeAudioSessionId = initialSessionId
+            audioEffectManager.bindAudioSession(initialSessionId)
+        }
+
+        exo.addAnalyticsListener(object : AnalyticsListener {
+            override fun onAudioSessionIdChanged(
+                eventTime: AnalyticsListener.EventTime,
+                audioSessionId: Int
+            ) {
+                if (audioSessionId > 0) {
+                    activeAudioSessionId = audioSessionId
+                    AudioEffectManager.getInstance(this@MusicPlaybackService).bindAudioSession(audioSessionId)
+                }
+            }
+        })
 
         val sessionActivityIntent = Intent(this, MainActivity::class.java)
         val pendingIntent = PendingIntent.getActivity(
@@ -38,7 +61,7 @@ class MusicPlaybackService : MediaSessionService() {
             PendingIntent.FLAG_IMMUTABLE or PendingIntent.FLAG_UPDATE_CURRENT
         )
 
-        mediaSession = MediaSession.Builder(this, player!!)
+        mediaSession = MediaSession.Builder(this, exo)
             .setSessionActivity(pendingIntent)
             .build()
     }
@@ -48,6 +71,8 @@ class MusicPlaybackService : MediaSessionService() {
     }
 
     override fun onDestroy() {
+        AudioEffectManager.getInstance(this).unbindAudioSession()
+        activeAudioSessionId = 0
         mediaSession?.run {
             player.release()
             release()
@@ -55,5 +80,11 @@ class MusicPlaybackService : MediaSessionService() {
         }
         player = null
         super.onDestroy()
+    }
+
+    companion object {
+        @Volatile
+        var activeAudioSessionId: Int = 0
+            private set
     }
 }
