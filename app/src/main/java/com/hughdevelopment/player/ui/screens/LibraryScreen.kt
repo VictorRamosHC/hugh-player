@@ -497,9 +497,8 @@ private fun SongRowItem(
                 maxLines = 1,
                 overflow = TextOverflow.Ellipsis
             )
-            val sizeMb = "%.1f MB".format(song.sizeBytes.toFloat() / (1024f * 1024f))
             Text(
-                text = "${song.artist} • ${song.formattedDuration} • $sizeMb",
+                text = "${song.artist} • ${song.formattedDuration} • ${song.formattedSize}",
                 color = MutedStone,
                 fontSize = 11.sp,
                 fontFamily = FontFamily.Monospace,
@@ -547,3 +546,4 @@ private fun SongRowItem(
         }
     }
 }
+

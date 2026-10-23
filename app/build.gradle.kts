@@ -13,8 +13,8 @@ android {
         applicationId = "com.hughdevelopment.player"
         minSdk = 26
         targetSdk = 35
-        versionCode = 6
-        versionName = "1.4.1"
+        versionCode = 7
+        versionName = "1.4.2"
 
         testInstrumentationRunner = "androidx.test.runner.AndroidJUnitRunner"
         vectorDrawables {
@@ -89,5 +89,5 @@ dependencies {
     implementation(libs.coil.compose)
 
     // Unit Testing
-    testImplementation("junit:junit:4.13.2")
+    testImplementation(libs.junit)
 }

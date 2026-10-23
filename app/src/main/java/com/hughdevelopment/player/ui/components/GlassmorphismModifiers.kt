@@ -10,7 +10,6 @@ import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.unit.Dp
 import androidx.compose.ui.unit.dp
 import com.hughdevelopment.player.ui.theme.KleinBlue
-import com.hughdevelopment.player.ui.theme.KleinBlueGlow
 import com.hughdevelopment.player.ui.theme.ObsidianGlass
 import com.hughdevelopment.player.ui.theme.SpecularGlassRimBottom
 import com.hughdevelopment.player.ui.theme.SpecularGlassRimMid
@@ -21,7 +20,27 @@ import com.hughdevelopment.player.ui.theme.SpecularGlassRimTop
  *
  * Implements Apple-inspired Frosted Glassmorphism with physical specular light refraction
  * and brutalist high-contrast hairlines.
+ * Uses static cached brushes to prevent GC allocation churn during 120 FPS scrolling.
  */
+
+private val cachedCardShape8 = RoundedCornerShape(8.dp)
+private val cachedCardShape10 = RoundedCornerShape(10.dp)
+
+private val cachedDefaultBrush = Brush.verticalGradient(
+    colors = listOf(
+        SpecularGlassRimTop,
+        SpecularGlassRimMid,
+        SpecularGlassRimBottom
+    )
+)
+
+private val cachedActivePlayingBrush = Brush.verticalGradient(
+    colors = listOf(
+        Color.White.copy(alpha = 0.85f),
+        KleinBlue,
+        KleinBlue
+    )
+)
 
 fun Modifier.neoGlassCard(
     cornerRadius: Dp = 8.dp,
@@ -29,35 +48,26 @@ fun Modifier.neoGlassCard(
     borderWidth: Dp = 1.dp,
     topRimColor: Color = SpecularGlassRimTop,
     bottomRimColor: Color = SpecularGlassRimBottom
-): Modifier = this
-    .clip(RoundedCornerShape(cornerRadius))
-    .background(backgroundColor)
-    .border(
-        width = borderWidth,
-        brush = Brush.verticalGradient(
-            colors = listOf(
-                topRimColor,
-                SpecularGlassRimMid,
-                bottomRimColor
-            )
-        ),
-        shape = RoundedCornerShape(cornerRadius)
-    )
+): Modifier {
+    val shape = if (cornerRadius == 8.dp) cachedCardShape8 else if (cornerRadius == 10.dp) cachedCardShape10 else RoundedCornerShape(cornerRadius)
+    val brush = if (topRimColor == SpecularGlassRimTop && bottomRimColor == SpecularGlassRimBottom) {
+        cachedDefaultBrush
+    } else {
+        Brush.verticalGradient(colors = listOf(topRimColor, SpecularGlassRimMid, bottomRimColor))
+    }
+    return this
+        .clip(shape)
+        .background(backgroundColor)
+        .border(width = borderWidth, brush = brush, shape = shape)
+}
 
 fun Modifier.activePlayingGlassCard(
     cornerRadius: Dp = 8.dp,
     backgroundColor: Color = ObsidianGlass
-): Modifier = this
-    .clip(RoundedCornerShape(cornerRadius))
-    .background(backgroundColor)
-    .border(
-        width = 1.5.dp,
-        brush = Brush.verticalGradient(
-            colors = listOf(
-                Color.White.copy(alpha = 0.85f),
-                KleinBlue,
-                KleinBlue
-            )
-        ),
-        shape = RoundedCornerShape(cornerRadius)
-    )
+): Modifier {
+    val shape = if (cornerRadius == 8.dp) cachedCardShape8 else RoundedCornerShape(cornerRadius)
+    return this
+        .clip(shape)
+        .background(backgroundColor)
+        .border(width = 1.5.dp, brush = cachedActivePlayingBrush, shape = shape)
+}

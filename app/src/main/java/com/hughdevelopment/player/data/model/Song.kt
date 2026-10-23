@@ -22,4 +22,6 @@ data class Song(
             val seconds = totalSeconds % 60
             return "%d:%02d".format(minutes, seconds)
         }
+
+    val formattedSize: String = "%.1f MB".format(sizeBytes.toFloat() / (1024f * 1024f))
 }

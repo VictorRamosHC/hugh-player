@@ -13,9 +13,9 @@ import kotlin.math.sin
 /**
  * AudioFadeManager
  * 
- * Provides smooth volume ramping for fade-in and soft fade-out.
+ * Provides smooth volume ramping for fade-in, fade-out, and soft pause transitions.
  * Concurrency-safe: rapid clicks cancel prior fades cleanly and guarantee
- * correct volume states without deadlocks or missing clicks.
+ * correct volume states without deadlocks, missing clicks, or Binder IPC overload.
  */
 class AudioFadeManager(
     private val scope: CoroutineScope,
@@ -27,10 +27,12 @@ class AudioFadeManager(
     fun cancel() {
         fadeJob?.cancel()
         fadeJob = null
+        player.volume = 1.0f
     }
 
     /**
-     * Smoothly fades in volume from 0.0 to 1.0.
+     * Smoothly fades in volume from 0.0 to 1.0 using a sinusoidal curve.
+     * Supports user durations up to 15.0 seconds.
      */
     fun fadeIn(durationMs: Long = defaultFadeDurationMs, onComplete: (() -> Unit)? = null) {
         fadeJob?.cancel()
@@ -51,9 +53,9 @@ class AudioFadeManager(
                     player.play()
                 }
 
-                val safeDuration = durationMs.coerceIn(100L, 2000L)
-                val steps = (safeDuration / 30L).toInt().coerceIn(6, 30)
-                val stepDelay = (safeDuration / steps).coerceAtLeast(10L)
+                val safeDuration = durationMs.coerceIn(100L, 15000L)
+                val steps = (safeDuration / 45L).toInt().coerceIn(8, 45)
+                val stepDelay = (safeDuration / steps).coerceAtLeast(25L)
 
                 for (i in 1..steps) {
                     if (!isActive) break
@@ -73,14 +75,49 @@ class AudioFadeManager(
     }
 
     /**
-     * Soft anti-pop fade out for Pause (max 200ms).
-     * Pauses the player when done, then restores volume to 1.0f for subsequent play.
+     * Smoothly fades out volume from current volume to 0.0 without pausing.
+     * Useful for track-to-track transitions.
      */
-    fun fadeOutAndPause(durationMs: Long = 200L, onPaused: (() -> Unit)? = null) {
+    fun fadeOut(durationMs: Long = defaultFadeDurationMs, onComplete: (() -> Unit)? = null) {
         fadeJob?.cancel()
 
-        val safeDuration = durationMs.coerceIn(50L, 250L)
-        if (safeDuration <= 50L) {
+        if (durationMs <= 50L) {
+            player.volume = 0.0f
+            onComplete?.invoke()
+            return
+        }
+
+        fadeJob = scope.launch(Dispatchers.Main) {
+            try {
+                val startingVolume = player.volume.coerceAtLeast(0.1f)
+                val safeDuration = durationMs.coerceIn(100L, 5000L)
+                val steps = (safeDuration / 45L).toInt().coerceIn(6, 35)
+                val stepDelay = (safeDuration / steps).coerceAtLeast(25L)
+
+                for (i in 1..steps) {
+                    if (!isActive) break
+                    val progress = i.toFloat() / steps
+                    val curveFactor = cos(progress * (Math.PI / 2.0)).toFloat()
+                    player.volume = (startingVolume * curveFactor).coerceIn(0.0f, 1.0f)
+                    delay(stepDelay)
+                }
+                player.volume = 0.0f
+                onComplete?.invoke()
+            } catch (e: Exception) {
+                // Cancelled or interrupted
+            }
+        }
+    }
+
+    /**
+     * Smooth anti-pop fade out for Pause.
+     * Smoothly scales volume down, pauses playback, then resets volume to 1.0f for subsequent resume.
+     */
+    fun fadeOutAndPause(durationMs: Long = 600L, onPaused: (() -> Unit)? = null) {
+        fadeJob?.cancel()
+
+        val safeDuration = durationMs.coerceIn(80L, 4000L)
+        if (safeDuration <= 80L) {
             player.pause()
             player.volume = 1.0f
             onPaused?.invoke()
@@ -90,8 +127,8 @@ class AudioFadeManager(
         fadeJob = scope.launch(Dispatchers.Main) {
             try {
                 val startingVolume = player.volume.coerceAtLeast(0.1f)
-                val steps = (safeDuration / 25L).toInt().coerceIn(4, 10)
-                val stepDelay = (safeDuration / steps).coerceAtLeast(10L)
+                val steps = (safeDuration / 45L).toInt().coerceIn(6, 35)
+                val stepDelay = (safeDuration / steps).coerceAtLeast(25L)
 
                 for (i in 1..steps) {
                     if (!isActive) break

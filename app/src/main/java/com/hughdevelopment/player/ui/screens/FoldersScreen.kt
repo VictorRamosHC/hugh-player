@@ -1,4 +1,4 @@
-package com.hughdevelopment.player.ui.screens
+﻿package com.hughdevelopment.player.ui.screens
 
 import android.widget.Toast
 import androidx.compose.foundation.Image
@@ -67,6 +67,9 @@ import androidx.compose.ui.unit.sp
 import com.hughdevelopment.player.R
 import com.hughdevelopment.player.data.model.Playlist
 import com.hughdevelopment.player.data.model.Song
+import com.hughdevelopment.player.data.settings.SortOrder
+import androidx.compose.foundation.horizontalScroll
+import androidx.compose.foundation.rememberScrollState
 import com.hughdevelopment.player.ui.components.ArtworkImage
 import com.hughdevelopment.player.ui.components.CybersigilBackground
 import com.hughdevelopment.player.ui.theme.CharcoalSurface
@@ -101,6 +104,8 @@ fun FoldersScreen(
     var selectedPlaylistForDetail by remember { mutableStateOf<Playlist?>(null) }
     var showCreateDialog by remember { mutableStateOf(false) }
     var showAddSongsDialog by remember { mutableStateOf(false) }
+    var folderSearchQuery by remember { mutableStateOf("") }
+    var folderSortOrder by remember { mutableStateOf(SortOrder.DATE_ADDED_DESC) }
 
     // Synchronize active selected playlist when list updates, clearing stale deleted playlists
     val activePlaylist = remember(playlists, selectedPlaylistForDetail) {
@@ -377,6 +382,86 @@ fun FoldersScreen(
                     Spacer(modifier = Modifier.height(8.dp))
                 }
 
+                val sortedFolderSongs = remember(activePlaylist.songs, folderSearchQuery, folderSortOrder) {
+                    val filtered = if (folderSearchQuery.isBlank()) activePlaylist.songs
+                    else {
+                        val q = folderSearchQuery.trim().lowercase()
+                        activePlaylist.songs.filter {
+                            it.title.lowercase().contains(q) ||
+                            it.artist.lowercase().contains(q) ||
+                            it.album.lowercase().contains(q)
+                        }
+                    }
+                    when (folderSortOrder) {
+                        SortOrder.DATE_ADDED_DESC -> filtered.sortedByDescending { it.dateAdded }
+                        SortOrder.DEFAULT -> filtered.sortedBy { it.title.lowercase() }
+                        SortOrder.SIZE_DESC -> filtered.sortedByDescending { it.sizeBytes }
+                        SortOrder.FAVORITES_FIRST -> filtered.sortedWith(compareByDescending<Song> { it.isFavorite }.thenBy { it.title.lowercase() })
+                        SortOrder.MOST_PLAYED -> filtered.sortedByDescending { it.durationMs }
+                    }
+                }
+
+                if (activePlaylist.songs.isNotEmpty()) {
+                    OutlinedTextField(
+                        value = folderSearchQuery,
+                        onValueChange = { folderSearchQuery = it },
+                        placeholder = {
+                            Text("FILTRAR NA PASTA...", color = MutedStone, fontFamily = FontFamily.Monospace, fontSize = 11.sp)
+                        },
+                        leadingIcon = {
+                            Icon(imageVector = Icons.Default.Search, contentDescription = null, tint = MutedStone, modifier = Modifier.size(16.dp))
+                        },
+                        singleLine = true,
+                        colors = OutlinedTextFieldDefaults.colors(
+                            focusedBorderColor = CyberAmber,
+                            unfocusedBorderColor = WireframeBorder,
+                            focusedTextColor = SigilWhite,
+                            unfocusedTextColor = SigilSilver,
+                            focusedContainerColor = CharcoalSurface,
+                            unfocusedContainerColor = CharcoalSurface
+                        ),
+                        shape = RoundedCornerShape(6.dp),
+                        modifier = Modifier.fillMaxWidth().height(48.dp)
+                    )
+
+                    Spacer(modifier = Modifier.height(6.dp))
+
+                    Row(
+                        modifier = Modifier
+                            .fillMaxWidth()
+                            .horizontalScroll(rememberScrollState()),
+                        horizontalArrangement = Arrangement.spacedBy(6.dp)
+                    ) {
+                        FolderSortChip(
+                            label = "RECENTES",
+                            isSelected = folderSortOrder == SortOrder.DATE_ADDED_DESC,
+                            onClick = { folderSortOrder = SortOrder.DATE_ADDED_DESC }
+                        )
+                        FolderSortChip(
+                            label = "A-Z",
+                            isSelected = folderSortOrder == SortOrder.DEFAULT,
+                            onClick = { folderSortOrder = SortOrder.DEFAULT }
+                        )
+                        FolderSortChip(
+                            label = "MAIORES (MB)",
+                            isSelected = folderSortOrder == SortOrder.SIZE_DESC,
+                            onClick = { folderSortOrder = SortOrder.SIZE_DESC }
+                        )
+                        FolderSortChip(
+                            label = "FAVORITAS",
+                            isSelected = folderSortOrder == SortOrder.FAVORITES_FIRST,
+                            onClick = { folderSortOrder = SortOrder.FAVORITES_FIRST }
+                        )
+                        FolderSortChip(
+                            label = "DURA��O",
+                            isSelected = folderSortOrder == SortOrder.MOST_PLAYED,
+                            onClick = { folderSortOrder = SortOrder.MOST_PLAYED }
+                        )
+                    }
+
+                    Spacer(modifier = Modifier.height(8.dp))
+                }
+
                 if (activePlaylist.songs.isEmpty()) {
                     Box(
                         modifier = Modifier
@@ -417,14 +502,14 @@ fun FoldersScreen(
                         contentPadding = PaddingValues(bottom = 120.dp),
                         verticalArrangement = Arrangement.spacedBy(6.dp)
                     ) {
-                        items(items = activePlaylist.songs, key = { it.id }) { song ->
+                        items(items = sortedFolderSongs, key = { it.id }) { song ->
                             Row(
                                 modifier = Modifier
                                     .fillMaxWidth()
                                     .clip(RoundedCornerShape(8.dp))
                                     .background(CharcoalSurface)
                                     .border(1.dp, WireframeBorder.copy(alpha = 0.5f), RoundedCornerShape(8.dp))
-                                    .clickable { onSongSelectedFromPlaylist(song, activePlaylist.songs) }
+                                    .clickable { onSongSelectedFromPlaylist(song, sortedFolderSongs) }
                                     .padding(8.dp),
                                 verticalAlignment = Alignment.CenterVertically
                             ) {
@@ -1063,4 +1148,33 @@ fun getPlaylistCoverResource(name: String, category: String): Int? {
     }
 
     return null
+}
+
+@Composable
+private fun FolderSortChip(
+    label: String,
+    isSelected: Boolean,
+    onClick: () -> Unit
+) {
+    Box(
+        modifier = Modifier
+            .clip(RoundedCornerShape(4.dp))
+            .background(if (isSelected) KleinBlue else ObsidianGlass.copy(alpha = 0.8f))
+            .border(
+                width = 1.dp,
+                color = if (isSelected) KleinBlue else WireframeBorder,
+                shape = RoundedCornerShape(4.dp)
+            )
+            .clickable { onClick() }
+            .padding(horizontal = 9.dp, vertical = 5.dp)
+    ) {
+        Text(
+            text = label,
+            color = if (isSelected) SigilWhite else SigilSilver,
+            fontSize = 10.sp,
+            fontWeight = if (isSelected) FontWeight.Bold else FontWeight.Medium,
+            fontFamily = FontFamily.Monospace,
+            letterSpacing = 0.5.sp
+        )
+    }
 }

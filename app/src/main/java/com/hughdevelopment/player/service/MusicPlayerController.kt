@@ -10,6 +10,7 @@ import androidx.media3.session.SessionToken
 import com.google.common.util.concurrent.ListenableFuture
 import com.google.common.util.concurrent.MoreExecutors
 import com.hughdevelopment.player.data.model.Song
+import com.hughdevelopment.player.data.settings.SettingsManager
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.Job
@@ -105,6 +106,7 @@ class MusicPlayerController(
                     _currentSong.value = song
                     _durationMs.value = song.durationMs
                     onSongStarted(song)
+                    saveSessionState(song.id, 0L)
                 }
             }
         }
@@ -118,6 +120,39 @@ class MusicPlayerController(
         }
     }
 
+    /**
+     * Restore last played song & position seamlessly from persistent storage on cold boot.
+     */
+    fun restoreLastPlayedSession(song: Song, positionMs: Long, newPlaylist: List<Song>) {
+        val controller = mediaController ?: return
+        _playlist.value = newPlaylist
+        _currentSong.value = song
+        _durationMs.value = song.durationMs
+        _playbackPositionMs.value = positionMs
+        isPlayIntended = false
+        _isPlaying.value = false
+
+        val mediaItems = newPlaylist.map { s ->
+            MediaItem.Builder()
+                .setMediaId(s.id.toString())
+                .setUri(s.contentUri)
+                .setMediaMetadata(
+                    MediaMetadata.Builder()
+                        .setTitle(s.title)
+                        .setArtist(s.artist)
+                        .setAlbumTitle(s.album)
+                        .setArtworkUri(s.albumArtUri)
+                        .build()
+                )
+                .build()
+        }
+
+        val targetIndex = newPlaylist.indexOfFirst { it.id == song.id }.coerceAtLeast(0)
+        controller.setMediaItems(mediaItems, targetIndex, positionMs)
+        controller.prepare()
+        controller.volume = 1.0f
+    }
+
     fun playSong(song: Song, newPlaylist: List<Song> = _playlist.value) {
         val controller = mediaController ?: return
         flushAccumulatedListenStats()
@@ -129,8 +164,9 @@ class MusicPlayerController(
         isPlayIntended = true
         _isPlaying.value = true
 
-        // Trigger instantaneous play recording in DB
+        // Trigger instantaneous play recording in DB and persistent session state
         onSongStarted(song)
+        saveSessionState(song.id, 0L)
 
         val mediaItems = newPlaylist.map { s ->
             MediaItem.Builder()
@@ -171,10 +207,13 @@ class MusicPlayerController(
             isPlayIntended = false
             _isPlaying.value = false
             flushAccumulatedListenStats()
+            _currentSong.value?.let { saveSessionState(it.id, _playbackPositionMs.value) }
 
             val fadeDur = getEffectiveFadeDuration()
             if (fadeDur > 50L) {
-                fadeManager?.fadeOutAndPause(200L)
+                // Responsive yet audible pause fade (between 500ms and 2500ms)
+                val pauseFadeDur = if (fadeDur > 2000L) (fadeDur * 0.4f).toLong().coerceIn(500L, 2500L) else fadeDur
+                fadeManager?.fadeOutAndPause(pauseFadeDur)
             } else {
                 fadeManager?.cancel()
                 controller.pause()
@@ -201,21 +240,27 @@ class MusicPlayerController(
         flushAccumulatedListenStats()
         val shouldPlay = isPlayIntended || controller.isPlaying
 
-        // Immediate track transition
-        if (controller.hasNextMediaItem()) {
-            controller.seekToNextMediaItem()
-        } else {
-            controller.seekTo(0, 0L)
-        }
-
         if (shouldPlay) {
             isPlayIntended = true
             _isPlaying.value = true
             val fadeDur = getEffectiveFadeDuration()
             if (fadeDur > 50L) {
-                fadeManager?.fadeIn(fadeDur)
+                val skipFadeOut = (fadeDur * 0.35f).toLong().coerceIn(250L, 1200L)
+                fadeManager?.fadeOut(skipFadeOut) {
+                    if (controller.hasNextMediaItem()) {
+                        controller.seekToNextMediaItem()
+                    } else {
+                        controller.seekTo(0, 0L)
+                    }
+                    fadeManager?.fadeIn(fadeDur)
+                }
             } else {
                 fadeManager?.cancel()
+                if (controller.hasNextMediaItem()) {
+                    controller.seekToNextMediaItem()
+                } else {
+                    controller.seekTo(0, 0L)
+                }
                 controller.volume = 1.0f
                 controller.play()
             }
@@ -224,6 +269,11 @@ class MusicPlayerController(
             isPlayIntended = false
             _isPlaying.value = false
             fadeManager?.cancel()
+            if (controller.hasNextMediaItem()) {
+                controller.seekToNextMediaItem()
+            } else {
+                controller.seekTo(0, 0L)
+            }
             controller.volume = 1.0f
             controller.pause()
         }
@@ -234,10 +284,12 @@ class MusicPlayerController(
         flushAccumulatedListenStats()
         val shouldPlay = isPlayIntended || controller.isPlaying
 
-        if (controller.currentPosition > 3000L || !controller.hasPreviousMediaItem()) {
-            controller.seekTo(0L)
-        } else {
-            controller.seekToPreviousMediaItem()
+        val executeSeek = {
+            if (controller.currentPosition > 3000L || !controller.hasPreviousMediaItem()) {
+                controller.seekTo(0L)
+            } else {
+                controller.seekToPreviousMediaItem()
+            }
         }
 
         if (shouldPlay) {
@@ -245,9 +297,14 @@ class MusicPlayerController(
             _isPlaying.value = true
             val fadeDur = getEffectiveFadeDuration()
             if (fadeDur > 50L) {
-                fadeManager?.fadeIn(fadeDur)
+                val skipFadeOut = (fadeDur * 0.35f).toLong().coerceIn(250L, 1200L)
+                fadeManager?.fadeOut(skipFadeOut) {
+                    executeSeek()
+                    fadeManager?.fadeIn(fadeDur)
+                }
             } else {
                 fadeManager?.cancel()
+                executeSeek()
                 controller.volume = 1.0f
                 controller.play()
             }
@@ -256,6 +313,7 @@ class MusicPlayerController(
             isPlayIntended = false
             _isPlaying.value = false
             fadeManager?.cancel()
+            executeSeek()
             controller.volume = 1.0f
             controller.pause()
         }
@@ -273,6 +331,7 @@ class MusicPlayerController(
     fun seekTo(positionMs: Long) {
         mediaController?.seekTo(positionMs)
         _playbackPositionMs.value = positionMs
+        _currentSong.value?.let { saveSessionState(it.id, positionMs) }
     }
 
     fun toggleShuffle() {
@@ -302,9 +361,12 @@ class MusicPlayerController(
                     _durationMs.value = if (c.duration > 0) c.duration else _currentSong.value?.durationMs ?: 0L
                     secondsAccumulatedForCurrentSong += 1
 
-                    // Auto-flush every 5 seconds to continuously guarantee statistics persistence
+                    // Auto-flush every 5 seconds to continuously guarantee statistics and session persistence
                     if (secondsAccumulatedForCurrentSong >= 5) {
                         flushAccumulatedListenStats()
+                        _currentSong.value?.let { song ->
+                            saveSessionState(song.id, c.currentPosition)
+                        }
                     }
                 }
                 delay(1000L)
@@ -316,6 +378,9 @@ class MusicPlayerController(
         progressTrackingJob?.cancel()
         progressTrackingJob = null
         flushAccumulatedListenStats()
+        _currentSong.value?.let { song ->
+            saveSessionState(song.id, _playbackPositionMs.value)
+        }
     }
 
     private fun flushAccumulatedListenStats() {
@@ -323,6 +388,14 @@ class MusicPlayerController(
         if (song != null && secondsAccumulatedForCurrentSong > 0) {
             onSongProgressLogged(song, secondsAccumulatedForCurrentSong)
             secondsAccumulatedForCurrentSong = 0L
+        }
+    }
+
+    private fun saveSessionState(songId: Long, positionMs: Long) {
+        try {
+            SettingsManager.getInstance(context).saveLastPlaybackSession(songId, positionMs)
+        } catch (e: Exception) {
+            // Ignore if context is unbinding
         }
     }
 

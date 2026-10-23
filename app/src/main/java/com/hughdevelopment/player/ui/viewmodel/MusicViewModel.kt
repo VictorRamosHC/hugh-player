@@ -8,6 +8,7 @@ import com.hughdevelopment.player.HughPlayerApplication
 import com.hughdevelopment.player.data.model.ListeningOverview
 import com.hughdevelopment.player.data.model.Playlist
 import com.hughdevelopment.player.data.model.Song
+import com.hughdevelopment.player.data.settings.SettingsManager
 import com.hughdevelopment.player.data.settings.SettingsState
 import com.hughdevelopment.player.data.settings.SortOrder
 import com.hughdevelopment.player.service.MusicPlayerController
@@ -24,7 +25,7 @@ class MusicViewModel(application: Application) : AndroidViewModel(application) {
     private val app = application as HughPlayerApplication
     val repository = app.repository
     val agentManager = app.agentDataManager
-    val settingsManager = app.settingsManager
+    val settingsManager = SettingsManager.getInstance(application)
 
     val settings: StateFlow<SettingsState> = settingsManager.settings
 
@@ -33,12 +34,12 @@ class MusicViewModel(application: Application) : AndroidViewModel(application) {
         scope = viewModelScope,
         onSongStarted = { song ->
             viewModelScope.launch {
-                repository.recordSongStarted(song)
+                repository.recordSongStart(song)
             }
         },
         onSongProgressLogged = { song, secondsPlayed ->
             viewModelScope.launch {
-                repository.recordSongProgress(song, secondsPlayed)
+                repository.recordSongPlayed(song, secondsPlayed)
             }
         }
     )
@@ -123,6 +124,22 @@ class MusicViewModel(application: Application) : AndroidViewModel(application) {
                 playerController.fadeDurationMs = (s.fadeDurationSeconds * 1000f).toLong()
             }
         }
+
+        // Auto-restore last playback session seamlessly once library songs are indexed
+        viewModelScope.launch {
+            songs.collect { songList ->
+                if (songList.isNotEmpty() && playerController.currentSong.value == null) {
+                    val lastSongId = settingsManager.getLastPlayedSongId()
+                    if (lastSongId != null) {
+                        val lastSong = songList.find { it.id == lastSongId }
+                        if (lastSong != null) {
+                            val lastPos = settingsManager.getLastPlayedPositionMs()
+                            playerController.restoreLastPlayedSession(lastSong, lastPos, songList)
+                        }
+                    }
+                }
+            }
+        }
     }
 
     fun loadLocalMusic() {
@@ -168,9 +185,28 @@ class MusicViewModel(application: Application) : AndroidViewModel(application) {
         }
     }
 
-    // --- Folder / Playlist Actions ---
+    fun playPlaylist(playlist: Playlist) {
+        if (playlist.songs.isNotEmpty()) {
+            playerController.playSong(playlist.songs.first(), playlist.songs)
+        }
+    }
 
-    fun createPlaylist(name: String, category: String = "CUSTOM", colorHex: String = "#F59E0B") {
+    fun playSongFromPlaylist(song: Song, playlistSongs: List<Song>) {
+        playerController.playSong(song, playlistSongs)
+    }
+
+    fun shuffleAll() {
+        val all = sortedSongs.value
+        if (all.isNotEmpty()) {
+            val shuffled = all.shuffled()
+            playerController.playSong(shuffled.first(), shuffled)
+            if (!isShuffleEnabled.value) {
+                playerController.toggleShuffle()
+            }
+        }
+    }
+
+    fun createPlaylist(name: String, category: String, colorHex: String) {
         viewModelScope.launch {
             repository.createPlaylist(name, category, colorHex)
         }
@@ -179,12 +215,6 @@ class MusicViewModel(application: Application) : AndroidViewModel(application) {
     fun deletePlaylist(playlistId: Long) {
         viewModelScope.launch {
             repository.deletePlaylist(playlistId)
-        }
-    }
-
-    fun addSongToPlaylist(playlistId: Long, songId: Long) {
-        viewModelScope.launch {
-            repository.addSongToPlaylist(playlistId, songId)
         }
     }
 
@@ -218,6 +248,10 @@ class MusicViewModel(application: Application) : AndroidViewModel(application) {
 
     fun setSortOrder(order: SortOrder) {
         settingsManager.setSortOrder(order)
+    }
+
+    fun setFolderSortOrder(order: SortOrder) {
+        settingsManager.setFolderSortOrder(order)
     }
 
     fun setFadeEnabled(enabled: Boolean) {
