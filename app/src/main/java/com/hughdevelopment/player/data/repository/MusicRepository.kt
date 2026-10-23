@@ -314,6 +314,32 @@ class MusicRepository(
             playlistIdMap[name] = id
         }
 
+        val christianArtists = listOf(
+            "mara lima", "eyshila", "damares", "aline barros", "diante do trono", "nani azevedo",
+            "anderson freire", "gabriel guedes", "elaine de jesus", "trazendo a arca", "giselli cristina",
+            "cancao & louvor", "canção & louvor", "cassiane", "leia mendonca", "léia mendonça",
+            "lea mendonça", "lea mendonca", "renascer praise", "michelle nascimento", "luiz de carvalho",
+            "giselma barbosa", "vanderley santos", "ministerio", "ministério", "verdadeiro evangelho",
+            "niel nascimento", "edgars2paula", "shirley carvalhaes", "bruna karla", "fernandinho",
+            "midian lima", "isadora pompeo", "gabriela rocha", "thalles roberto", "rose nascimento",
+            "mattos nascimento", "gerson rufino", "lauriete", "fabiana anastacio", "davi sacer",
+            "ludmila ferber", "heloisa rosa", "harpa", "cantor cristao", "cantor cristão", "asaph borba",
+            "adhemar de campos", "voz da verdade", "novo som", "oficina g3", "fhop", "alexsander lucio",
+            "julia vitória", "julia vitoria", "rute maia", "felipe rodrigues", "elizeu rodrigues",
+            "thiago brito", "todah music", "coral canto jovem", "rayssa andreoli", "leandro borges",
+            "vanilda bordieri", "gabi sampaio", "nivea soares", "nívea soares", "jose wellington"
+        )
+
+        val christianKeywords = listOf(
+            "hino", "harpa", "louvor", "gospel", "adorador", "adoração", "adoracao", "oracao", "oração",
+            "deus", "jesus", "aleluia", "evangelho", "igreja", "bíblia", "biblia", "cruz", "calvário",
+            "calvario", "ressuscitou", "redentor", "santo dos santos", "ungido", "unção", "milagre",
+            "árvore e a cruz", "arvore e a cruz", "santidade", "adorai", "adorar", "bendito é o rei",
+            "buscar-me-eis", "mais perto quero estar", "nome mais doce", "nada mais", "teu toque",
+            "ezequiel 47", "não quero ser o mesmo", "o amor tem um nome", "chora que a vitória vem",
+            "imperfeito", "comum e imperfeito"
+        )
+
         val addedCounts = mutableMapOf<String, Int>()
 
         for (song in allSongs) {
@@ -321,14 +347,17 @@ class MusicRepository(
             val lowerPath = song.dataPath.lowercase()
             val lowerArtist = song.artist.lowercase()
 
+            val isChristian = christianArtists.any { lowerArtist.contains(it) || lowerTitle.contains(it) } ||
+                    christianKeywords.any { lowerTitle.contains(it) }
+
             val targetCategory = when {
-                lowerTitle.contains("reunião") || lowerTitle.contains("reuniao") || lowerPath.contains("reunião") || lowerPath.contains("meeting") || lowerPath.contains("ata") -> {
+                lowerPath.contains("4 - audios de reunioes") || lowerPath.contains("audio_reunioes") || lowerTitle.contains("reunião") || lowerTitle.contains("reuniao") || lowerPath.contains("meeting") || lowerPath.contains("ata") || lowerPath.contains("transcrever") -> {
                     "Áudios de Reuniões"
                 }
-                lowerTitle.contains("playback") || lowerTitle.contains("instrumental") || lowerPath.contains("playback") || lowerTitle.contains("sem voz") -> {
+                lowerPath.contains("2 - cristas (playback)") || lowerTitle.contains("playback") || lowerTitle.contains("instrumental") || lowerPath.contains("playback") || lowerTitle.contains("sem voz") -> {
                     "Músicas Cristãs (Playback)"
                 }
-                lowerTitle.contains("harpa") || lowerTitle.contains("hino") || lowerTitle.contains("louvor") || lowerTitle.contains("cristã") || lowerTitle.contains("gospel") || lowerPath.contains("gospel") || lowerArtist.contains("gospel") -> {
+                lowerPath.contains("1 - cristas (cantado)") || isChristian -> {
                     "Músicas Cristãs (Cantado)"
                 }
                 else -> {
