@@ -78,6 +78,9 @@ import androidx.compose.material3.AlertDialog
 import androidx.compose.material3.TextButton
 import androidx.compose.ui.graphics.Color
 import com.hughdevelopment.player.data.model.Playlist
+import com.hughdevelopment.player.data.model.ListeningOverview
+import com.hughdevelopment.player.ui.components.HermesPetBanner
+import com.hughdevelopment.player.ui.components.HermesDialogueSheet
 
 @Composable
 fun LibraryScreen(
@@ -88,6 +91,7 @@ fun LibraryScreen(
     sortOrder: SortOrder,
     wallpaperAlpha: Float,
     playlists: List<Playlist> = emptyList(),
+    overview: ListeningOverview = ListeningOverview(0, 0, 0, 0, emptyList()),
     onSongSelected: (Song, List<Song>) -> Unit,
     onRefresh: () -> Unit,
     onOpenFolders: () -> Unit,
@@ -97,11 +101,14 @@ fun LibraryScreen(
     onAddSongToPlaylist: (Long, Long) -> Unit = { _, _ -> },
     onShuffleAll: () -> Unit,
     onSelectSortOrder: (SortOrder) -> Unit,
+    onAutoOrganize: () -> Unit = {},
+    onPlayFavorites: () -> Unit = {},
     modifier: Modifier = Modifier
 ) {
     val context = LocalContext.current
     var songToAddToPlaylist by remember { mutableStateOf<Song?>(null) }
     var searchQuery by remember { mutableStateOf("") }
+    var showHermesSheet by remember { mutableStateOf(false) }
     val sortScrollState = rememberScrollState()
 
     val filteredSongs = remember(songs, searchQuery) {
@@ -208,6 +215,16 @@ fun LibraryScreen(
                     )
                 }
             }
+
+            Spacer(modifier = Modifier.height(10.dp))
+
+            // Hermes Pet AI Companion Banner
+            HermesPetBanner(
+                overview = overview,
+                songsCount = songs.size,
+                playlistsCount = playlists.size,
+                onOpenChat = { showHermesSheet = true }
+            )
 
             Spacer(modifier = Modifier.height(10.dp))
 
@@ -422,6 +439,24 @@ fun LibraryScreen(
                     TextButton(onClick = { songToAddToPlaylist = null }) {
                         Text(text = "CANCELAR", color = MutedStone, fontFamily = FontFamily.Monospace)
                     }
+                }
+            )
+        }
+
+        // Hermes Pet Dialogue Bottom Sheet
+        if (showHermesSheet) {
+            HermesDialogueSheet(
+                overview = overview,
+                songsCount = songs.size,
+                playlists = playlists,
+                onDismiss = { showHermesSheet = false },
+                onAutoOrganize = {
+                    onAutoOrganize()
+                    showHermesSheet = false
+                },
+                onPlayFavorites = {
+                    onPlayFavorites()
+                    showHermesSheet = false
                 }
             )
         }

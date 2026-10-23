@@ -307,7 +307,7 @@ class MusicRepository(
 
         val playlistIdMap = mutableMapOf<String, Long>()
         for ((name, cat, color) in presetDefinitions) {
-            val existing = playlistDao.findPlaylistByName(name)
+            val existing = playlistDao.getPlaylistByName(name)
             val id = existing?.id ?: playlistDao.insertPlaylist(
                 PlaylistEntity(name = name, category = cat, colorHex = color)
             )

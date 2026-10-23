@@ -4,6 +4,7 @@ import android.Manifest
 import android.content.pm.PackageManager
 import android.os.Build
 import android.os.Bundle
+import android.widget.Toast
 import androidx.activity.ComponentActivity
 import androidx.activity.compose.setContent
 import androidx.activity.result.contract.ActivityResultContracts
@@ -26,6 +27,7 @@ import androidx.compose.runtime.remember
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.platform.LocalContext
 import androidx.core.content.ContextCompat
 import com.hughdevelopment.player.ui.components.ExpandedPlayerSheet
 import com.hughdevelopment.player.ui.components.MiniPlayerBar
@@ -116,6 +118,7 @@ fun MainScreen(
     isPermissionsSettled: Boolean,
     onExportAiManifest: (((String) -> Unit)) -> Unit
 ) {
+    val context = LocalContext.current
     val sortedSongs by viewModel.sortedSongs.collectAsState()
     val playlists by viewModel.playlists.collectAsState()
     val isLoading by viewModel.isLoading.collectAsState()
@@ -162,6 +165,7 @@ fun MainScreen(
                         sortOrder = settings.sortOrder,
                         wallpaperAlpha = settings.libraryWallpaperAlpha,
                         playlists = playlists,
+                        overview = overview,
                         onSongSelected = { song, playlist ->
                             viewModel.playSong(song, playlist)
                         },
@@ -181,6 +185,18 @@ fun MainScreen(
                         },
                         onSelectSortOrder = { order ->
                             viewModel.setSortOrder(order)
+                        },
+                        onAutoOrganize = {
+                            viewModel.autoOrganizeWithAiPresets { counts ->
+                                Toast.makeText(
+                                    context,
+                                    "Hermes organizou: ${counts.values.sum()} faixas em 4 pastas!",
+                                    Toast.LENGTH_LONG
+                                ).show()
+                            }
+                        },
+                        onPlayFavorites = {
+                            viewModel.playFavorites()
                         }
                     )
                 }

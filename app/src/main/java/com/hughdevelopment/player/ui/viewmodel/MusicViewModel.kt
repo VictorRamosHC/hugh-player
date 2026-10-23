@@ -34,7 +34,7 @@ class MusicViewModel(application: Application) : AndroidViewModel(application) {
         scope = viewModelScope,
         onSongStarted = { song ->
             viewModelScope.launch {
-                repository.recordSongStart(song)
+                repository.recordSongStarted(song)
             }
         },
         onSongProgressLogged = { song, secondsPlayed ->
@@ -206,6 +206,19 @@ class MusicViewModel(application: Application) : AndroidViewModel(application) {
         }
     }
 
+    fun playFavorites() {
+        val favs = songs.value.filter { it.isFavorite }
+        if (favs.isNotEmpty()) {
+            val shuffled = favs.shuffled()
+            playerController.playSong(shuffled.first(), shuffled)
+            if (!isShuffleEnabled.value) {
+                playerController.toggleShuffle()
+            }
+        } else {
+            shuffleAll()
+        }
+    }
+
     fun createPlaylist(name: String, category: String, colorHex: String) {
         viewModelScope.launch {
             repository.createPlaylist(name, category, colorHex)
@@ -215,6 +228,12 @@ class MusicViewModel(application: Application) : AndroidViewModel(application) {
     fun deletePlaylist(playlistId: Long) {
         viewModelScope.launch {
             repository.deletePlaylist(playlistId)
+        }
+    }
+
+    fun addSongToPlaylist(playlistId: Long, songId: Long) {
+        viewModelScope.launch {
+            repository.addSongToPlaylist(playlistId, songId)
         }
     }
 
