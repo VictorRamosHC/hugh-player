@@ -92,10 +92,9 @@ fun HermesPetBanner(
             modifier = Modifier.fillMaxWidth(),
             verticalAlignment = Alignment.CenterVertically
         ) {
-            // Stylized Neoclassical Bust Glyph for Hermes
-            StatueGlyphView(
-                modifier = Modifier.size(46.dp),
-                accentColor = theme.primaryAccent
+            // Sovereign Astrolabe Oracle Eye for Hermes
+            HermesAstrolabeOracleEye(
+                modifier = Modifier.size(46.dp)
             )
 
             Spacer(modifier = Modifier.width(12.dp))
@@ -192,9 +191,8 @@ fun HermesDialogueSheet(
                     verticalAlignment = Alignment.CenterVertically
                 ) {
                     Row(verticalAlignment = Alignment.CenterVertically) {
-                        StatueGlyphView(
-                            modifier = Modifier.size(36.dp),
-                            accentColor = theme.primaryAccent
+                        HermesAstrolabeOracleEye(
+                            modifier = Modifier.size(36.dp)
                         )
                         Spacer(modifier = Modifier.width(10.dp))
                         Column {

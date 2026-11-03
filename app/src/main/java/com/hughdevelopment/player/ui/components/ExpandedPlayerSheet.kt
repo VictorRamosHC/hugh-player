@@ -1,11 +1,18 @@
 package com.hughdevelopment.player.ui.components
 
 import androidx.compose.animation.AnimatedContent
+import androidx.compose.animation.core.FastOutSlowInEasing
+import androidx.compose.animation.core.LinearEasing
+import androidx.compose.animation.core.RepeatMode
+import androidx.compose.animation.core.animateFloat
 import androidx.compose.animation.core.animateFloatAsState
+import androidx.compose.animation.core.infiniteRepeatable
+import androidx.compose.animation.core.rememberInfiniteTransition
 import androidx.compose.animation.core.tween
 import androidx.compose.animation.fadeIn
 import androidx.compose.animation.fadeOut
 import androidx.compose.animation.togetherWith
+import androidx.compose.foundation.Canvas
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.background
 import androidx.compose.foundation.border
@@ -62,8 +69,13 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.alpha
 import androidx.compose.ui.draw.clip
+import androidx.compose.ui.draw.scale
+import androidx.compose.ui.geometry.Offset
 import androidx.compose.ui.graphics.Brush
 import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.graphics.PathEffect
+import androidx.compose.ui.graphics.drawscope.Stroke
+import androidx.compose.ui.graphics.drawscope.rotate
 import androidx.compose.ui.graphics.graphicsLayer
 import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.res.painterResource
@@ -87,6 +99,7 @@ import com.hughdevelopment.player.ui.theme.LocalVaultTheme
 import com.hughdevelopment.player.ui.theme.MutedStone
 import com.hughdevelopment.player.ui.theme.SigilSilver
 import com.hughdevelopment.player.ui.theme.SigilWhite
+import com.hughdevelopment.player.ui.theme.SpecularGlassRimTop
 import com.hughdevelopment.player.ui.theme.VoidBlack
 import com.hughdevelopment.player.ui.theme.WireframeBorder
 
@@ -130,6 +143,35 @@ fun ExpandedPlayerSheet(
     var showLyrics by remember { mutableStateOf(false) }
     var lyrics by remember(song.id, song.dataPath) { mutableStateOf<List<LrcLine>?>(null) }
     var hasLoadedLyrics by remember(song.id, song.dataPath) { mutableStateOf(false) }
+
+    val auraTransition = rememberInfiniteTransition(label = "AltarAuraTransition")
+    val auraScale by auraTransition.animateFloat(
+        initialValue = 1.0f,
+        targetValue = 1.08f,
+        animationSpec = infiniteRepeatable(
+            animation = tween(4500, easing = FastOutSlowInEasing),
+            repeatMode = RepeatMode.Reverse
+        ),
+        label = "AuraScale"
+    )
+    val auraAlpha by auraTransition.animateFloat(
+        initialValue = 0.35f,
+        targetValue = 0.65f,
+        animationSpec = infiniteRepeatable(
+            animation = tween(4500, easing = FastOutSlowInEasing),
+            repeatMode = RepeatMode.Reverse
+        ),
+        label = "AuraAlpha"
+    )
+    val haloOrbitAngle by auraTransition.animateFloat(
+        initialValue = 0f,
+        targetValue = 360f,
+        animationSpec = infiniteRepeatable(
+            animation = tween(28000, easing = LinearEasing),
+            repeatMode = RepeatMode.Restart
+        ),
+        label = "HaloOrbitAngle"
+    )
 
     LaunchedEffect(song.id, song.dataPath) {
         hasLoadedLyrics = false
@@ -184,13 +226,13 @@ fun ExpandedPlayerSheet(
                     Box(
                         modifier = Modifier
                             .clip(RoundedCornerShape(4.dp))
-                            .border(1.dp, CyberAmber.copy(alpha = 0.6f), RoundedCornerShape(4.dp))
+                            .border(1.dp, theme.secondaryAccent.copy(alpha = 0.6f), RoundedCornerShape(4.dp))
                             .background(CharcoalSurface)
                             .padding(horizontal = 10.dp, vertical = 5.dp)
                     ) {
                         Text(
-                            text = if (isFadeActive) "AETHER // 0x01 CORE • FADE ACTIVE" else "AETHER // 0x01 CORE • RAW CUT",
-                            color = CyberAmber,
+                            text = if (isFadeActive) "AETHER // PANTHEON SACRED • FADE" else "AETHER // PANTHEON SACRED",
+                            color = theme.secondaryAccent,
                             fontSize = 10.sp,
                             fontFamily = FontFamily.Monospace,
                             fontWeight = FontWeight.Bold,
@@ -260,63 +302,135 @@ fun ExpandedPlayerSheet(
                     label = "PlayerArtworkLyricsSwitch"
                 ) { isLyricsView ->
                     if (!isLyricsView) {
-                        // Big Album Artwork with Cybernetic Frame & Neoclassical Fallback
+                        // Divine Celestial Altar Container
                         Box(
                             modifier = Modifier
-                                .fillMaxWidth(0.85f)
-                                .aspectRatio(1f)
-                                .clip(RoundedCornerShape(18.dp))
-                                .border(1.5.dp, WireframeBorder, RoundedCornerShape(18.dp))
-                                .background(CharcoalSurface)
-                                .clickable { showLyrics = true }
+                                .fillMaxWidth(0.92f)
+                                .aspectRatio(1f),
+                            contentAlignment = Alignment.Center
                         ) {
-                            ArtworkImage(
-                                artworkUri = song.albumArtUri,
-                                modifier = Modifier.fillMaxSize(),
-                                cornerRadius = 18.dp,
-                                accentColor = CyberAmber,
-                                targetDimensionPx = 480
+                            // 1. Ambient Pulsating Halo (Radial Gradient Aura)
+                            Box(
+                                modifier = Modifier
+                                    .fillMaxSize()
+                                    .scale(auraScale)
+                                    .background(
+                                        brush = Brush.radialGradient(
+                                            colors = listOf(
+                                                theme.accentGlow.copy(alpha = auraAlpha),
+                                                theme.primaryAccent.copy(alpha = auraAlpha * 0.45f),
+                                                Color.Transparent
+                                            )
+                                        ),
+                                        shape = CircleShape
+                                    )
                             )
 
-                            // Overlay HUD Coordinate Tag
-                            Box(
-                                modifier = Modifier
-                                    .align(Alignment.BottomStart)
-                                    .padding(8.dp)
-                                    .clip(RoundedCornerShape(4.dp))
-                                    .background(VoidBlack.copy(alpha = 0.75f))
-                                    .padding(horizontal = 6.dp, vertical = 2.dp)
-                            ) {
-                                Text(
-                                    text = "OFFLINE VAULT // LOSSLESS",
-                                    color = HermeticCyan,
-                                    fontSize = 9.sp,
-                                    fontFamily = FontFamily.Monospace,
-                                    fontWeight = FontWeight.Bold
-                                )
+                            // 2. Rotating Celestial Astrolabe Ring Behind Cover
+                            Canvas(modifier = Modifier.fillMaxSize(1.08f)) {
+                                val w = size.width
+                                val h = size.height
+                                val center = Offset(w / 2f, h / 2f)
+                                val outerR = w * 0.47f
+
+                                rotate(degrees = if (isPlaying) haloOrbitAngle else 0f, pivot = center) {
+                                    drawCircle(
+                                        color = theme.primaryAccent.copy(alpha = 0.35f),
+                                        radius = outerR,
+                                        center = center,
+                                        style = Stroke(
+                                            width = 1.2f,
+                                            pathEffect = PathEffect.dashPathEffect(floatArrayOf(14f, 14f), 0f)
+                                        )
+                                    )
+                                }
                             }
 
-                            // Synced Lyrics Available Badge
+                            // 3. Central Artwork Card with Titanium Chamfered Bezel
                             Box(
                                 modifier = Modifier
-                                    .align(Alignment.TopEnd)
-                                    .padding(8.dp)
-                                    .clip(RoundedCornerShape(4.dp))
+                                    .fillMaxWidth(0.86f)
+                                    .aspectRatio(1f)
+                                    .clip(RoundedCornerShape(20.dp))
                                     .border(
-                                        1.dp,
-                                        if (lyrics != null) HermeticCyan.copy(alpha = 0.7f) else WireframeBorder,
-                                        RoundedCornerShape(4.dp)
+                                        width = 1.5.dp,
+                                        brush = Brush.linearGradient(
+                                            listOf(
+                                                theme.primaryAccent,
+                                                SpecularGlassRimTop,
+                                                WireframeBorder.copy(alpha = 0.5f)
+                                            )
+                                        ),
+                                        shape = RoundedCornerShape(20.dp)
                                     )
-                                    .background(VoidBlack.copy(alpha = 0.85f))
-                                    .padding(horizontal = 7.dp, vertical = 3.dp)
+                                    .background(CharcoalSurface)
+                                    .clickable { showLyrics = true }
                             ) {
-                                Text(
-                                    text = if (lyrics != null) "LRC • SYNC" else "LRC",
-                                    color = if (lyrics != null) HermeticCyan else MutedStone,
-                                    fontSize = 9.sp,
-                                    fontFamily = FontFamily.Monospace,
-                                    fontWeight = FontWeight.Bold
+                                ArtworkImage(
+                                    artworkUri = song.albumArtUri,
+                                    modifier = Modifier.fillMaxSize(),
+                                    cornerRadius = 20.dp,
+                                    accentColor = theme.secondaryAccent,
+                                    targetDimensionPx = 480
                                 )
+
+                                // Overlay Micro-HUD Badges
+                                Box(
+                                    modifier = Modifier
+                                        .align(Alignment.TopStart)
+                                        .padding(10.dp)
+                                        .clip(RoundedCornerShape(4.dp))
+                                        .background(VoidBlack.copy(alpha = 0.78f))
+                                        .padding(horizontal = 7.dp, vertical = 2.5.dp)
+                                ) {
+                                    Text(
+                                        text = "FLAC 96kHz / 24-BIT",
+                                        color = SigilSilver,
+                                        fontSize = 8.5.sp,
+                                        fontFamily = FontFamily.Monospace,
+                                        fontWeight = FontWeight.Bold
+                                    )
+                                }
+
+                                Box(
+                                    modifier = Modifier
+                                        .align(Alignment.BottomStart)
+                                        .padding(10.dp)
+                                        .clip(RoundedCornerShape(4.dp))
+                                        .background(VoidBlack.copy(alpha = 0.78f))
+                                        .padding(horizontal = 7.dp, vertical = 2.5.dp)
+                                ) {
+                                    Text(
+                                        text = "SOVEREIGN SACRED",
+                                        color = theme.secondaryAccent,
+                                        fontSize = 8.5.sp,
+                                        fontFamily = FontFamily.Monospace,
+                                        fontWeight = FontWeight.Bold
+                                    )
+                                }
+
+                                // Synced Lyrics Available Badge
+                                Box(
+                                    modifier = Modifier
+                                        .align(Alignment.TopEnd)
+                                        .padding(10.dp)
+                                        .clip(RoundedCornerShape(4.dp))
+                                        .border(
+                                            1.dp,
+                                            if (lyrics != null) theme.primaryAccent.copy(alpha = 0.7f) else WireframeBorder,
+                                            RoundedCornerShape(4.dp)
+                                        )
+                                        .background(VoidBlack.copy(alpha = 0.85f))
+                                        .padding(horizontal = 7.dp, vertical = 3.dp)
+                                ) {
+                                    Text(
+                                        text = if (lyrics != null) "LRC • SYNC" else "LRC",
+                                        color = if (lyrics != null) theme.primaryAccent else MutedStone,
+                                        fontSize = 9.sp,
+                                        fontFamily = FontFamily.Monospace,
+                                        fontWeight = FontWeight.Bold
+                                    )
+                                }
                             }
                         }
                     } else {
