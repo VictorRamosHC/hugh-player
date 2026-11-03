@@ -27,6 +27,7 @@ import androidx.compose.foundation.layout.aspectRatio
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
+import androidx.compose.foundation.layout.offset
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.layout.width
@@ -124,7 +125,8 @@ fun ExpandedPlayerSheet(
     onToggleFavorite: () -> Unit,
     onAddToPlaylist: () -> Unit = {},
     onOpenQueue: () -> Unit = {},
-    onOpenEqualizer: () -> Unit = {}
+    onOpenEqualizer: () -> Unit = {},
+    waveformPoints: List<Float> = emptyList()
 ) {
     val theme = LocalVaultTheme.current
     val sheetState = rememberModalBottomSheetState(skipPartiallyExpanded = true)
@@ -186,20 +188,48 @@ fun ExpandedPlayerSheet(
         dragHandle = null
     ) {
         Box(
-            modifier = Modifier.fillMaxSize()
+            modifier = Modifier
+                .fillMaxSize()
+                .background(theme.background)
         ) {
-            // Klein Blue and Neoclassical Moiré Ambient Backdrop with dynamic opacity
-            Image(
-                painter = painterResource(id = R.drawable.bg_expanded_player),
-                contentDescription = null,
-                contentScale = ContentScale.Crop,
+            // 1. Luminous Ambient Aura (Top-Left primary radiant cloud)
+            Box(
                 modifier = Modifier
-                    .fillMaxSize()
-                    .alpha(wallpaperAlpha)
+                    .size(360.dp)
+                    .offset(x = (-80).dp, y = (-80).dp)
+                    .scale(auraScale)
+                    .background(
+                        brush = Brush.radialGradient(
+                            colors = listOf(
+                                theme.primaryAccent.copy(alpha = auraAlpha * 0.40f),
+                                theme.accentGlow.copy(alpha = auraAlpha * 0.20f),
+                                Color.Transparent
+                            )
+                        ),
+                        shape = CircleShape
+                    )
             )
 
-            // Procedural halo and wireframes
-            CybersigilBackground(showHalo = true)
+            // 2. Secondary Luminous Ambient Aura (Mid-Right secondary radiant cloud)
+            Box(
+                modifier = Modifier
+                    .size(300.dp)
+                    .align(Alignment.CenterEnd)
+                    .offset(x = 60.dp, y = 70.dp)
+                    .scale(auraScale)
+                    .background(
+                        brush = Brush.radialGradient(
+                            colors = listOf(
+                                theme.secondaryAccent.copy(alpha = auraAlpha * 0.30f),
+                                Color.Transparent
+                            )
+                        ),
+                        shape = CircleShape
+                    )
+            )
+
+            // 3. Cybernetic Precision Corner & Astrolabe Sigils
+            CybersigilBackground(showHalo = false)
 
             Column(
                 modifier = Modifier
@@ -513,45 +543,16 @@ fun ExpandedPlayerSheet(
 
                 Spacer(modifier = Modifier.height(16.dp))
 
-                // High-precision Cyber Slider (Smooth seeking without playback stutter)
-                Slider(
-                    value = effectiveProgress,
-                    onValueChange = { newFrac ->
-                        draggingProgress = newFrac
-                    },
-                    onValueChangeFinished = {
-                        draggingProgress?.let { finalFrac ->
-                            onSeekTo((finalFrac * durationMs).toLong())
-                            draggingProgress = null
-                        }
-                    },
-                    modifier = Modifier.fillMaxWidth(),
-                    colors = SliderDefaults.colors(
-                        thumbColor = theme.primary,
-                        activeTrackColor = theme.primary,
-                        inactiveTrackColor = WireframeBorder
-                    )
+                // Real-time 42-Band Waveform Scrubber with interactive tactile Seeking
+                WaveformScrubber(
+                    points = waveformPoints,
+                    currentPositionMs = displayedPositionMs,
+                    durationMs = durationMs,
+                    onSeekTo = onSeekTo,
+                    modifier = Modifier
+                        .fillMaxWidth(0.96f)
+                        .padding(horizontal = 4.dp)
                 )
-
-                // Time indicators
-                Row(
-                    modifier = Modifier.fillMaxWidth(),
-                    horizontalArrangement = Arrangement.SpaceBetween
-                ) {
-                    Text(
-                        text = formatTime(displayedPositionMs),
-                        color = theme.primaryAccent,
-                        fontSize = 12.sp,
-                        fontFamily = FontFamily.Monospace,
-                        fontWeight = FontWeight.SemiBold
-                    )
-                    Text(
-                        text = formatTime(durationMs),
-                        color = MutedStone,
-                        fontSize = 12.sp,
-                        fontFamily = FontFamily.Monospace
-                    )
-                }
 
                 Spacer(modifier = Modifier.height(16.dp))
 
@@ -584,13 +585,13 @@ fun ExpandedPlayerSheet(
                         )
                     }
 
-                    // Play/Pause Core Button with Cyber Reactor Ring
+                    // Play/Pause Core Button with Radiant Cyber Rim
                     Box(
                         modifier = Modifier
                             .size(68.dp)
                             .clip(CircleShape)
                             .background(theme.primary)
-                            .border(2.5.dp, theme.primaryAccent, CircleShape),
+                            .border(2.dp, SpecularGlassRimTop, CircleShape),
                         contentAlignment = Alignment.Center
                     ) {
                         IconButton(
@@ -600,7 +601,7 @@ fun ExpandedPlayerSheet(
                             Icon(
                                 imageVector = if (isPlaying) Icons.Default.Pause else Icons.Default.PlayArrow,
                                 contentDescription = if (isPlaying) "Pausar" else "Reproduzir",
-                                tint = theme.background,
+                                tint = SigilWhite,
                                 modifier = Modifier.size(38.dp)
                             )
                         }

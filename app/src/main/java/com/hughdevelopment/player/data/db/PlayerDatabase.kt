@@ -12,9 +12,10 @@ import androidx.sqlite.db.SupportSQLiteDatabase
         StatsEntity::class,
         PlaylistEntity::class,
         PlaylistSongCrossRef::class,
-        DailyListeningEntity::class
+        DailyListeningEntity::class,
+        WaveformEntity::class
     ],
-    version = 6,
+    version = 7,
     exportSchema = false
 )
 abstract class PlayerDatabase : RoomDatabase() {
@@ -22,6 +23,7 @@ abstract class PlayerDatabase : RoomDatabase() {
     abstract fun statsDao(): StatsDao
     abstract fun playlistDao(): PlaylistDao
     abstract fun dailyListeningDao(): DailyListeningDao
+    abstract fun waveformDao(): WaveformDao
 
     companion object {
         @Volatile
@@ -33,6 +35,14 @@ abstract class PlayerDatabase : RoomDatabase() {
             }
         }
 
+        val MIGRATION_6_7 = object : Migration(6, 7) {
+            override fun migrate(db: SupportSQLiteDatabase) {
+                db.execSQL(
+                    "CREATE TABLE IF NOT EXISTS song_waveforms (song_id INTEGER PRIMARY KEY NOT NULL, waveform_points TEXT NOT NULL)"
+                )
+            }
+        }
+
         fun getInstance(context: Context): PlayerDatabase {
             return INSTANCE ?: synchronized(this) {
                 val instance = Room.databaseBuilder(
@@ -40,7 +50,7 @@ abstract class PlayerDatabase : RoomDatabase() {
                     PlayerDatabase::class.java,
                     "hugh_player_stats.db"
                 )
-                .addMigrations(MIGRATION_5_6)
+                .addMigrations(MIGRATION_5_6, MIGRATION_6_7)
                 .setJournalMode(JournalMode.WRITE_AHEAD_LOGGING)
                 .fallbackToDestructiveMigration()
                 .build()

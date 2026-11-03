@@ -1,6 +1,8 @@
 package com.hughdevelopment.player.v160
 
+import com.hughdevelopment.player.audio.WaveformExtractor
 import com.hughdevelopment.player.data.db.StatsEntity
+import com.hughdevelopment.player.data.db.WaveformEntity
 import com.hughdevelopment.player.data.settings.TimeDisplayFormat
 import com.hughdevelopment.player.data.settings.formatListeningTime
 import com.hughdevelopment.player.hermes.HermesDialogueEngine
@@ -78,5 +80,21 @@ class VaultV160FeaturesTest {
         val celebration = HermesVoiceManager.getStreakCelebrationPhrase(5)
         assertTrue(celebration.isNotBlank())
         assertTrue(celebration.contains("5 dias"))
+    }
+
+    @Test
+    fun `waveformEntity correctly stores songId and serialized points`() {
+        val entity = WaveformEntity(songId = 42L, points = "0.200,0.550,0.880,1.000")
+        assertEquals(42L, entity.songId)
+        assertEquals("0.200,0.550,0.880,1.000", entity.points)
+    }
+
+    @Test
+    fun `waveformExtractor synthesizes 42 normalized amplitude peaks within valid bounds`() {
+        val points = WaveformExtractor.synthesizeSignature(songId = 1337L, songTitle = "Cyber Altar Divine")
+        assertEquals(WaveformExtractor.BAR_COUNT, points.size)
+        assertEquals(42, points.size)
+        assertTrue("All points must be >= 0.15f", points.all { it >= 0.15f })
+        assertTrue("All points must be <= 1.0f", points.all { it <= 1.0f })
     }
 }

@@ -145,6 +145,7 @@ fun MainScreen(
     val settings by viewModel.settings.collectAsState()
     val queue by viewModel.queue.collectAsState()
     val hiddenSongs by viewModel.hiddenSongs.collectAsState()
+    val waveformPoints by viewModel.currentWaveformPoints.collectAsState()
 
     // DSP Equalizer States
     val eqEnabled by viewModel.equalizerEnabled.collectAsState()
@@ -296,6 +297,7 @@ fun MainScreen(
                 AppScreen.STATS_DASHBOARD -> {
                     StatsDashboardScreen(
                         overview = overview,
+                        totalTracks = sortedSongs.size,
                         timeDisplayFormat = settings.timeDisplayFormat,
                         onSpeakBriefing = { viewModel.speakHermesDailyBriefing() },
                         onBack = { viewModel.navigateTo(AppScreen.LIBRARY) }
@@ -361,7 +363,8 @@ fun MainScreen(
                     viewModel.navigateTo(AppScreen.FOLDERS)
                 },
                 onOpenQueue = { showQueueSheet = true },
-                onOpenEqualizer = { showEqualizerSheet = true }
+                onOpenEqualizer = { showEqualizerSheet = true },
+                waveformPoints = waveformPoints
             )
         }
 

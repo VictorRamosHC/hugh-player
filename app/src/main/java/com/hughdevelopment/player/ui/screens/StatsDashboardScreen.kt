@@ -1,5 +1,6 @@
 package com.hughdevelopment.player.ui.screens
 
+import android.net.Uri
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.background
 import androidx.compose.foundation.border
@@ -32,12 +33,23 @@ import androidx.compose.material.icons.filled.LocalFireDepartment
 import androidx.compose.material.icons.filled.MilitaryTech
 import androidx.compose.material.icons.filled.Nightlight
 import androidx.compose.material.icons.filled.Security
+import androidx.compose.material.icons.filled.Share
 import androidx.compose.material.icons.filled.Timelapse
+import androidx.compose.material3.AlertDialog
+import androidx.compose.material3.Button
+import androidx.compose.material3.ButtonDefaults
+import androidx.compose.material3.CircularProgressIndicator
 import androidx.compose.material3.Icon
 import androidx.compose.material3.IconButton
 import androidx.compose.material3.LinearProgressIndicator
 import androidx.compose.material3.Text
+import androidx.compose.material3.TextButton
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.getValue
+import androidx.compose.runtime.mutableStateOf
+import androidx.compose.runtime.remember
+import androidx.compose.runtime.rememberCoroutineScope
+import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.alpha
@@ -45,6 +57,7 @@ import androidx.compose.ui.draw.clip
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.graphics.vector.ImageVector
 import androidx.compose.ui.layout.ContentScale
+import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.text.font.FontFamily
 import androidx.compose.ui.text.font.FontWeight
@@ -58,6 +71,7 @@ import com.hughdevelopment.player.data.model.ListeningOverview
 import com.hughdevelopment.player.data.model.TopSongSummary
 import com.hughdevelopment.player.data.settings.TimeDisplayFormat
 import com.hughdevelopment.player.data.settings.formatListeningTime
+import com.hughdevelopment.player.export.SovereignCardGenerator
 import com.hughdevelopment.player.ui.components.CybersigilBackground
 import com.hughdevelopment.player.ui.components.neoGlassCard
 import com.hughdevelopment.player.ui.theme.LocalVaultTheme
@@ -72,6 +86,7 @@ import com.hughdevelopment.player.ui.theme.SigilWhite
 import com.hughdevelopment.player.ui.theme.SpecularGlassRimTop
 import com.hughdevelopment.player.ui.theme.VoidBlack
 import com.hughdevelopment.player.ui.theme.WireframeBorder
+import kotlinx.coroutines.launch
 import java.text.SimpleDateFormat
 import java.util.Date
 import java.util.Locale
@@ -79,6 +94,7 @@ import java.util.Locale
 @Composable
 fun StatsDashboardScreen(
     overview: ListeningOverview,
+    totalTracks: Int = 0,
     timeDisplayFormat: TimeDisplayFormat = TimeDisplayFormat.MINUTES,
     onSpeakBriefing: () -> Unit = {},
     onBack: () -> Unit,
@@ -159,6 +175,15 @@ fun StatsDashboardScreen(
                 item {
                     HermesBriefingActionCard(
                         onSpeakBriefing = onSpeakBriefing
+                    )
+                }
+
+                // 1.8 SOVEREIGN AUDIO CARD GENERATOR (Opção 2)
+                item {
+                    SovereignCardExportActionCard(
+                        overview = overview,
+                        totalTracks = totalTracks,
+                        timeDisplayFormat = timeDisplayFormat
                     )
                 }
 
@@ -847,5 +872,130 @@ private fun HermesBriefingActionCard(
                 fontFamily = FontFamily.Monospace
             )
         }
+    }
+}
+
+@Composable
+private fun SovereignCardExportActionCard(
+    overview: ListeningOverview,
+    totalTracks: Int,
+    timeDisplayFormat: TimeDisplayFormat
+) {
+    val context = LocalContext.current
+    val theme = LocalVaultTheme.current
+    val coroutineScope = rememberCoroutineScope()
+    var isGenerating by remember { mutableStateOf(false) }
+    var exportSuccessUri by remember { mutableStateOf<Uri?>(null) }
+    var showSuccessDialog by remember { mutableStateOf(false) }
+
+    Row(
+        modifier = Modifier
+            .fillMaxWidth()
+            .clip(RoundedCornerShape(10.dp))
+            .background(theme.cardBackground)
+            .border(1.dp, theme.secondaryAccent.copy(alpha = 0.5f), RoundedCornerShape(10.dp))
+            .clickable(enabled = !isGenerating) {
+                isGenerating = true
+                coroutineScope.launch {
+                    val bitmap = SovereignCardGenerator.generateCardBitmap(
+                        overview = overview,
+                        totalTracks = totalTracks,
+                        timeDisplayFormat = timeDisplayFormat,
+                        theme = theme
+                    )
+                    val uri = SovereignCardGenerator.saveCardToGallery(context, bitmap)
+                    exportSuccessUri = uri
+                    isGenerating = false
+                    showSuccessDialog = true
+                }
+            }
+            .padding(14.dp),
+        verticalAlignment = Alignment.CenterVertically
+    ) {
+        Box(
+            modifier = Modifier
+                .size(42.dp)
+                .clip(CircleShape)
+                .background(theme.secondaryAccent.copy(alpha = 0.15f))
+                .border(1.dp, theme.secondaryAccent, CircleShape),
+            contentAlignment = Alignment.Center
+        ) {
+            if (isGenerating) {
+                CircularProgressIndicator(
+                    modifier = Modifier.size(20.dp),
+                    color = theme.secondaryAccent,
+                    strokeWidth = 2.dp
+                )
+            } else {
+                Icon(
+                    imageVector = Icons.Default.Share,
+                    contentDescription = null,
+                    tint = theme.secondaryAccent,
+                    modifier = Modifier.size(20.dp)
+                )
+            }
+        }
+
+        Spacer(modifier = Modifier.width(12.dp))
+
+        Column(modifier = Modifier.weight(1f)) {
+            Text(
+                text = if (isGenerating) "GERANDO CARTÃO SOBERANO..." else "EXPORTAR CARTÃO DE SOBERANIA",
+                color = theme.secondaryAccent,
+                fontSize = 13.5.sp,
+                fontWeight = FontWeight.Bold,
+                fontFamily = FontFamily.Monospace,
+                letterSpacing = 1.sp
+            )
+            Text(
+                text = "Gera um card em alta resolução (1080x1920) 100% offline para galeria e redes",
+                color = MutedStone,
+                fontSize = 10.5.sp,
+                fontFamily = FontFamily.Monospace
+            )
+        }
+    }
+
+    if (showSuccessDialog) {
+        AlertDialog(
+            onDismissRequest = { showSuccessDialog = false },
+            title = {
+                Text(
+                    text = "CARTÃO DE SOBERANIA GERADO",
+                    color = theme.textPrimary,
+                    fontSize = 14.sp,
+                    fontWeight = FontWeight.Bold,
+                    fontFamily = FontFamily.Monospace
+                )
+            },
+            text = {
+                Text(
+                    text = "O relatório visual de telemetria foi salvo com sucesso em Pictures/AetherVault no seu aparelho. Zero dados foram enviados para nuvem.",
+                    color = theme.textMuted,
+                    fontSize = 12.sp,
+                    fontFamily = FontFamily.Monospace
+                )
+            },
+            confirmButton = {
+                Button(
+                    onClick = {
+                        exportSuccessUri?.let { uri ->
+                            SovereignCardGenerator.shareCard(context, uri)
+                        }
+                        showSuccessDialog = false
+                    },
+                    colors = ButtonDefaults.buttonColors(containerColor = theme.primary)
+                ) {
+                    Text("COMPARTILHAR", color = theme.background, fontWeight = FontWeight.Bold)
+                }
+            },
+            dismissButton = {
+                TextButton(onClick = { showSuccessDialog = false }) {
+                    Text("CONCLUIR", color = theme.textPrimary)
+                }
+            },
+            containerColor = theme.cardBackground,
+            shape = RoundedCornerShape(12.dp)
+        )
     }
 }

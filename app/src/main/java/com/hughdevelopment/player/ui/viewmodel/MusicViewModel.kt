@@ -5,6 +5,7 @@ import android.content.Context
 import androidx.lifecycle.AndroidViewModel
 import androidx.lifecycle.viewModelScope
 import com.hughdevelopment.player.HughPlayerApplication
+import com.hughdevelopment.player.audio.WaveformExtractor
 import com.hughdevelopment.player.data.backup.BackupImportResult
 import com.hughdevelopment.player.data.model.ListeningOverview
 import com.hughdevelopment.player.data.model.Playlist
@@ -28,6 +29,7 @@ import kotlinx.coroutines.launch
 class MusicViewModel(application: Application) : AndroidViewModel(application) {
 
     private val app = application as HughPlayerApplication
+    val database = app.database
     val repository = app.repository
     val agentManager = app.agentDataManager
     val backupManager = app.backupManager
@@ -139,11 +141,24 @@ class MusicViewModel(application: Application) : AndroidViewModel(application) {
     private val _isExpandedPlayerOpen = MutableStateFlow(false)
     val isExpandedPlayerOpen = _isExpandedPlayerOpen.asStateFlow()
 
+    private val _currentWaveformPoints = MutableStateFlow<List<Float>>(emptyList())
+    val currentWaveformPoints: StateFlow<List<Float>> = _currentWaveformPoints.asStateFlow()
+
     private val _currentScreen = MutableStateFlow(AppScreen.LIBRARY)
     val currentScreen = _currentScreen.asStateFlow()
 
     init {
         playerController.initialize()
+        viewModelScope.launch {
+            currentPlayingSong.collect { song ->
+                if (song != null) {
+                    val points = WaveformExtractor.getWaveformForSong(song, database)
+                    _currentWaveformPoints.value = points
+                } else {
+                    _currentWaveformPoints.value = emptyList()
+                }
+            }
+        }
         viewModelScope.launch {
             settingsManager.settings.collect { s ->
                 playerController.isFadeEnabled = s.isFadeEnabled
