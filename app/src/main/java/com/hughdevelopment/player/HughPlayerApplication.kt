@@ -11,6 +11,7 @@ import com.hughdevelopment.player.data.db.PlayerDatabase
 import com.hughdevelopment.player.data.repository.MusicRepository
 import com.hughdevelopment.player.data.settings.SettingsManager
 import com.hughdevelopment.player.data.source.MediaStoreScanner
+import com.hughdevelopment.player.hermes.HermesVoiceManager
 import com.hughdevelopment.player.notifications.VaultNotificationHelper
 
 class HughPlayerApplication : Application(), ImageLoaderFactory {
@@ -45,6 +46,7 @@ class HughPlayerApplication : Application(), ImageLoaderFactory {
         )
         agentDataManager = AgentDataManager(this, repository)
         backupManager = VaultBackupManager(this, repository, settingsManager)
+        HermesVoiceManager.init(this, settingsManager.settings.value.isHermesVoiceEnabled)
     }
 
     override fun newImageLoader(): ImageLoader {

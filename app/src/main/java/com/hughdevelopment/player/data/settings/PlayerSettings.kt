@@ -13,6 +13,34 @@ enum class SortOrder(val label: String) {
     FAVORITES_FIRST("FAVORITAS")
 }
 
+enum class TimeDisplayFormat(val label: String) {
+    MINUTES("MINUTOS"),
+    DAYS_AND_HOURS("DIAS E HORAS")
+}
+
+fun formatListeningTime(totalSeconds: Long, format: TimeDisplayFormat): String {
+    if (totalSeconds <= 0L) return if (format == TimeDisplayFormat.DAYS_AND_HOURS) "0 horas" else "0 min"
+    return when (format) {
+        TimeDisplayFormat.MINUTES -> {
+            val totalMinutes = totalSeconds / 60
+            if (totalMinutes == 0L) "${totalSeconds}s" else "$totalMinutes min"
+        }
+        TimeDisplayFormat.DAYS_AND_HOURS -> {
+            val totalHours = totalSeconds / 3600
+            val days = totalHours / 24
+            val hours = totalHours % 24
+            val mins = (totalSeconds % 3600) / 60
+            when {
+                days > 0 && hours > 0 -> "$days dia${if (days > 1) "s" else ""} e $hours hora${if (hours > 1) "s" else ""}"
+                days > 0 -> "$days dia${if (days > 1) "s" else ""}"
+                hours > 0 && mins > 0 -> "$hours hora${if (hours > 1) "s" else ""} e $mins min"
+                hours > 0 -> "$hours hora${if (hours > 1) "s" else ""}"
+                else -> "$mins min"
+            }
+        }
+    }
+}
+
 enum class EqualizerPreset(
     val id: String,
     val displayName: String,
@@ -46,7 +74,8 @@ data class SettingsState(
     val equalizerPreset: EqualizerPreset = EqualizerPreset.FLAT,
     val equalizerBandLevels: List<Int> = EqualizerPreset.FLAT.bandLevels,
     val bassBoostStrength: Int = EqualizerPreset.FLAT.bassBoost,
-    val isHermesVoiceEnabled: Boolean = true
+    val isHermesVoiceEnabled: Boolean = true,
+    val timeDisplayFormat: TimeDisplayFormat = TimeDisplayFormat.MINUTES
 )
 
 class SettingsManager(context: Context) {
@@ -95,6 +124,12 @@ class SettingsManager(context: Context) {
         }
         val bassStrength = prefs.getInt(KEY_BASS_BOOST, eqPreset.bassBoost).coerceIn(0, 1000)
         val hermesVoice = prefs.getBoolean(KEY_HERMES_VOICE_ENABLED, true)
+        val timeFormatName = prefs.getString(KEY_TIME_DISPLAY_FORMAT, TimeDisplayFormat.MINUTES.name) ?: TimeDisplayFormat.MINUTES.name
+        val timeDisplayFormat = try {
+            TimeDisplayFormat.valueOf(timeFormatName)
+        } catch (_: Exception) {
+            TimeDisplayFormat.MINUTES
+        }
 
         return SettingsState(
             isFadeEnabled = fadeEnabled,
@@ -109,7 +144,8 @@ class SettingsManager(context: Context) {
             equalizerPreset = eqPreset,
             equalizerBandLevels = eqBandLevels,
             bassBoostStrength = bassStrength,
-            isHermesVoiceEnabled = hermesVoice
+            isHermesVoiceEnabled = hermesVoice,
+            timeDisplayFormat = timeDisplayFormat
         )
     }
 
@@ -235,6 +271,11 @@ class SettingsManager(context: Context) {
         _settings.value = _settings.value.copy(bassBoostStrength = clamped)
     }
 
+    fun setTimeDisplayFormat(format: TimeDisplayFormat) {
+        prefs.edit().putString(KEY_TIME_DISPLAY_FORMAT, format.name).apply()
+        _settings.value = _settings.value.copy(timeDisplayFormat = format)
+    }
+
     // --- Hermes Voice Engine Setting ---
     fun setHermesVoiceEnabled(enabled: Boolean) {
         prefs.edit().putBoolean(KEY_HERMES_VOICE_ENABLED, enabled).apply()
@@ -255,6 +296,7 @@ class SettingsManager(context: Context) {
         private const val KEY_HAPTIC = "key_haptic"
         private const val KEY_THEME_ID = "key_theme_id"
         private const val KEY_HERMES_VOICE_ENABLED = "key_hermes_voice_enabled"
+        private const val KEY_TIME_DISPLAY_FORMAT = "key_time_display_format"
 
         private const val KEY_EQ_ENABLED = "key_eq_enabled"
         private const val KEY_EQ_PRESET = "key_eq_preset"

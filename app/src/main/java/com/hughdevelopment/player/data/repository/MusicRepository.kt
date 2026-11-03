@@ -17,10 +17,13 @@ import com.hughdevelopment.player.data.model.TopSongSummary
 import com.hughdevelopment.player.data.source.MediaStoreScanner
 import com.hughdevelopment.player.hermes.HermesVoiceManager
 import com.hughdevelopment.player.notifications.VaultNotificationHelper
+import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.asStateFlow
 import kotlinx.coroutines.flow.combine
+import kotlinx.coroutines.flow.map
+import kotlinx.coroutines.withContext
 import java.text.SimpleDateFormat
 import java.util.Calendar
 import java.util.Date
@@ -35,20 +38,35 @@ class MusicRepository(
 ) {
     private val _rawSongs = MutableStateFlow<List<Song>>(emptyList())
     private val _favoriteOverrides = MutableStateFlow<Map<Long, Boolean>>(emptyMap())
+    private val _hiddenOverrides = MutableStateFlow<Map<Long, Boolean>>(emptyMap())
 
     fun getCurrentSongs(): List<Song> = _rawSongs.value
 
-    // Combine scanned songs with favorites from Room DB and instantaneous memory overrides
-    val songs: Flow<List<Song>> = combine(
+    // Scanned songs unified with favorites, hidden state, and instant memory overrides
+    val allSongsWithHidden: Flow<List<Song>> = combine(
         _rawSongs,
         statsDao.getFavoriteStatsFlow(),
-        _favoriteOverrides
-    ) { songList, favEntities, overrides ->
+        statsDao.getHiddenSongIdsFlow(),
+        _favoriteOverrides,
+        _hiddenOverrides
+    ) { songList, favEntities, hiddenIds, favOverrides, hiddenOverrides ->
         val favIdSet = favEntities.map { it.songId }.toSet()
+        val hiddenIdSet = hiddenIds.toSet()
         songList.map { song ->
-            val isFav = overrides[song.id] ?: favIdSet.contains(song.id)
-            song.copy(isFavorite = isFav)
+            val isFav = favOverrides[song.id] ?: favIdSet.contains(song.id)
+            val isHid = hiddenOverrides[song.id] ?: hiddenIdSet.contains(song.id)
+            song.copy(isFavorite = isFav, isHidden = isHid)
         }
+    }
+
+    // Visible active library songs (filtering out hidden tracks)
+    val songs: Flow<List<Song>> = allSongsWithHidden.map { list ->
+        list.filter { !it.isHidden }
+    }
+
+    // Only hidden songs for sovereign management and unhiding
+    val hiddenSongs: Flow<List<Song>> = allSongsWithHidden.map { list ->
+        list.filter { it.isHidden }
     }
 
     // Reactive list of playlists with full member Song objects
@@ -135,6 +153,47 @@ class MusicRepository(
         return resultingFav
     }
 
+    suspend fun hideSong(song: Song) {
+        _hiddenOverrides.value = _hiddenOverrides.value + (song.id to true)
+        statsDao.setSongHidden(song.id, song.title, song.artist, true)
+    }
+
+    suspend fun hideSongs(songsToHide: List<Song>) {
+        val newOverrides = _hiddenOverrides.value.toMutableMap()
+        for (song in songsToHide) {
+            newOverrides[song.id] = true
+            statsDao.setSongHidden(song.id, song.title, song.artist, true)
+        }
+        _hiddenOverrides.value = newOverrides
+    }
+
+    suspend fun unhideSong(songId: Long) {
+        _hiddenOverrides.value = _hiddenOverrides.value + (songId to false)
+        statsDao.updateSongHidden(songId, false)
+    }
+
+    suspend fun unhideAllSongs() {
+        _hiddenOverrides.value = emptyMap()
+        statsDao.unhideAllSongs()
+    }
+
+    suspend fun deleteSongsFromDevice(songIds: List<Long>): Int {
+        var count = 0
+        withContext(Dispatchers.IO) {
+            val songsToDelete = _rawSongs.value.filter { songIds.contains(it.id) }
+            for (song in songsToDelete) {
+                try {
+                    val rows = context.contentResolver.delete(song.contentUri, null, null)
+                    if (rows > 0) count++
+                } catch (e: Exception) {
+                    hideSong(song)
+                }
+            }
+            refreshLibrary()
+        }
+        return count
+    }
+
     suspend fun calculateCurrentStreak(): Int {
         val allDays = dailyListeningDao.getRecentDays(120)
         return computeStreakFromRecords(allDays)
@@ -181,15 +240,22 @@ class MusicRepository(
             dailyListeningDao.getAllDailyRecordsFlow()
         ) { statsList, totalSeconds, uniqueCount, favCount, dailyRecords ->
             val totalSec = totalSeconds ?: 0L
-            val topSongs = statsList.filter { it.playCount > 0 }.take(10).map { entity ->
-                TopSongSummary(
-                    songId = entity.songId,
-                    title = entity.title,
-                    artist = entity.artist,
-                    playCount = entity.playCount,
-                    totalSecondsListened = entity.totalSecondsListened
+            val topSongs = statsList
+                .filter { it.totalSecondsListened > 0 || it.playCount > 0 }
+                .sortedWith(
+                    compareByDescending<StatsEntity> { it.totalSecondsListened }
+                        .thenByDescending { it.playCount }
                 )
-            }
+                .take(10)
+                .map { entity ->
+                    TopSongSummary(
+                        songId = entity.songId,
+                        title = entity.title,
+                        artist = entity.artist,
+                        playCount = entity.playCount,
+                        totalSecondsListened = entity.totalSecondsListened
+                    )
+                }
 
             val streak = computeStreakFromRecords(dailyRecords)
             val activeDaysCount = dailyRecords.count { it.hasValidStreakDay }

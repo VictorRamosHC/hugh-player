@@ -6,6 +6,7 @@ import android.os.Build
 import android.os.Bundle
 import android.widget.Toast
 import androidx.activity.ComponentActivity
+import androidx.activity.compose.BackHandler
 import androidx.activity.compose.setContent
 import androidx.activity.result.contract.ActivityResultContracts
 import androidx.activity.viewModels
@@ -29,15 +30,18 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.platform.LocalContext
 import androidx.core.content.ContextCompat
+import com.hughdevelopment.player.ui.components.EqualizerBottomSheet
 import com.hughdevelopment.player.ui.components.ExpandedPlayerSheet
+import com.hughdevelopment.player.ui.components.HiddenSongsBottomSheet
 import com.hughdevelopment.player.ui.components.MiniPlayerBar
+import com.hughdevelopment.player.ui.components.QueueBottomSheet
 import com.hughdevelopment.player.ui.components.SplashScreenView
 import com.hughdevelopment.player.ui.screens.FoldersScreen
 import com.hughdevelopment.player.ui.screens.LibraryScreen
 import com.hughdevelopment.player.ui.screens.SettingsScreen
 import com.hughdevelopment.player.ui.screens.StatsDashboardScreen
 import com.hughdevelopment.player.ui.theme.HughPlayerTheme
-import com.hughdevelopment.player.ui.theme.VoidBlack
+import com.hughdevelopment.player.ui.theme.LocalVaultTheme
 import com.hughdevelopment.player.ui.viewmodel.AppScreen
 import com.hughdevelopment.player.ui.viewmodel.MusicViewModel
 import kotlinx.coroutines.delay
@@ -124,6 +128,8 @@ fun MainScreen(
     onExportAiManifest: (((String) -> Unit)) -> Unit
 ) {
     val context = LocalContext.current
+    val currentTheme = LocalVaultTheme.current
+
     val sortedSongs by viewModel.sortedSongs.collectAsState()
     val playlists by viewModel.playlists.collectAsState()
     val isLoading by viewModel.isLoading.collectAsState()
@@ -137,8 +143,39 @@ fun MainScreen(
     val isExpandedOpen by viewModel.isExpandedPlayerOpen.collectAsState()
     val currentScreen by viewModel.currentScreen.collectAsState()
     val settings by viewModel.settings.collectAsState()
+    val queue by viewModel.queue.collectAsState()
+    val hiddenSongs by viewModel.hiddenSongs.collectAsState()
+
+    // DSP Equalizer States
+    val eqEnabled by viewModel.equalizerEnabled.collectAsState()
+    val eqPreset by viewModel.equalizerPreset.collectAsState()
+    val eqBands by viewModel.equalizerBandLevels.collectAsState()
+    val eqBass by viewModel.bassBoostStrength.collectAsState()
+    val eqFreqs by viewModel.equalizerCenterFrequencies.collectAsState()
+
+    // Sheet visibility states
+    var showQueueSheet by remember { mutableStateOf(false) }
+    var showEqualizerSheet by remember { mutableStateOf(false) }
+    var showHiddenSongsSheet by remember { mutableStateOf(false) }
 
     var showSplash by remember { mutableStateOf(true) }
+
+    // Multi-layered Back Navigation Hierarchy (R11)
+    BackHandler(enabled = true) {
+        if (showQueueSheet) {
+            showQueueSheet = false
+        } else if (showEqualizerSheet) {
+            showEqualizerSheet = false
+        } else if (showHiddenSongsSheet) {
+            showHiddenSongsSheet = false
+        } else if (isExpandedOpen) {
+            viewModel.setExpandedPlayerOpen(false)
+        } else if (viewModel.canNavigateBack()) {
+            viewModel.navigateBack()
+        } else {
+            (context as? ComponentActivity)?.finish()
+        }
+    }
 
     // Start splash timer only after permissions are settled so user always sees the boot screen
     LaunchedEffect(isPermissionsSettled) {
@@ -155,7 +192,7 @@ fun MainScreen(
     Box(
         modifier = Modifier
             .fillMaxSize()
-            .background(VoidBlack)
+            .background(currentTheme.background)
             .statusBarsPadding()
             .navigationBarsPadding()
     ) {
@@ -182,6 +219,9 @@ fun MainScreen(
                         onAddSongToPlaylist = { playlistId, songId ->
                             viewModel.addSongToPlaylist(playlistId, songId)
                         },
+                        onAddSongsToPlaylist = { playlistId, songIds ->
+                            viewModel.addSongsToPlaylist(playlistId, songIds)
+                        },
                         onShuffleAll = {
                             if (sortedSongs.isNotEmpty()) {
                                 val shuffled = sortedSongs.shuffled()
@@ -202,6 +242,23 @@ fun MainScreen(
                         },
                         onPlayFavorites = {
                             viewModel.playFavorites()
+                        },
+                        onPlayNext = { songsToPlayNext ->
+                            viewModel.playNext(songsToPlayNext)
+                        },
+                        onAddToQueue = { songsToQueue ->
+                            viewModel.addToQueue(songsToQueue)
+                        },
+                        onHideSong = { songToHide ->
+                            viewModel.hideSong(songToHide)
+                        },
+                        onHideSongs = { songsToHide ->
+                            viewModel.hideSongs(songsToHide)
+                        },
+                        onDeleteSongs = { songIdsToDelete ->
+                            viewModel.deleteSongs(songIdsToDelete) { deletedCount ->
+                                Toast.makeText(context, "$deletedCount faixa(s) excluída(s)", Toast.LENGTH_SHORT).show()
+                            }
                         }
                     )
                 }
@@ -239,6 +296,8 @@ fun MainScreen(
                 AppScreen.STATS_DASHBOARD -> {
                     StatsDashboardScreen(
                         overview = overview,
+                        timeDisplayFormat = settings.timeDisplayFormat,
+                        onSpeakBriefing = { viewModel.speakHermesDailyBriefing() },
                         onBack = { viewModel.navigateTo(AppScreen.LIBRARY) }
                     )
                 }
@@ -253,7 +312,11 @@ fun MainScreen(
                         onExportAiManifest = onExportAiManifest,
                         onSelectTheme = { viewModel.setThemeId(it) },
                         onExportBackup = { viewModel.exportBackup(it) },
-                        onImportBackup = { json, cb -> viewModel.importBackup(json, cb) }
+                        onImportBackup = { json, cb -> viewModel.importBackup(json, cb) },
+                        onOpenEqualizer = { showEqualizerSheet = true },
+                        onOpenHiddenSongs = { showHiddenSongsSheet = true },
+                        hiddenSongsCount = hiddenSongs.size,
+                        onChangeTimeDisplayFormat = { viewModel.setTimeDisplayFormat(it) }
                     )
                 }
             }
@@ -296,6 +359,60 @@ fun MainScreen(
                 onAddToPlaylist = {
                     viewModel.setExpandedPlayerOpen(false)
                     viewModel.navigateTo(AppScreen.FOLDERS)
+                },
+                onOpenQueue = { showQueueSheet = true },
+                onOpenEqualizer = { showEqualizerSheet = true }
+            )
+        }
+
+        // Spotify-style Queue Bottom Sheet (R1)
+        if (showQueueSheet) {
+            QueueBottomSheet(
+                currentSong = currentSong,
+                isPlaying = isPlaying,
+                queue = queue,
+                onDismiss = { showQueueSheet = false },
+                onSongSelected = { targetSong ->
+                    viewModel.playSong(targetSong, queue)
+                },
+                onMoveItem = { fromIdx, toIdx ->
+                    viewModel.moveQueueItem(fromIdx, toIdx)
+                },
+                onRemoveItem = { queueIdx ->
+                    viewModel.removeFromQueue(queueIdx)
+                },
+                onClearQueue = {
+                    viewModel.clearQueue()
+                }
+            )
+        }
+
+        // Interactive 5-Band Hardware DSP Equalizer Sheet (R10)
+        if (showEqualizerSheet) {
+            EqualizerBottomSheet(
+                isEnabled = eqEnabled,
+                currentPreset = eqPreset,
+                bandLevels = eqBands,
+                bassBoostStrength = eqBass,
+                centerFrequencies = eqFreqs,
+                onDismiss = { showEqualizerSheet = false },
+                onToggleEnabled = { viewModel.setEqualizerEnabled(it) },
+                onSelectPreset = { viewModel.setEqualizerPreset(it) },
+                onBandLevelChange = { bIdx, lvlMb -> viewModel.setEqualizerBandLevel(bIdx, lvlMb) },
+                onBassBoostChange = { viewModel.setBassBoostStrength(it) }
+            )
+        }
+
+        // Sovereign Hidden Songs Management Sheet (R4)
+        if (showHiddenSongsSheet) {
+            HiddenSongsBottomSheet(
+                hiddenSongs = hiddenSongs,
+                onDismiss = { showHiddenSongsSheet = false },
+                onUnhideSong = { songId ->
+                    viewModel.unhideSong(songId)
+                },
+                onUnhideAll = {
+                    viewModel.unhideAllSongs()
                 }
             )
         }

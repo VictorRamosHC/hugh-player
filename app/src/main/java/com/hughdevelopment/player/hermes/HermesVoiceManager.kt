@@ -115,6 +115,24 @@ class HermesVoiceManager(
     }
 
     /**
+     * Speaks structured daily telemetry briefing with ElevenLabs-style cadence.
+     */
+    fun speakDailyBriefing(
+        formattedTime: String,
+        streakDays: Int,
+        rankTitle: String,
+        totalTracks: Int
+    ) {
+        val dialogue = HermesDialogueEngine.buildDailyBriefing(
+            formattedTime = formattedTime,
+            streakDays = streakDays,
+            rankTitle = rankTitle,
+            totalTracks = totalTracks
+        )
+        speak(dialogue, "hermes_briefing_${System.currentTimeMillis()}")
+    }
+
+    /**
      * Speaks celebratory phrase for listening streak milestones.
      */
     fun speakStreakCelebration(streakDays: Int) {
@@ -234,6 +252,12 @@ class HermesVoiceManager(
         // Static delegate conveniences:
         fun speak(text: String) = defaultInstance?.speak(text)
         fun speakGreeting(userName: String = "Soberano") = defaultInstance?.speakGreeting(userName)
+        fun speakDailyBriefing(
+            formattedTime: String,
+            streakDays: Int,
+            rankTitle: String,
+            totalTracks: Int
+        ) = defaultInstance?.speakDailyBriefing(formattedTime, streakDays, rankTitle, totalTracks)
         fun speakStreakCelebration(streakDays: Int) = defaultInstance?.speakStreakCelebration(streakDays)
         fun speakRankPromotion(newRank: String) = defaultInstance?.speakRankPromotion(newRank)
         fun speakRankPromotion(rank: SovereignRank) = defaultInstance?.speakRankPromotion(rank)

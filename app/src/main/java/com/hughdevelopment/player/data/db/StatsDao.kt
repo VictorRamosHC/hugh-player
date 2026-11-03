@@ -9,7 +9,7 @@ import kotlinx.coroutines.flow.Flow
 @Dao
 interface StatsDao {
 
-    @Query("SELECT * FROM playback_stats ORDER BY play_count DESC")
+    @Query("SELECT * FROM playback_stats ORDER BY total_seconds_listened DESC, play_count DESC")
     fun getAllStatsFlow(): Flow<List<StatsEntity>>
 
     @Query("SELECT * FROM playback_stats")
@@ -18,8 +18,20 @@ interface StatsDao {
     @Query("SELECT * FROM playback_stats WHERE is_favorite = 1")
     fun getFavoriteStatsFlow(): Flow<List<StatsEntity>>
 
-    @Query("SELECT * FROM playback_stats ORDER BY play_count DESC LIMIT :limit")
+    @Query("SELECT * FROM playback_stats ORDER BY total_seconds_listened DESC, play_count DESC LIMIT :limit")
     fun getTopPlayedTracks(limit: Int): Flow<List<StatsEntity>>
+
+    @Query("SELECT song_id FROM playback_stats WHERE is_hidden = 1")
+    fun getHiddenSongIdsFlow(): Flow<List<Long>>
+
+    @Query("SELECT * FROM playback_stats WHERE is_hidden = 1")
+    fun getHiddenStatsFlow(): Flow<List<StatsEntity>>
+
+    @Query("UPDATE playback_stats SET is_hidden = :isHidden WHERE song_id = :songId")
+    suspend fun updateSongHidden(songId: Long, isHidden: Boolean)
+
+    @Query("UPDATE playback_stats SET is_hidden = 0")
+    suspend fun unhideAllSongs()
 
     @Query("SELECT * FROM playback_stats WHERE song_id = :songId LIMIT 1")
     suspend fun getStatsForSong(songId: Long): StatsEntity?
@@ -79,6 +91,24 @@ interface StatsDao {
                     totalSecondsListened = existing.totalSecondsListened + seconds
                 )
             )
+        }
+    }
+
+    suspend fun setSongHidden(songId: Long, title: String, artist: String, isHidden: Boolean) {
+        val existing = getStatsForSong(songId)
+        if (existing == null) {
+            insertOrUpdate(
+                StatsEntity(
+                    songId = songId,
+                    title = title,
+                    artist = artist,
+                    playCount = 0,
+                    totalSecondsListened = 0L,
+                    isHidden = isHidden
+                )
+            )
+        } else {
+            insertOrUpdate(existing.copy(isHidden = isHidden))
         }
     }
 

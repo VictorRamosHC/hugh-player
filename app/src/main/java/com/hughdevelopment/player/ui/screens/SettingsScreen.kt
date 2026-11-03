@@ -32,7 +32,9 @@ import androidx.compose.material.icons.filled.Hub
 import androidx.compose.material.icons.filled.Palette
 import androidx.compose.material.icons.filled.Restore
 import androidx.compose.material.icons.filled.Security
+import androidx.compose.material.icons.filled.Timelapse
 import androidx.compose.material.icons.filled.Tune
+import androidx.compose.material.icons.filled.VisibilityOff
 import androidx.compose.material3.Button
 import androidx.compose.material3.ButtonDefaults
 import androidx.compose.material3.Icon
@@ -62,6 +64,7 @@ import com.hughdevelopment.player.R
 import com.hughdevelopment.player.data.backup.BackupImportResult
 import com.hughdevelopment.player.data.settings.SettingsManager
 import com.hughdevelopment.player.data.settings.SettingsState
+import com.hughdevelopment.player.data.settings.TimeDisplayFormat
 import com.hughdevelopment.player.ui.components.CybersigilBackground
 import com.hughdevelopment.player.ui.theme.CharcoalSurface
 import com.hughdevelopment.player.ui.theme.CyberAmber
@@ -70,6 +73,7 @@ import com.hughdevelopment.player.ui.theme.ObsidianGlass
 import com.hughdevelopment.player.ui.theme.SpecularGlassRimTop
 import com.hughdevelopment.player.ui.components.neoGlassCard
 import com.hughdevelopment.player.ui.theme.HermeticCyan
+import com.hughdevelopment.player.ui.theme.LocalVaultTheme
 import com.hughdevelopment.player.ui.theme.MutedStone
 import com.hughdevelopment.player.ui.theme.SigilSilver
 import com.hughdevelopment.player.ui.theme.SigilWhite
@@ -90,9 +94,14 @@ fun SettingsScreen(
     onExportBackup: ((String) -> Unit) -> Unit = {},
     onImportBackup: (String, (BackupImportResult) -> Unit) -> Unit = { _, _ -> },
     onToggleHermesVoice: ((Boolean) -> Unit)? = null,
+    onOpenEqualizer: () -> Unit = {},
+    onOpenHiddenSongs: () -> Unit = {},
+    hiddenSongsCount: Int = 0,
+    onChangeTimeDisplayFormat: (TimeDisplayFormat) -> Unit = {},
     modifier: Modifier = Modifier
 ) {
     val context = LocalContext.current
+    val currentTheme = LocalVaultTheme.current
     var exportStatusText by remember { mutableStateOf<String?>(null) }
     var backupStatusText by remember { mutableStateOf<String?>(null) }
     val scrollState = rememberScrollState()
@@ -119,7 +128,7 @@ fun SettingsScreen(
     Box(
         modifier = modifier
             .fillMaxSize()
-            .background(VoidBlack)
+            .background(currentTheme.background)
     ) {
         // Subtle background texture
         Image(
@@ -271,6 +280,184 @@ fun SettingsScreen(
                             fontSize = 10.5.sp,
                             fontFamily = FontFamily.Monospace
                         )
+                    }
+                }
+            }
+
+            Spacer(modifier = Modifier.height(20.dp))
+
+            // EQUALIZADOR DSP
+            SectionHeader(
+                title = "EQUALIZADOR DSP (5-BANDAS & BASS BOOST)",
+                icon = Icons.Default.Tune
+            )
+
+            Spacer(modifier = Modifier.height(10.dp))
+
+            Box(
+                modifier = Modifier
+                    .fillMaxWidth()
+                    .neoGlassCard(
+                        cornerRadius = 10.dp,
+                        backgroundColor = currentTheme.cardBackground,
+                        borderWidth = 1.dp
+                    )
+                    .padding(14.dp)
+            ) {
+                Row(
+                    modifier = Modifier.fillMaxWidth(),
+                    horizontalArrangement = Arrangement.SpaceBetween,
+                    verticalAlignment = Alignment.CenterVertically
+                ) {
+                    Column(modifier = Modifier.weight(1f)) {
+                        Text(
+                            text = "Processamento Acústico Hardware",
+                            color = currentTheme.textPrimary,
+                            fontSize = 14.sp,
+                            fontWeight = FontWeight.SemiBold,
+                            fontFamily = FontFamily.Monospace
+                        )
+                        Text(
+                            text = if (settings.equalizerEnabled) "Ativo: Preset ${settings.equalizerPreset.displayName} • Bass Boost ${(settings.bassBoostStrength / 10f).toInt()}%" else "Desativado (Bypass)",
+                            color = if (settings.equalizerEnabled) currentTheme.primaryAccent else MutedStone,
+                            fontSize = 11.sp,
+                            fontFamily = FontFamily.Monospace
+                        )
+                    }
+
+                    Button(
+                        onClick = onOpenEqualizer,
+                        colors = ButtonDefaults.buttonColors(
+                            containerColor = currentTheme.primary,
+                            contentColor = currentTheme.background
+                        ),
+                        shape = RoundedCornerShape(6.dp)
+                    ) {
+                        Text("AJUSTAR", fontWeight = FontWeight.Bold, fontFamily = FontFamily.Monospace, fontSize = 11.sp)
+                    }
+                }
+            }
+
+            Spacer(modifier = Modifier.height(20.dp))
+
+            // FAIXAS OCULTAS
+            SectionHeader(
+                title = "SANTUÁRIO // FAIXAS OCULTAS",
+                icon = Icons.Default.VisibilityOff
+            )
+
+            Spacer(modifier = Modifier.height(10.dp))
+
+            Box(
+                modifier = Modifier
+                    .fillMaxWidth()
+                    .neoGlassCard(
+                        cornerRadius = 10.dp,
+                        backgroundColor = currentTheme.cardBackground,
+                        borderWidth = 1.dp
+                    )
+                    .padding(14.dp)
+            ) {
+                Row(
+                    modifier = Modifier.fillMaxWidth(),
+                    horizontalArrangement = Arrangement.SpaceBetween,
+                    verticalAlignment = Alignment.CenterVertically
+                ) {
+                    Column(modifier = Modifier.weight(1f)) {
+                        Text(
+                            text = "Músicas Ocultas da Biblioteca",
+                            color = currentTheme.textPrimary,
+                            fontSize = 14.sp,
+                            fontWeight = FontWeight.SemiBold,
+                            fontFamily = FontFamily.Monospace
+                        )
+                        Text(
+                            text = "$hiddenSongsCount faixa(s) ocultadas (não excluídas do disco)",
+                            color = if (hiddenSongsCount > 0) currentTheme.primaryAccent else MutedStone,
+                            fontSize = 11.sp,
+                            fontFamily = FontFamily.Monospace
+                        )
+                    }
+
+                    Button(
+                        onClick = onOpenHiddenSongs,
+                        colors = ButtonDefaults.buttonColors(
+                            containerColor = currentTheme.primary,
+                            contentColor = currentTheme.background
+                        ),
+                        shape = RoundedCornerShape(6.dp)
+                    ) {
+                        Text("GERENCIAR", fontWeight = FontWeight.Bold, fontFamily = FontFamily.Monospace, fontSize = 11.sp)
+                    }
+                }
+            }
+
+            Spacer(modifier = Modifier.height(20.dp))
+
+            // MEDIDOR DE TEMPO OUVIDO
+            SectionHeader(
+                title = "MÉTRICAS // FORMATO DO TEMPO OUVIDO",
+                icon = Icons.Default.Timelapse
+            )
+
+            Spacer(modifier = Modifier.height(10.dp))
+
+            Box(
+                modifier = Modifier
+                    .fillMaxWidth()
+                    .neoGlassCard(
+                        cornerRadius = 10.dp,
+                        backgroundColor = currentTheme.cardBackground,
+                        borderWidth = 1.dp
+                    )
+                    .padding(14.dp)
+            ) {
+                Column {
+                    Text(
+                        text = "Exibição do Tempo de Escuta na Telemetria",
+                        color = currentTheme.textPrimary,
+                        fontSize = 14.sp,
+                        fontWeight = FontWeight.SemiBold,
+                        fontFamily = FontFamily.Monospace
+                    )
+                    Spacer(modifier = Modifier.height(8.dp))
+                    Row(
+                        modifier = Modifier.fillMaxWidth(),
+                        horizontalArrangement = Arrangement.spacedBy(8.dp)
+                    ) {
+                        TimeDisplayFormat.entries.forEach { fmt ->
+                            val isSelected = settings.timeDisplayFormat == fmt
+                            Box(
+                                modifier = Modifier
+                                    .weight(1f)
+                                    .clip(RoundedCornerShape(6.dp))
+                                    .background(if (isSelected) currentTheme.primary else currentTheme.background)
+                                    .border(
+                                        width = 1.dp,
+                                        color = if (isSelected) currentTheme.primary else WireframeBorder.copy(alpha = 0.4f),
+                                        shape = RoundedCornerShape(6.dp)
+                                    )
+                                    .clickable { onChangeTimeDisplayFormat(fmt) }
+                                    .padding(vertical = 10.dp),
+                                contentAlignment = Alignment.Center
+                            ) {
+                                Column(horizontalAlignment = Alignment.CenterHorizontally) {
+                                    Text(
+                                        text = fmt.label,
+                                        color = if (isSelected) currentTheme.background else currentTheme.textPrimary,
+                                        fontSize = 11.sp,
+                                        fontWeight = FontWeight.Bold,
+                                        fontFamily = FontFamily.Monospace
+                                    )
+                                    Text(
+                                        text = if (fmt == TimeDisplayFormat.MINUTES) "(Ex: 125 min)" else "(Ex: 1 dia e 3h)",
+                                        color = if (isSelected) currentTheme.background.copy(alpha = 0.8f) else MutedStone,
+                                        fontSize = 9.sp,
+                                        fontFamily = FontFamily.Monospace
+                                    )
+                                }
+                            }
+                        }
                     }
                 }
             }

@@ -3,6 +3,7 @@ package com.hughdevelopment.player.ui.screens
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.background
 import androidx.compose.foundation.border
+import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
@@ -22,6 +23,7 @@ import androidx.compose.foundation.shape.CircleShape
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.ArrowBack
+import androidx.compose.material.icons.filled.AutoAwesome
 import androidx.compose.material.icons.filled.CalendarMonth
 import androidx.compose.material.icons.filled.ElectricBolt
 import androidx.compose.material.icons.filled.Favorite
@@ -54,8 +56,11 @@ import com.hughdevelopment.player.R
 import com.hughdevelopment.player.data.model.DayListeningSummary
 import com.hughdevelopment.player.data.model.ListeningOverview
 import com.hughdevelopment.player.data.model.TopSongSummary
+import com.hughdevelopment.player.data.settings.TimeDisplayFormat
+import com.hughdevelopment.player.data.settings.formatListeningTime
 import com.hughdevelopment.player.ui.components.CybersigilBackground
 import com.hughdevelopment.player.ui.components.neoGlassCard
+import com.hughdevelopment.player.ui.theme.LocalVaultTheme
 import com.hughdevelopment.player.ui.theme.CharcoalSurface
 import com.hughdevelopment.player.ui.theme.CyberAmber
 import com.hughdevelopment.player.ui.theme.HermeticCyan
@@ -74,13 +79,17 @@ import java.util.Locale
 @Composable
 fun StatsDashboardScreen(
     overview: ListeningOverview,
+    timeDisplayFormat: TimeDisplayFormat = TimeDisplayFormat.MINUTES,
+    onSpeakBriefing: () -> Unit = {},
     onBack: () -> Unit,
     modifier: Modifier = Modifier
 ) {
+    val currentTheme = LocalVaultTheme.current
+
     Box(
         modifier = modifier
             .fillMaxSize()
-            .background(VoidBlack)
+            .background(currentTheme.background)
     ) {
         // High-contrast brutalist dashboard ambient backdrop
         Image(
@@ -146,6 +155,13 @@ fun StatsDashboardScreen(
                     StreakBannerCard(overview = overview)
                 }
 
+                // 1.5 HERMES SPOKEN BRIEFING ACTION (R8)
+                item {
+                    HermesBriefingActionCard(
+                        onSpeakBriefing = onSpeakBriefing
+                    )
+                }
+
                 // 2. SOVEREIGN LEVEL & XP CARD (ANTI-SLEEPER BALANCED)
                 item {
                     SovereignLevelCard(overview = overview)
@@ -158,10 +174,10 @@ fun StatsDashboardScreen(
                         horizontalArrangement = Arrangement.spacedBy(8.dp)
                     ) {
                         MetricCard(
-                            title = "MINUTOS",
-                            value = "${overview.totalMinutesListened}",
+                            title = if (timeDisplayFormat == TimeDisplayFormat.DAYS_AND_HOURS) "TEMPO OUVIDO" else "MINUTOS",
+                            value = formatListeningTime(overview.totalSecondsListened, timeDisplayFormat),
                             icon = Icons.Default.Timelapse,
-                            accentColor = CyberAmber,
+                            accentColor = currentTheme.primary,
                             modifier = Modifier.weight(1f)
                         )
                         MetricCard(
@@ -777,6 +793,58 @@ private fun TopSongRow(
                     .height(2.5.dp),
                 color = rankColor,
                 trackColor = WireframeBorder.copy(alpha = 0.4f)
+            )
+        }
+    }
+}
+
+@Composable
+private fun HermesBriefingActionCard(
+    onSpeakBriefing: () -> Unit
+) {
+    val theme = LocalVaultTheme.current
+    Row(
+        modifier = Modifier
+            .fillMaxWidth()
+            .clip(RoundedCornerShape(10.dp))
+            .background(theme.cardBackground)
+            .border(1.dp, theme.primary.copy(alpha = 0.5f), RoundedCornerShape(10.dp))
+            .clickable { onSpeakBriefing() }
+            .padding(14.dp),
+        verticalAlignment = Alignment.CenterVertically
+    ) {
+        Box(
+            modifier = Modifier
+                .size(42.dp)
+                .clip(CircleShape)
+                .background(theme.primary.copy(alpha = 0.15f))
+                .border(1.dp, theme.primary, CircleShape),
+            contentAlignment = Alignment.Center
+        ) {
+            Icon(
+                imageVector = Icons.Default.AutoAwesome,
+                contentDescription = null,
+                tint = theme.primary,
+                modifier = Modifier.size(22.dp)
+            )
+        }
+
+        Spacer(modifier = Modifier.width(12.dp))
+
+        Column(modifier = Modifier.weight(1f)) {
+            Text(
+                text = "OUVIR BRIEFING DO HERMES",
+                color = theme.primary,
+                fontSize = 13.5.sp,
+                fontWeight = FontWeight.Bold,
+                fontFamily = FontFamily.Monospace,
+                letterSpacing = 1.sp
+            )
+            Text(
+                text = "Relatório falado offline: minutos, ofensiva, rank e diretriz estratégica",
+                color = MutedStone,
+                fontSize = 10.5.sp,
+                fontFamily = FontFamily.Monospace
             )
         }
     }

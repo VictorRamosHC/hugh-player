@@ -1,6 +1,7 @@
 package com.hughdevelopment.player.ui.screens
 
 import android.widget.Toast
+import androidx.activity.compose.BackHandler
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.background
 import androidx.compose.foundation.border
@@ -74,6 +75,7 @@ import com.hughdevelopment.player.ui.components.ArtworkImage
 import com.hughdevelopment.player.ui.components.CybersigilBackground
 import com.hughdevelopment.player.ui.theme.CharcoalSurface
 import com.hughdevelopment.player.ui.theme.CyberAmber
+import com.hughdevelopment.player.ui.theme.LocalVaultTheme
 import com.hughdevelopment.player.ui.theme.KleinBlue
 import com.hughdevelopment.player.ui.theme.ObsidianGlass
 import com.hughdevelopment.player.ui.theme.SpecularGlassRimTop
@@ -113,6 +115,16 @@ fun FoldersScreen(
         else playlists.find { it.id == selectedPlaylistForDetail?.id }
     }
 
+    val currentTheme = LocalVaultTheme.current
+
+    BackHandler(enabled = true) {
+        if (activePlaylist != null) {
+            selectedPlaylistForDetail = null
+        } else {
+            onBack()
+        }
+    }
+
     androidx.compose.runtime.LaunchedEffect(playlists, selectedPlaylistForDetail) {
         if (selectedPlaylistForDetail != null && activePlaylist == null) {
             selectedPlaylistForDetail = null
@@ -122,7 +134,7 @@ fun FoldersScreen(
     Box(
         modifier = modifier
             .fillMaxSize()
-            .background(VoidBlack)
+            .background(currentTheme.background)
     ) {
         Image(
             painter = painterResource(id = R.drawable.bg_folders),

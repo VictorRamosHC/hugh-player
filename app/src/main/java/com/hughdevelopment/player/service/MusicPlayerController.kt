@@ -18,8 +18,11 @@ import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.Job
 import kotlinx.coroutines.delay
 import kotlinx.coroutines.flow.MutableStateFlow
+import kotlinx.coroutines.flow.SharingStarted
 import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.flow.asStateFlow
+import kotlinx.coroutines.flow.combine
+import kotlinx.coroutines.flow.stateIn
 import kotlinx.coroutines.isActive
 import kotlinx.coroutines.launch
 
@@ -54,6 +57,19 @@ class MusicPlayerController(
 
     private val _playlist = MutableStateFlow<List<Song>>(emptyList())
     val playlist = _playlist.asStateFlow()
+
+    // Reactive upcoming playback queue (Spotify-style)
+    val queue: StateFlow<List<Song>> = combine(_playlist, _currentSong) { playlist, current ->
+        if (current == null) playlist
+        else {
+            val idx = playlist.indexOfFirst { it.id == current.id }
+            if (idx >= 0 && idx + 1 < playlist.size) {
+                playlist.subList(idx + 1, playlist.size)
+            } else {
+                emptyList()
+            }
+        }
+    }.stateIn(scope, SharingStarted.Eagerly, emptyList())
 
     private val _isShuffleEnabled = MutableStateFlow(false)
     val isShuffleEnabled = _isShuffleEnabled.asStateFlow()
@@ -92,6 +108,15 @@ class MusicPlayerController(
                     addListener(playerListener)
                     _isShuffleEnabled.value = shuffleModeEnabled
                     _repeatMode.value = repeatMode
+                    _isPlaying.value = isPlaying
+                    currentMediaItem?.mediaId?.toLongOrNull()?.let { activeId ->
+                        val song = _playlist.value.find { it.id == activeId }
+                        if (song != null) {
+                            _currentSong.value = song
+                            _durationMs.value = song.durationMs
+                            _playbackPositionMs.value = currentPosition
+                        }
+                    }
                 }
             } catch (e: Exception) {
                 e.printStackTrace()
@@ -120,6 +145,10 @@ class MusicPlayerController(
             mediaItem?.mediaId?.toLongOrNull()?.let { songId ->
                 val song = _playlist.value.find { it.id == songId }
                 if (song != null) {
+                    if (song.isHidden) {
+                        skipNextWithFade()
+                        return
+                    }
                     flushAccumulatedListenStats()
                     _currentSong.value = song
                     _durationMs.value = song.durationMs
@@ -150,21 +179,7 @@ class MusicPlayerController(
         isPlayIntended = false
         _isPlaying.value = false
 
-        val mediaItems = newPlaylist.map { s ->
-            MediaItem.Builder()
-                .setMediaId(s.id.toString())
-                .setUri(s.contentUri)
-                .setMediaMetadata(
-                    MediaMetadata.Builder()
-                        .setTitle(s.title)
-                        .setArtist(s.artist)
-                        .setAlbumTitle(s.album)
-                        .setArtworkUri(s.albumArtUri)
-                        .build()
-                )
-                .build()
-        }
-
+        val mediaItems = newPlaylist.map { toMediaItem(it) }
         val targetIndex = newPlaylist.indexOfFirst { it.id == song.id }.coerceAtLeast(0)
         controller.setMediaItems(mediaItems, targetIndex, positionMs)
         controller.prepare()
@@ -186,21 +201,7 @@ class MusicPlayerController(
         onSongStarted(song)
         saveSessionState(song.id, 0L)
 
-        val mediaItems = newPlaylist.map { s ->
-            MediaItem.Builder()
-                .setMediaId(s.id.toString())
-                .setUri(s.contentUri)
-                .setMediaMetadata(
-                    MediaMetadata.Builder()
-                        .setTitle(s.title)
-                        .setArtist(s.artist)
-                        .setAlbumTitle(s.album)
-                        .setArtworkUri(s.albumArtUri)
-                        .build()
-                )
-                .build()
-        }
-
+        val mediaItems = newPlaylist.map { toMediaItem(it) }
         val targetIndex = newPlaylist.indexOfFirst { it.id == song.id }.coerceAtLeast(0)
 
         controller.setMediaItems(mediaItems, targetIndex, 0L)
@@ -414,6 +415,117 @@ class MusicPlayerController(
             SettingsManager.getInstance(context).saveLastPlaybackSession(songId, positionMs)
         } catch (e: Exception) {
             // Ignore if context is unbinding
+        }
+    }
+
+    private fun toMediaItem(s: Song): MediaItem {
+        return MediaItem.Builder()
+            .setMediaId(s.id.toString())
+            .setUri(s.contentUri)
+            .setMediaMetadata(
+                MediaMetadata.Builder()
+                    .setTitle(s.title)
+                    .setArtist(s.artist)
+                    .setAlbumTitle(s.album)
+                    .setArtworkUri(s.albumArtUri)
+                    .build()
+            )
+            .build()
+    }
+
+    // --- Spotify-Style Playback Queue Operations ---
+
+    fun playNext(song: Song) {
+        playNext(listOf(song))
+    }
+
+    fun playNext(songs: List<Song>) {
+        if (songs.isEmpty()) return
+        val controller = mediaController
+        val current = _currentSong.value
+        val currentPlaylist = _playlist.value
+        if (controller == null || current == null || currentPlaylist.isEmpty()) {
+            playSong(songs.first(), songs)
+            return
+        }
+        val currentIdx = currentPlaylist.indexOfFirst { it.id == current.id }
+        val insertIdx = if (currentIdx >= 0) currentIdx + 1 else currentPlaylist.size
+        val newPlaylist = currentPlaylist.toMutableList().apply {
+            addAll(insertIdx, songs)
+        }
+        _playlist.value = newPlaylist
+        val mediaItems = songs.map { toMediaItem(it) }
+        controller.addMediaItems(insertIdx, mediaItems)
+    }
+
+    fun addToQueue(song: Song) {
+        addToQueue(listOf(song))
+    }
+
+    fun addToQueue(songs: List<Song>) {
+        if (songs.isEmpty()) return
+        val controller = mediaController
+        val currentPlaylist = _playlist.value
+        if (controller == null || _currentSong.value == null || currentPlaylist.isEmpty()) {
+            playSong(songs.first(), songs)
+            return
+        }
+        val newPlaylist = currentPlaylist.toMutableList().apply {
+            addAll(songs)
+        }
+        _playlist.value = newPlaylist
+        val mediaItems = songs.map { toMediaItem(it) }
+        controller.addMediaItems(mediaItems)
+    }
+
+    fun moveQueueItem(fromQueueIdx: Int, toQueueIdx: Int) {
+        val controller = mediaController ?: return
+        val current = _currentSong.value ?: return
+        val currentPlaylist = _playlist.value
+        val currentIdx = currentPlaylist.indexOfFirst { it.id == current.id }
+        if (currentIdx < 0) return
+
+        val fromPlaylistIdx = currentIdx + 1 + fromQueueIdx
+        val toPlaylistIdx = currentIdx + 1 + toQueueIdx
+        if (fromPlaylistIdx !in currentPlaylist.indices || toPlaylistIdx !in currentPlaylist.indices) return
+
+        val mutable = currentPlaylist.toMutableList()
+        val item = mutable.removeAt(fromPlaylistIdx)
+        mutable.add(toPlaylistIdx, item)
+        _playlist.value = mutable
+
+        controller.moveMediaItem(fromPlaylistIdx, toPlaylistIdx)
+    }
+
+    fun removeFromQueue(queueIdx: Int) {
+        val controller = mediaController ?: return
+        val current = _currentSong.value ?: return
+        val currentPlaylist = _playlist.value
+        val currentIdx = currentPlaylist.indexOfFirst { it.id == current.id }
+        if (currentIdx < 0) return
+
+        val targetIdx = currentIdx + 1 + queueIdx
+        if (targetIdx in currentPlaylist.indices) {
+            val mutable = currentPlaylist.toMutableList()
+            mutable.removeAt(targetIdx)
+            _playlist.value = mutable
+            controller.removeMediaItem(targetIdx)
+        }
+    }
+
+    fun clearQueue() {
+        val controller = mediaController ?: return
+        val current = _currentSong.value ?: return
+        val currentPlaylist = _playlist.value
+        val currentIdx = currentPlaylist.indexOfFirst { it.id == current.id }
+        if (currentIdx < 0) return
+
+        val itemsToRemove = currentPlaylist.size - (currentIdx + 1)
+        if (itemsToRemove > 0) {
+            _playlist.value = currentPlaylist.take(currentIdx + 1)
+            for (i in (currentPlaylist.size - 1) downTo (currentIdx + 1)) {
+                controller.removeMediaItem(i)
+            }
         }
     }
 

@@ -19,8 +19,7 @@ import androidx.compose.ui.graphics.Brush
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.unit.Dp
 import androidx.compose.ui.unit.dp
-import com.hughdevelopment.player.ui.theme.CyberAmber
-import com.hughdevelopment.player.ui.theme.HermeticCyan
+import com.hughdevelopment.player.ui.theme.LocalVaultTheme
 import com.hughdevelopment.player.ui.theme.WireframeBorder
 import kotlin.math.abs
 import kotlin.math.sin
@@ -31,9 +30,12 @@ fun AudioVisualizerBars(
     modifier: Modifier = Modifier,
     barCount: Int = 28,
     height: Dp = 38.dp,
-    activeColor: Color = CyberAmber,
-    secondaryColor: Color = HermeticCyan
+    activeColor: Color = Color.Unspecified,
+    secondaryColor: Color = Color.Unspecified
 ) {
+    val theme = LocalVaultTheme.current
+    val resolvedActiveColor = if (activeColor != Color.Unspecified) activeColor else theme.primary
+    val resolvedSecondaryColor = if (secondaryColor != Color.Unspecified) secondaryColor else theme.primaryAccent
     val transition = rememberInfiniteTransition(label = "VisualizerTransition")
     val phase by transition.animateFloat(
         initialValue = 0f,
@@ -74,7 +76,7 @@ fun AudioVisualizerBars(
             val y = canvasHeight - barHeight
 
             val brush = Brush.verticalGradient(
-                colors = if (isPlaying) listOf(activeColor, secondaryColor) else listOf(WireframeBorder, WireframeBorder),
+                colors = if (isPlaying) listOf(resolvedActiveColor, resolvedSecondaryColor) else listOf(WireframeBorder, WireframeBorder),
                 startY = y,
                 endY = canvasHeight
             )

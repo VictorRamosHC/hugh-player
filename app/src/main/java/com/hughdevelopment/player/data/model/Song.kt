@@ -13,7 +13,8 @@ data class Song(
     val dataPath: String,
     val sizeBytes: Long,
     val dateAdded: Long,
-    val isFavorite: Boolean = false
+    val isFavorite: Boolean = false,
+    val isHidden: Boolean = false
 ) {
     val formattedDuration: String
         get() {

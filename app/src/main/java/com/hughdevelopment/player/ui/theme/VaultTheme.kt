@@ -44,7 +44,12 @@ data class VaultThemeConfig(
     val cardCornerRadius: Dp,
     val isBrutalistSharp: Boolean,
     val lexicon: VaultLexicon
-)
+) {
+    val primary: Color get() = primaryAccent
+    val background: Color get() = backgroundColor
+    val cardBackground: Color get() = surfaceColor
+    val destructiveAlert: Color get() = DangerRed
+}
 
 object VaultThemes {
 

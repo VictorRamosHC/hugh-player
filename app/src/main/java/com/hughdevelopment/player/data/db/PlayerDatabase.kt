@@ -4,6 +4,8 @@ import android.content.Context
 import androidx.room.Database
 import androidx.room.Room
 import androidx.room.RoomDatabase
+import androidx.room.migration.Migration
+import androidx.sqlite.db.SupportSQLiteDatabase
 
 @Database(
     entities = [
@@ -12,7 +14,7 @@ import androidx.room.RoomDatabase
         PlaylistSongCrossRef::class,
         DailyListeningEntity::class
     ],
-    version = 5,
+    version = 6,
     exportSchema = false
 )
 abstract class PlayerDatabase : RoomDatabase() {
@@ -25,6 +27,12 @@ abstract class PlayerDatabase : RoomDatabase() {
         @Volatile
         private var INSTANCE: PlayerDatabase? = null
 
+        val MIGRATION_5_6 = object : Migration(5, 6) {
+            override fun migrate(db: SupportSQLiteDatabase) {
+                db.execSQL("ALTER TABLE playback_stats ADD COLUMN is_hidden INTEGER NOT NULL DEFAULT 0")
+            }
+        }
+
         fun getInstance(context: Context): PlayerDatabase {
             return INSTANCE ?: synchronized(this) {
                 val instance = Room.databaseBuilder(
@@ -32,6 +40,7 @@ abstract class PlayerDatabase : RoomDatabase() {
                     PlayerDatabase::class.java,
                     "hugh_player_stats.db"
                 )
+                .addMigrations(MIGRATION_5_6)
                 .setJournalMode(JournalMode.WRITE_AHEAD_LOGGING)
                 .fallbackToDestructiveMigration()
                 .build()

@@ -31,6 +31,7 @@ import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.automirrored.filled.Article
 import androidx.compose.material.icons.automirrored.filled.PlaylistAdd
+import androidx.compose.material.icons.automirrored.filled.QueueMusic
 import androidx.compose.material.icons.filled.Favorite
 import androidx.compose.material.icons.filled.FavoriteBorder
 import androidx.compose.material.icons.filled.KeyboardArrowDown
@@ -42,6 +43,7 @@ import androidx.compose.material.icons.filled.RepeatOne
 import androidx.compose.material.icons.filled.Shuffle
 import androidx.compose.material.icons.filled.SkipNext
 import androidx.compose.material.icons.filled.SkipPrevious
+import androidx.compose.material.icons.filled.Tune
 import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.Icon
 import androidx.compose.material3.IconButton
@@ -81,6 +83,7 @@ import com.hughdevelopment.player.ui.theme.CharcoalSurface
 import com.hughdevelopment.player.ui.theme.CyberAmber
 import com.hughdevelopment.player.ui.theme.KleinBlue
 import com.hughdevelopment.player.ui.theme.HermeticCyan
+import com.hughdevelopment.player.ui.theme.LocalVaultTheme
 import com.hughdevelopment.player.ui.theme.MutedStone
 import com.hughdevelopment.player.ui.theme.SigilSilver
 import com.hughdevelopment.player.ui.theme.SigilWhite
@@ -106,8 +109,11 @@ fun ExpandedPlayerSheet(
     onToggleShuffle: () -> Unit,
     onToggleRepeat: () -> Unit,
     onToggleFavorite: () -> Unit,
-    onAddToPlaylist: () -> Unit = {}
+    onAddToPlaylist: () -> Unit = {},
+    onOpenQueue: () -> Unit = {},
+    onOpenEqualizer: () -> Unit = {}
 ) {
+    val theme = LocalVaultTheme.current
     val sheetState = rememberModalBottomSheetState(skipPartiallyExpanded = true)
 
     // Local drag state to eliminate seeking stutter/lag completely
@@ -134,7 +140,7 @@ fun ExpandedPlayerSheet(
     ModalBottomSheet(
         onDismissRequest = onDismiss,
         sheetState = sheetState,
-        containerColor = VoidBlack,
+        containerColor = theme.background,
         dragHandle = null
     ) {
         Box(
@@ -193,6 +199,26 @@ fun ExpandedPlayerSheet(
                     }
 
                     Row(verticalAlignment = Alignment.CenterVertically) {
+                        // Open DSP Equalizer
+                        IconButton(onClick = onOpenEqualizer) {
+                            Icon(
+                                imageVector = Icons.Default.Tune,
+                                contentDescription = "Equalizador DSP",
+                                tint = theme.primaryAccent,
+                                modifier = Modifier.size(24.dp)
+                            )
+                        }
+
+                        // Open Spotify Queue
+                        IconButton(onClick = onOpenQueue) {
+                            Icon(
+                                imageVector = Icons.AutoMirrored.Filled.QueueMusic,
+                                contentDescription = "Fila de Reprodução",
+                                tint = theme.primary,
+                                modifier = Modifier.size(24.dp)
+                            )
+                        }
+
                         // Toggle between Artwork view and Synced Lyrics view
                         IconButton(onClick = { showLyrics = !showLyrics }) {
                             Icon(
@@ -359,7 +385,7 @@ fun ExpandedPlayerSheet(
 
                 Spacer(modifier = Modifier.height(16.dp))
 
-                // Real-time Procedural Audio Visualizer Spectrum Bars
+                // Real-time Procedural Audio Visualizer Spectrum Bars (Theme-Adaptive)
                 AudioVisualizerBars(
                     isPlaying = isPlaying,
                     modifier = Modifier
@@ -367,8 +393,8 @@ fun ExpandedPlayerSheet(
                         .padding(horizontal = 8.dp),
                     barCount = 30,
                     height = 32.dp,
-                    activeColor = KleinBlue,
-                    secondaryColor = CyberAmber
+                    activeColor = theme.primary,
+                    secondaryColor = theme.primaryAccent
                 )
 
                 Spacer(modifier = Modifier.height(16.dp))
@@ -387,8 +413,8 @@ fun ExpandedPlayerSheet(
                     },
                     modifier = Modifier.fillMaxWidth(),
                     colors = SliderDefaults.colors(
-                        thumbColor = SigilWhite,
-                        activeTrackColor = KleinBlue,
+                        thumbColor = theme.primary,
+                        activeTrackColor = theme.primary,
                         inactiveTrackColor = WireframeBorder
                     )
                 )
@@ -400,7 +426,7 @@ fun ExpandedPlayerSheet(
                 ) {
                     Text(
                         text = formatTime(displayedPositionMs),
-                        color = HermeticCyan,
+                        color = theme.primaryAccent,
                         fontSize = 12.sp,
                         fontFamily = FontFamily.Monospace,
                         fontWeight = FontWeight.SemiBold
@@ -426,7 +452,7 @@ fun ExpandedPlayerSheet(
                         Icon(
                             imageVector = Icons.Default.Shuffle,
                             contentDescription = "Aleatório",
-                            tint = if (isShuffleEnabled) CyberAmber else MutedStone,
+                            tint = if (isShuffleEnabled) theme.primary else MutedStone,
                             modifier = Modifier.size(24.dp)
                         )
                     }
@@ -449,8 +475,8 @@ fun ExpandedPlayerSheet(
                         modifier = Modifier
                             .size(68.dp)
                             .clip(CircleShape)
-                            .background(SigilWhite)
-                            .border(2.5.dp, KleinBlue, CircleShape),
+                            .background(theme.primary)
+                            .border(2.5.dp, theme.primaryAccent, CircleShape),
                         contentAlignment = Alignment.Center
                     ) {
                         IconButton(
@@ -460,7 +486,7 @@ fun ExpandedPlayerSheet(
                             Icon(
                                 imageVector = if (isPlaying) Icons.Default.Pause else Icons.Default.PlayArrow,
                                 contentDescription = if (isPlaying) "Pausar" else "Reproduzir",
-                                tint = VoidBlack,
+                                tint = theme.background,
                                 modifier = Modifier.size(38.dp)
                             )
                         }
@@ -485,7 +511,7 @@ fun ExpandedPlayerSheet(
                             Player.REPEAT_MODE_ONE -> Icons.Default.RepeatOne
                             else -> Icons.Default.Repeat
                         }
-                        val tint = if (repeatMode != Player.REPEAT_MODE_OFF) CyberAmber else MutedStone
+                        val tint = if (repeatMode != Player.REPEAT_MODE_OFF) theme.primary else MutedStone
                         Icon(
                             imageVector = icon,
                             contentDescription = "Repetir",

@@ -9,6 +9,7 @@ import androidx.room.PrimaryKey
     tableName = "playback_stats",
     indices = [
         Index(value = ["is_favorite"]),
+        Index(value = ["is_hidden"]),
         Index(value = ["play_count"]),
         Index(value = ["total_seconds_listened"])
     ]
@@ -34,5 +35,8 @@ data class StatsEntity(
     val lastPlayedTimestamp: Long = System.currentTimeMillis(),
 
     @ColumnInfo(name = "is_favorite", defaultValue = "0")
-    val isFavorite: Boolean = false
+    val isFavorite: Boolean = false,
+
+    @ColumnInfo(name = "is_hidden", defaultValue = "0")
+    val isHidden: Boolean = false
 )
