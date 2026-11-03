@@ -66,6 +66,7 @@ import com.hughdevelopment.player.data.settings.SettingsManager
 import com.hughdevelopment.player.data.settings.SettingsState
 import com.hughdevelopment.player.data.settings.TimeDisplayFormat
 import com.hughdevelopment.player.ui.components.CybersigilBackground
+import com.hughdevelopment.player.ui.components.SovereignVoidBackdrop
 import com.hughdevelopment.player.ui.theme.CharcoalSurface
 import com.hughdevelopment.player.ui.theme.CyberAmber
 import com.hughdevelopment.player.ui.theme.KleinBlue
@@ -130,17 +131,11 @@ fun SettingsScreen(
             .fillMaxSize()
             .background(currentTheme.background)
     ) {
-        // Subtle background texture
-        Image(
-            painter = painterResource(id = R.drawable.bg_dashboard),
-            contentDescription = null,
-            contentScale = ContentScale.Crop,
-            modifier = Modifier
-                .fillMaxSize()
-                .alpha(0.25f)
+        // Pure Obsidian Void & Radiant Auras
+        SovereignVoidBackdrop(
+            showCybersigil = true,
+            auraScale = 0.85f
         )
-
-        CybersigilBackground(showHalo = false)
 
         Column(
             modifier = Modifier

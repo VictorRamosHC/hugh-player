@@ -64,8 +64,10 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.alpha
 import androidx.compose.ui.draw.clip
 import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.hapticfeedback.HapticFeedbackType
 import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.platform.LocalContext
+import androidx.compose.ui.platform.LocalHapticFeedback
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.text.font.FontFamily
 import androidx.compose.ui.text.font.FontWeight
@@ -81,12 +83,14 @@ import com.hughdevelopment.player.ui.components.ArtworkImage
 import com.hughdevelopment.player.ui.components.CybersigilBackground
 import com.hughdevelopment.player.ui.components.HermesDialogueSheet
 import com.hughdevelopment.player.ui.components.HermesPetBanner
+import com.hughdevelopment.player.ui.components.SovereignVoidBackdrop
 import com.hughdevelopment.player.ui.components.activePlayingGlassCard
 import com.hughdevelopment.player.ui.components.neoGlassCard
 import com.hughdevelopment.player.ui.theme.LocalVaultTheme
 import com.hughdevelopment.player.ui.theme.MutedStone
 import com.hughdevelopment.player.ui.theme.SigilSilver
 import com.hughdevelopment.player.ui.theme.SigilWhite
+import com.hughdevelopment.player.ui.theme.SpecularGlassRimTop
 import com.hughdevelopment.player.ui.theme.WireframeBorder
 
 @Composable
@@ -132,6 +136,7 @@ fun LibraryScreen(
     // Multi-Selection Mode State (R3)
     var isMultiSelectMode by remember { mutableStateOf(false) }
     var selectedSongIds by remember { mutableStateOf(setOf<Long>()) }
+    var showHubMenu by remember { mutableStateOf(false) }
 
     val filteredSongs = remember(songs, searchQuery) {
         if (searchQuery.isBlank()) songs
@@ -150,18 +155,11 @@ fun LibraryScreen(
             .fillMaxSize()
             .background(currentTheme.background)
     ) {
-        // High-contrast atmospheric backdrop
-        Image(
-            painter = painterResource(id = R.drawable.bg_library),
-            contentDescription = null,
-            contentScale = ContentScale.Crop,
-            modifier = Modifier
-                .fillMaxSize()
-                .alpha(wallpaperAlpha)
+        // Pure Obsidian Void & Radiant Auras
+        SovereignVoidBackdrop(
+            showCybersigil = true,
+            auraScale = 1.0f
         )
-
-        // Procedural wireframe overlay
-        CybersigilBackground(showHalo = false)
 
         Column(
             modifier = Modifier
@@ -325,7 +323,7 @@ fun LibraryScreen(
                     }
                 }
             } else {
-                // App Brand Standard Header in Cybersigilism
+                // App Brand Standard Header in Sovereign Cyber-Obsidian
                 Row(
                     modifier = Modifier.fillMaxWidth(),
                     verticalAlignment = Alignment.CenterVertically
@@ -334,71 +332,156 @@ fun LibraryScreen(
                         Text(
                             text = currentTheme.lexicon.brandHeader,
                             color = currentTheme.textPrimary,
-                            fontSize = 18.sp,
+                            fontSize = 17.sp,
                             fontWeight = FontWeight.Black,
                             fontFamily = FontFamily.Monospace,
-                            letterSpacing = 1.5.sp
+                            letterSpacing = 1.2.sp,
+                            maxLines = 1,
+                            overflow = TextOverflow.Ellipsis
                         )
                         Text(
-                            text = "${currentTheme.lexicon.brandSub} • ${songs.size} TRACKS",
+                            text = "${currentTheme.lexicon.brandSub} • ${songs.size} FAIXAS",
                             color = currentTheme.primaryAccent,
-                            fontSize = 10.5.sp,
-                            fontFamily = FontFamily.Monospace
+                            fontSize = 10.sp,
+                            fontFamily = FontFamily.Monospace,
+                            letterSpacing = 0.5.sp,
+                            maxLines = 1,
+                            overflow = TextOverflow.Ellipsis
                         )
                     }
 
-                    // Multi-select toggle
-                    IconButton(onClick = { isMultiSelectMode = true }) {
-                        Icon(
-                            imageVector = Icons.Default.Checklist,
-                            contentDescription = "Modo Multi-Seleção",
-                            tint = currentTheme.primaryAccent
-                        )
-                    }
-
-                    // Shuffle All action
-                    IconButton(onClick = onShuffleAll) {
+                    // 1. Shuffle All Quick Action
+                    IconButton(
+                        onClick = onShuffleAll,
+                        modifier = Modifier.size(34.dp)
+                    ) {
                         Icon(
                             imageVector = Icons.Default.Shuffle,
                             contentDescription = "Tocar Todas no Shuffle",
-                            tint = SigilSilver
+                            tint = currentTheme.primaryAccent,
+                            modifier = Modifier.size(19.dp)
                         )
                     }
 
-                    // Folders & Playlists Action
-                    IconButton(onClick = onOpenFolders) {
+                    // 2. Multi-Select Quick Action
+                    IconButton(
+                        onClick = { isMultiSelectMode = true },
+                        modifier = Modifier.size(34.dp)
+                    ) {
+                        Icon(
+                            imageVector = Icons.Default.Checklist,
+                            contentDescription = "Modo Multi-Seleção",
+                            tint = SigilSilver,
+                            modifier = Modifier.size(19.dp)
+                        )
+                    }
+
+                    // 3. Folders / Playlists Quick Action
+                    IconButton(
+                        onClick = onOpenFolders,
+                        modifier = Modifier.size(34.dp)
+                    ) {
                         Icon(
                             imageVector = Icons.Default.Folder,
                             contentDescription = "Pastas & Playlists",
-                            tint = currentTheme.primaryAccent
+                            tint = currentTheme.primaryAccent,
+                            modifier = Modifier.size(19.dp)
                         )
                     }
 
-                    // Stats Dashboard Action
-                    IconButton(onClick = onOpenDashboard) {
-                        Icon(
-                            imageVector = Icons.Default.BarChart,
-                            contentDescription = "Métricas",
-                            tint = currentTheme.primary
-                        )
-                    }
+                    // 4. Sovereign Hub Menu (Stats, Settings, Refresh)
+                    Box {
+                        IconButton(
+                            onClick = { showHubMenu = true },
+                            modifier = Modifier.size(34.dp)
+                        ) {
+                            Icon(
+                                imageVector = Icons.Default.MoreVert,
+                                contentDescription = "Menu Soberano",
+                                tint = SigilWhite,
+                                modifier = Modifier.size(20.dp)
+                            )
+                        }
 
-                    // Settings Action
-                    IconButton(onClick = onOpenSettings) {
-                        Icon(
-                            imageVector = Icons.Default.Settings,
-                            contentDescription = "Configurações",
-                            tint = SigilWhite
-                        )
-                    }
+                        DropdownMenu(
+                            expanded = showHubMenu,
+                            onDismissRequest = { showHubMenu = false },
+                            modifier = Modifier
+                                .background(Color(0xF80E1019))
+                                .border(1.dp, WireframeBorder.copy(alpha = 0.5f), RoundedCornerShape(8.dp))
+                        ) {
+                            DropdownMenuItem(
+                                text = {
+                                    Text(
+                                        text = "MÉTRICAS & ARCONTE",
+                                        fontFamily = FontFamily.Monospace,
+                                        fontSize = 12.sp,
+                                        fontWeight = FontWeight.Bold,
+                                        color = currentTheme.primary
+                                    )
+                                },
+                                leadingIcon = {
+                                    Icon(
+                                        imageVector = Icons.Default.BarChart,
+                                        contentDescription = null,
+                                        tint = currentTheme.primary,
+                                        modifier = Modifier.size(18.dp)
+                                    )
+                                },
+                                onClick = {
+                                    showHubMenu = false
+                                    onOpenDashboard()
+                                }
+                            )
 
-                    // Rescan Storage Action
-                    IconButton(onClick = onRefresh) {
-                        Icon(
-                            imageVector = Icons.Default.Refresh,
-                            contentDescription = "Atualizar",
-                            tint = SigilSilver
-                        )
+                            DropdownMenuItem(
+                                text = {
+                                    Text(
+                                        text = "CONFIGURAÇÕES & TEMAS",
+                                        fontFamily = FontFamily.Monospace,
+                                        fontSize = 12.sp,
+                                        fontWeight = FontWeight.Medium,
+                                        color = currentTheme.textPrimary
+                                    )
+                                },
+                                leadingIcon = {
+                                    Icon(
+                                        imageVector = Icons.Default.Settings,
+                                        contentDescription = null,
+                                        tint = SigilWhite,
+                                        modifier = Modifier.size(18.dp)
+                                    )
+                                },
+                                onClick = {
+                                    showHubMenu = false
+                                    onOpenSettings()
+                                }
+                            )
+
+                            DropdownMenuItem(
+                                text = {
+                                    Text(
+                                        text = "RESCANEAR DISCO",
+                                        fontFamily = FontFamily.Monospace,
+                                        fontSize = 12.sp,
+                                        fontWeight = FontWeight.Medium,
+                                        color = SigilSilver
+                                    )
+                                },
+                                leadingIcon = {
+                                    Icon(
+                                        imageVector = Icons.Default.Refresh,
+                                        contentDescription = null,
+                                        tint = SigilSilver,
+                                        modifier = Modifier.size(18.dp)
+                                    )
+                                },
+                                onClick = {
+                                    showHubMenu = false
+                                    onRefresh()
+                                }
+                            )
+                        }
                     }
                 }
             }
@@ -457,27 +540,27 @@ fun LibraryScreen(
                 horizontalArrangement = Arrangement.spacedBy(6.dp)
             ) {
                 SortChip(
-                    label = "A-Z",
+                    label = "ORDEM A-Z",
                     isSelected = sortOrder == SortOrder.DEFAULT,
                     onClick = { onSelectSortOrder(SortOrder.DEFAULT) }
                 )
                 SortChip(
-                    label = "⚡ RECENTES",
+                    label = "RECENTES",
                     isSelected = sortOrder == SortOrder.DATE_ADDED_DESC,
                     onClick = { onSelectSortOrder(SortOrder.DATE_ADDED_DESC) }
                 )
                 SortChip(
-                    label = "💾 MAIORES (MB)",
+                    label = "MAIORES (MB)",
                     isSelected = sortOrder == SortOrder.SIZE_DESC,
                     onClick = { onSelectSortOrder(SortOrder.SIZE_DESC) }
                 )
                 SortChip(
-                    label = "🎧 MAIS OUVIDAS",
+                    label = "MAIS TOCADAS",
                     isSelected = sortOrder == SortOrder.MOST_PLAYED,
                     onClick = { onSelectSortOrder(SortOrder.MOST_PLAYED) }
                 )
                 SortChip(
-                    label = "⭐ FAVORITAS",
+                    label = "FAVORITAS",
                     isSelected = sortOrder == SortOrder.FAVORITES_FIRST,
                     onClick = { onSelectSortOrder(SortOrder.FAVORITES_FIRST) }
                 )
@@ -508,7 +591,7 @@ fun LibraryScreen(
             } else {
                 LazyColumn(
                     modifier = Modifier.fillMaxSize(),
-                    contentPadding = PaddingValues(bottom = 110.dp) // Space for mini-player
+                    contentPadding = PaddingValues(top = 4.dp, bottom = 136.dp) // Space for mini-player dock and navigation bar
                 ) {
                     itemsIndexed(
                         items = filteredSongs,
@@ -773,20 +856,20 @@ private fun SortChip(
     val theme = LocalVaultTheme.current
     Box(
         modifier = Modifier
-            .clip(RoundedCornerShape(4.dp))
-            .background(if (isSelected) theme.primary else theme.cardBackground)
+            .clip(RoundedCornerShape(6.dp))
+            .background(if (isSelected) theme.primary.copy(alpha = 0.22f) else Color(0x66131622))
             .border(
                 width = 1.dp,
-                color = if (isSelected) theme.primary else WireframeBorder.copy(alpha = 0.4f),
-                shape = RoundedCornerShape(4.dp)
+                color = if (isSelected) theme.primary else WireframeBorder.copy(alpha = 0.35f),
+                shape = RoundedCornerShape(6.dp)
             )
             .clickable { onClick() }
-            .padding(horizontal = 9.dp, vertical = 5.dp)
+            .padding(horizontal = 10.dp, vertical = 6.dp)
     ) {
         Text(
             text = label,
-            color = if (isSelected) theme.background else theme.textPrimary,
-            fontSize = 10.5.sp,
+            color = if (isSelected) theme.primary else theme.textPrimary,
+            fontSize = 11.sp,
             fontWeight = if (isSelected) FontWeight.Bold else FontWeight.Medium,
             fontFamily = FontFamily.Monospace,
             letterSpacing = 0.5.sp
@@ -812,21 +895,33 @@ private fun SongRowItem(
     onDelete: () -> Unit
 ) {
     val theme = LocalVaultTheme.current
+    val haptic = LocalHapticFeedback.current
     var menuExpanded by remember { mutableStateOf(false) }
 
     Row(
         modifier = Modifier
             .fillMaxWidth()
-            .padding(vertical = 3.dp)
+            .padding(vertical = 2.5.dp)
             .then(
-                if (isSelected) Modifier.activePlayingGlassCard(cornerRadius = 8.dp)
-                else Modifier.neoGlassCard(cornerRadius = 8.dp, backgroundColor = theme.cardBackground, borderWidth = 0.8.dp)
+                if (isSelected) Modifier.activePlayingGlassCard(cornerRadius = 10.dp)
+                else Modifier.neoGlassCard(
+                    cornerRadius = 10.dp,
+                    backgroundColor = Color(0x730D0F18),
+                    borderWidth = 0.6.dp,
+                    topRimColor = SpecularGlassRimTop.copy(alpha = 0.35f)
+                )
             )
             .combinedClickable(
-                onClick = onClick,
-                onLongClick = onLongClick
+                onClick = {
+                    haptic.performHapticFeedback(HapticFeedbackType.TextHandleMove)
+                    onClick()
+                },
+                onLongClick = {
+                    haptic.performHapticFeedback(HapticFeedbackType.LongPress)
+                    onLongClick()
+                }
             )
-            .padding(8.dp),
+            .padding(horizontal = 9.dp, vertical = 7.dp),
         verticalAlignment = Alignment.CenterVertically
     ) {
         // Multi-select Checkbox (R3)

@@ -73,6 +73,7 @@ import androidx.compose.foundation.horizontalScroll
 import androidx.compose.foundation.rememberScrollState
 import com.hughdevelopment.player.ui.components.ArtworkImage
 import com.hughdevelopment.player.ui.components.CybersigilBackground
+import com.hughdevelopment.player.ui.components.SovereignVoidBackdrop
 import com.hughdevelopment.player.ui.theme.CharcoalSurface
 import com.hughdevelopment.player.ui.theme.CyberAmber
 import com.hughdevelopment.player.ui.theme.LocalVaultTheme
@@ -136,16 +137,11 @@ fun FoldersScreen(
             .fillMaxSize()
             .background(currentTheme.background)
     ) {
-        Image(
-            painter = painterResource(id = R.drawable.bg_folders),
-            contentDescription = null,
-            contentScale = ContentScale.Crop,
-            modifier = Modifier
-                .fillMaxSize()
-                .alpha(wallpaperAlpha)
+        // Pure Obsidian Void & Radiant Auras
+        SovereignVoidBackdrop(
+            showCybersigil = true,
+            auraScale = 0.9f
         )
-
-        CybersigilBackground(showHalo = false)
 
         Column(
             modifier = Modifier

@@ -73,6 +73,7 @@ import com.hughdevelopment.player.data.settings.TimeDisplayFormat
 import com.hughdevelopment.player.data.settings.formatListeningTime
 import com.hughdevelopment.player.export.SovereignCardGenerator
 import com.hughdevelopment.player.ui.components.CybersigilBackground
+import com.hughdevelopment.player.ui.components.SovereignVoidBackdrop
 import com.hughdevelopment.player.ui.components.neoGlassCard
 import com.hughdevelopment.player.ui.theme.LocalVaultTheme
 import com.hughdevelopment.player.ui.theme.CharcoalSurface
@@ -107,17 +108,11 @@ fun StatsDashboardScreen(
             .fillMaxSize()
             .background(currentTheme.background)
     ) {
-        // High-contrast brutalist dashboard ambient backdrop
-        Image(
-            painter = painterResource(id = R.drawable.bg_dashboard),
-            contentDescription = null,
-            contentScale = ContentScale.Crop,
-            modifier = Modifier
-                .fillMaxSize()
-                .alpha(0.30f)
+        // Pure Obsidian Void & Radiant Auras
+        SovereignVoidBackdrop(
+            showCybersigil = true,
+            auraScale = 1.0f
         )
-
-        CybersigilBackground(showHalo = true)
 
         Column(
             modifier = Modifier

@@ -42,6 +42,7 @@ import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
+import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.text.font.FontFamily
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
@@ -79,38 +80,43 @@ fun HermesPetBanner(
         modifier = modifier
             .fillMaxWidth()
             .neoGlassCard(
-                cornerRadius = theme.cardCornerRadius,
-                backgroundColor = ObsidianGlass,
+                cornerRadius = if (theme.cardCornerRadius < 12.dp) theme.cardCornerRadius else 12.dp,
+                backgroundColor = Color(0xF20D0F18),
                 borderWidth = 1.dp,
-                topRimColor = theme.primaryAccent.copy(alpha = 0.8f),
+                topRimColor = theme.primaryAccent.copy(alpha = 0.7f),
                 bottomRimColor = SpecularGlassRimTop
             )
             .clickable { onOpenChat() }
-            .padding(12.dp)
+            .padding(horizontal = 12.dp, vertical = 9.dp)
     ) {
         Row(
             modifier = Modifier.fillMaxWidth(),
             verticalAlignment = Alignment.CenterVertically
         ) {
-            // Sovereign Astrolabe Oracle Eye for Hermes
+            // Sovereign Astrolabe Oracle Eye for Hermes (Compact HUD size)
             HermesAstrolabeOracleEye(
-                modifier = Modifier.size(46.dp)
+                modifier = Modifier.size(34.dp)
             )
 
-            Spacer(modifier = Modifier.width(12.dp))
+            Spacer(modifier = Modifier.width(10.dp))
 
             Column(modifier = Modifier.weight(1f)) {
                 Row(verticalAlignment = Alignment.CenterVertically) {
                     Text(
                         text = theme.lexicon.petName,
                         color = theme.primaryAccent,
-                        fontSize = 11.5.sp,
+                        fontSize = 11.sp,
                         fontWeight = FontWeight.Bold,
                         fontFamily = FontFamily.Monospace,
                         letterSpacing = 1.sp
                     )
                     Spacer(modifier = Modifier.width(6.dp))
-                    Text(text = if (theme.isBrutalistSharp) "🔴" else "🏛️", fontSize = 11.sp)
+                    Box(
+                        modifier = Modifier
+                            .size(6.dp)
+                            .clip(CircleShape)
+                            .background(theme.primary)
+                    )
                 }
 
                 Spacer(modifier = Modifier.height(2.dp))
@@ -118,10 +124,11 @@ fun HermesPetBanner(
                 Text(
                     text = quip,
                     color = SigilWhite,
-                    fontSize = 12.sp,
+                    fontSize = 11.sp,
                     fontFamily = FontFamily.Monospace,
-                    maxLines = 2,
-                    lineHeight = 16.sp
+                    maxLines = 1,
+                    lineHeight = 15.sp,
+                    overflow = androidx.compose.ui.text.style.TextOverflow.Ellipsis
                 )
             }
 
@@ -129,16 +136,16 @@ fun HermesPetBanner(
 
             Box(
                 modifier = Modifier
-                    .clip(if (theme.isBrutalistSharp) RoundedCornerShape(2.dp) else CircleShape)
-                    .background(CharcoalSurface)
-                    .border(1.dp, theme.primaryAccent.copy(alpha = 0.5f), if (theme.isBrutalistSharp) RoundedCornerShape(2.dp) else CircleShape)
-                    .padding(8.dp)
+                    .clip(if (theme.isBrutalistSharp) RoundedCornerShape(4.dp) else CircleShape)
+                    .background(theme.primary.copy(alpha = 0.15f))
+                    .border(1.dp, theme.primaryAccent.copy(alpha = 0.5f), if (theme.isBrutalistSharp) RoundedCornerShape(4.dp) else CircleShape)
+                    .padding(6.dp)
             ) {
                 Icon(
                     imageVector = Icons.Default.AutoAwesome,
                     contentDescription = "Conversar",
-                    tint = theme.secondaryAccent,
-                    modifier = Modifier.size(16.dp)
+                    tint = theme.primaryAccent,
+                    modifier = Modifier.size(14.dp)
                 )
             }
         }

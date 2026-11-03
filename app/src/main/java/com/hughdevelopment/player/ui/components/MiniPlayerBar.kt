@@ -39,6 +39,7 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
 import androidx.compose.ui.draw.clipToBounds
+import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.graphics.graphicsLayer
 import androidx.compose.ui.input.pointer.pointerInput
 import androidx.compose.ui.layout.onSizeChanged
@@ -92,7 +93,7 @@ fun MiniPlayerBar(
             .padding(horizontal = 12.dp, vertical = 6.dp)
             .neoGlassCard(
                 cornerRadius = 18.dp,
-                backgroundColor = ObsidianGlass,
+                backgroundColor = Color(0xF80B0D15),
                 borderWidth = 1.2.dp,
                 topRimColor = SpecularGlassRimTop,
                 bottomRimColor = if (isPlaying) theme.primaryAccent else SpecularGlassRimBottom

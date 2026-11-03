@@ -17,8 +17,11 @@ import androidx.compose.animation.fadeOut
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.fillMaxSize
+import androidx.compose.foundation.layout.fillMaxWidth
+import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.navigationBarsPadding
 import androidx.compose.foundation.layout.statusBarsPadding
+import androidx.compose.ui.unit.dp
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.collectAsState
@@ -326,6 +329,23 @@ fun MainScreen(
 
         // Anchored Spotify-like Mini Player
         if (currentSong != null) {
+            // Atmospheric Obsidian Gradient Scrim behind the MiniPlayer to prevent list ghosting
+            Box(
+                modifier = Modifier
+                    .fillMaxWidth()
+                    .height(115.dp)
+                    .align(Alignment.BottomCenter)
+                    .background(
+                        androidx.compose.ui.graphics.Brush.verticalGradient(
+                            colors = listOf(
+                                androidx.compose.ui.graphics.Color.Transparent,
+                                androidx.compose.ui.graphics.Color(0xCC07070B),
+                                androidx.compose.ui.graphics.Color(0xFF07070B)
+                            )
+                        )
+                    )
+            )
+
             MiniPlayerBar(
                 currentSong = currentSong!!,
                 isPlaying = isPlaying,
