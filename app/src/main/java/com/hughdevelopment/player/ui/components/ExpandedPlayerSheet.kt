@@ -94,7 +94,6 @@ import com.hughdevelopment.player.lyrics.LrcParser
 import com.hughdevelopment.player.lyrics.LyricsRepository
 import com.hughdevelopment.player.ui.theme.CharcoalSurface
 import com.hughdevelopment.player.ui.theme.CyberAmber
-import com.hughdevelopment.player.ui.theme.KleinBlue
 import com.hughdevelopment.player.ui.theme.HermeticCyan
 import com.hughdevelopment.player.ui.theme.LocalVaultTheme
 import com.hughdevelopment.player.ui.theme.MutedStone

@@ -25,6 +25,8 @@ import com.hughdevelopment.player.ui.theme.SpecularGlassRimTop
 
 private val cachedCardShape8 = RoundedCornerShape(8.dp)
 private val cachedCardShape10 = RoundedCornerShape(10.dp)
+private val cachedCardShape14 = RoundedCornerShape(14.dp)
+private val cachedCardShape16 = RoundedCornerShape(16.dp)
 
 private val cachedDefaultBrush = Brush.verticalGradient(
     colors = listOf(
@@ -43,13 +45,19 @@ private val cachedActivePlayingBrush = Brush.verticalGradient(
 )
 
 fun Modifier.neoGlassCard(
-    cornerRadius: Dp = 8.dp,
+    cornerRadius: Dp = 14.dp,
     backgroundColor: Color = ObsidianGlass,
     borderWidth: Dp = 1.dp,
     topRimColor: Color = SpecularGlassRimTop,
     bottomRimColor: Color = SpecularGlassRimBottom
 ): Modifier {
-    val shape = if (cornerRadius == 8.dp) cachedCardShape8 else if (cornerRadius == 10.dp) cachedCardShape10 else RoundedCornerShape(cornerRadius)
+    val shape = when (cornerRadius) {
+        8.dp -> cachedCardShape8
+        10.dp -> cachedCardShape10
+        14.dp -> cachedCardShape14
+        16.dp -> cachedCardShape16
+        else -> RoundedCornerShape(cornerRadius)
+    }
     val brush = if (topRimColor == SpecularGlassRimTop && bottomRimColor == SpecularGlassRimBottom) {
         cachedDefaultBrush
     } else {
@@ -62,12 +70,55 @@ fun Modifier.neoGlassCard(
 }
 
 fun Modifier.activePlayingGlassCard(
-    cornerRadius: Dp = 8.dp,
-    backgroundColor: Color = ObsidianGlass
+    cornerRadius: Dp = 14.dp,
+    backgroundColor: Color = ObsidianGlass,
+    accentColor: Color? = null
 ): Modifier {
-    val shape = if (cornerRadius == 8.dp) cachedCardShape8 else RoundedCornerShape(cornerRadius)
+    val shape = when (cornerRadius) {
+        8.dp -> cachedCardShape8
+        10.dp -> cachedCardShape10
+        14.dp -> cachedCardShape14
+        16.dp -> cachedCardShape16
+        else -> RoundedCornerShape(cornerRadius)
+    }
+    val brush = if (accentColor == null || accentColor == KleinBlue) {
+        cachedActivePlayingBrush
+    } else {
+        Brush.verticalGradient(
+            colors = listOf(
+                Color.White.copy(alpha = 0.85f),
+                accentColor,
+                accentColor
+            )
+        )
+    }
     return this
         .clip(shape)
         .background(backgroundColor)
-        .border(width = 1.5.dp, brush = cachedActivePlayingBrush, shape = shape)
+        .border(width = 1.5.dp, brush = brush, shape = shape)
+}
+
+fun Modifier.quartzGlassCapsule(
+    cornerRadius: Dp = 14.dp,
+    backgroundColor: Color = ObsidianGlass,
+    accentColor: Color = SpecularGlassRimTop,
+    topRimColor: Color = SpecularGlassRimTop,
+    borderWidth: Dp = 1.dp
+): Modifier {
+    val shape = when (cornerRadius) {
+        14.dp -> cachedCardShape14
+        16.dp -> cachedCardShape16
+        else -> RoundedCornerShape(cornerRadius)
+    }
+    val brush = Brush.verticalGradient(
+        colors = listOf(
+            topRimColor,
+            accentColor.copy(alpha = 0.55f),
+            accentColor.copy(alpha = 0.20f)
+        )
+    )
+    return this
+        .clip(shape)
+        .background(backgroundColor)
+        .border(width = borderWidth, brush = brush, shape = shape)
 }

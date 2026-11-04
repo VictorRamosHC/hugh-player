@@ -37,6 +37,7 @@ import androidx.compose.material.icons.filled.Tune
 import androidx.compose.material.icons.filled.VisibilityOff
 import androidx.compose.material3.Button
 import androidx.compose.material3.ButtonDefaults
+import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.Icon
 import androidx.compose.material3.IconButton
 import androidx.compose.material3.Slider
@@ -53,6 +54,7 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.alpha
 import androidx.compose.ui.draw.clip
+import androidx.compose.ui.graphics.Brush
 import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.painterResource
@@ -67,17 +69,17 @@ import com.hughdevelopment.player.data.settings.SettingsState
 import com.hughdevelopment.player.data.settings.TimeDisplayFormat
 import com.hughdevelopment.player.ui.components.CybersigilBackground
 import com.hughdevelopment.player.ui.components.SovereignVoidBackdrop
+import com.hughdevelopment.player.ui.components.neoGlassCard
+import com.hughdevelopment.player.ui.components.quartzGlassCapsule
 import com.hughdevelopment.player.ui.theme.CharcoalSurface
 import com.hughdevelopment.player.ui.theme.CyberAmber
-import com.hughdevelopment.player.ui.theme.KleinBlue
-import com.hughdevelopment.player.ui.theme.ObsidianGlass
-import com.hughdevelopment.player.ui.theme.SpecularGlassRimTop
-import com.hughdevelopment.player.ui.components.neoGlassCard
 import com.hughdevelopment.player.ui.theme.HermeticCyan
 import com.hughdevelopment.player.ui.theme.LocalVaultTheme
 import com.hughdevelopment.player.ui.theme.MutedStone
+import com.hughdevelopment.player.ui.theme.ObsidianGlass
 import com.hughdevelopment.player.ui.theme.SigilSilver
 import com.hughdevelopment.player.ui.theme.SigilWhite
+import com.hughdevelopment.player.ui.theme.SpecularGlassRimTop
 import com.hughdevelopment.player.ui.theme.VaultThemes
 import com.hughdevelopment.player.ui.theme.VoidBlack
 import com.hughdevelopment.player.ui.theme.WireframeBorder
@@ -192,7 +194,7 @@ fun SettingsScreen(
                 modifier = Modifier
                     .fillMaxWidth()
                     .neoGlassCard(
-                        cornerRadius = 10.dp,
+                        cornerRadius = 14.dp,
                         backgroundColor = ObsidianGlass,
                         borderWidth = 1.dp,
                         topRimColor = SpecularGlassRimTop
@@ -256,18 +258,17 @@ fun SettingsScreen(
                             )
                         }
 
-                        Slider(
+                        Spacer(modifier = Modifier.height(4.dp))
+
+                        PrecisionSunSlider(
                             value = settings.fadeDurationSeconds,
                             onValueChange = onChangeFadeDuration,
                             valueRange = 1.0f..15.0f,
                             steps = 14,
-                            colors = SliderDefaults.colors(
-                                thumbColor = CyberAmber,
-                                activeTrackColor = CyberAmber,
-                                inactiveTrackColor = WireframeBorder
-                            ),
-                            modifier = Modifier.fillMaxWidth()
+                            accentColor = CyberAmber
                         )
+
+                        Spacer(modifier = Modifier.height(4.dp))
 
                         Text(
                             text = "Dica: Valores entre 8s e 10s criam a fusão perfeita entre faixas sem corte abrupto.",
@@ -293,7 +294,7 @@ fun SettingsScreen(
                 modifier = Modifier
                     .fillMaxWidth()
                     .neoGlassCard(
-                        cornerRadius = 10.dp,
+                        cornerRadius = 14.dp,
                         backgroundColor = currentTheme.cardBackground,
                         borderWidth = 1.dp
                     )
@@ -320,15 +321,27 @@ fun SettingsScreen(
                         )
                     }
 
-                    Button(
-                        onClick = onOpenEqualizer,
-                        colors = ButtonDefaults.buttonColors(
-                            containerColor = currentTheme.primary,
-                            contentColor = currentTheme.background
-                        ),
-                        shape = RoundedCornerShape(6.dp)
+                    Box(
+                        modifier = Modifier
+                            .quartzGlassCapsule(
+                                cornerRadius = 14.dp,
+                                backgroundColor = currentTheme.primaryAccent.copy(alpha = 0.22f),
+                                accentColor = currentTheme.primaryAccent,
+                                topRimColor = SpecularGlassRimTop,
+                                borderWidth = 1.dp
+                            )
+                            .clickable { onOpenEqualizer() }
+                            .padding(horizontal = 16.dp, vertical = 9.dp),
+                        contentAlignment = Alignment.Center
                     ) {
-                        Text("AJUSTAR", fontWeight = FontWeight.Bold, fontFamily = FontFamily.Monospace, fontSize = 11.sp)
+                        Text(
+                            text = "AJUSTAR",
+                            color = SigilWhite,
+                            fontWeight = FontWeight.Bold,
+                            fontFamily = FontFamily.Monospace,
+                            fontSize = 11.sp,
+                            letterSpacing = 1.sp
+                        )
                     }
                 }
             }
@@ -347,7 +360,7 @@ fun SettingsScreen(
                 modifier = Modifier
                     .fillMaxWidth()
                     .neoGlassCard(
-                        cornerRadius = 10.dp,
+                        cornerRadius = 14.dp,
                         backgroundColor = currentTheme.cardBackground,
                         borderWidth = 1.dp
                     )
@@ -374,15 +387,27 @@ fun SettingsScreen(
                         )
                     }
 
-                    Button(
-                        onClick = onOpenHiddenSongs,
-                        colors = ButtonDefaults.buttonColors(
-                            containerColor = currentTheme.primary,
-                            contentColor = currentTheme.background
-                        ),
-                        shape = RoundedCornerShape(6.dp)
+                    Box(
+                        modifier = Modifier
+                            .quartzGlassCapsule(
+                                cornerRadius = 14.dp,
+                                backgroundColor = currentTheme.primaryAccent.copy(alpha = 0.22f),
+                                accentColor = currentTheme.primaryAccent,
+                                topRimColor = SpecularGlassRimTop,
+                                borderWidth = 1.dp
+                            )
+                            .clickable { onOpenHiddenSongs() }
+                            .padding(horizontal = 16.dp, vertical = 9.dp),
+                        contentAlignment = Alignment.Center
                     ) {
-                        Text("GERENCIAR", fontWeight = FontWeight.Bold, fontFamily = FontFamily.Monospace, fontSize = 11.sp)
+                        Text(
+                            text = "GERENCIAR",
+                            color = SigilWhite,
+                            fontWeight = FontWeight.Bold,
+                            fontFamily = FontFamily.Monospace,
+                            fontSize = 11.sp,
+                            letterSpacing = 1.sp
+                        )
                     }
                 }
             }
@@ -401,7 +426,7 @@ fun SettingsScreen(
                 modifier = Modifier
                     .fillMaxWidth()
                     .neoGlassCard(
-                        cornerRadius = 10.dp,
+                        cornerRadius = 14.dp,
                         backgroundColor = currentTheme.cardBackground,
                         borderWidth = 1.dp
                     )
@@ -425,28 +450,37 @@ fun SettingsScreen(
                             Box(
                                 modifier = Modifier
                                     .weight(1f)
-                                    .clip(RoundedCornerShape(6.dp))
-                                    .background(if (isSelected) currentTheme.primary else currentTheme.background)
-                                    .border(
-                                        width = 1.dp,
-                                        color = if (isSelected) currentTheme.primary else WireframeBorder.copy(alpha = 0.4f),
-                                        shape = RoundedCornerShape(6.dp)
+                                    .then(
+                                        if (isSelected) {
+                                            Modifier.quartzGlassCapsule(
+                                                cornerRadius = 14.dp,
+                                                backgroundColor = currentTheme.primaryAccent.copy(alpha = 0.28f),
+                                                accentColor = currentTheme.primaryAccent,
+                                                topRimColor = SpecularGlassRimTop,
+                                                borderWidth = 1.2.dp
+                                            )
+                                        } else {
+                                            Modifier
+                                                .clip(RoundedCornerShape(14.dp))
+                                                .background(CharcoalSurface.copy(alpha = 0.6f))
+                                                .border(1.dp, WireframeBorder.copy(alpha = 0.4f), RoundedCornerShape(14.dp))
+                                        }
                                     )
                                     .clickable { onChangeTimeDisplayFormat(fmt) }
-                                    .padding(vertical = 10.dp),
+                                    .padding(vertical = 11.dp, horizontal = 6.dp),
                                 contentAlignment = Alignment.Center
                             ) {
                                 Column(horizontalAlignment = Alignment.CenterHorizontally) {
                                     Text(
                                         text = fmt.label,
-                                        color = if (isSelected) currentTheme.background else currentTheme.textPrimary,
+                                        color = if (isSelected) SigilWhite else currentTheme.textPrimary,
                                         fontSize = 11.sp,
                                         fontWeight = FontWeight.Bold,
                                         fontFamily = FontFamily.Monospace
                                     )
                                     Text(
                                         text = if (fmt == TimeDisplayFormat.MINUTES) "(Ex: 125 min)" else "(Ex: 1 dia e 3h)",
-                                        color = if (isSelected) currentTheme.background.copy(alpha = 0.8f) else MutedStone,
+                                        color = if (isSelected) SigilWhite.copy(alpha = 0.85f) else MutedStone,
                                         fontSize = 9.sp,
                                         fontFamily = FontFamily.Monospace
                                     )
@@ -471,7 +505,7 @@ fun SettingsScreen(
                 modifier = Modifier
                     .fillMaxWidth()
                     .neoGlassCard(
-                        cornerRadius = 10.dp,
+                        cornerRadius = 14.dp,
                         backgroundColor = ObsidianGlass,
                         borderWidth = 1.dp,
                         topRimColor = SpecularGlassRimTop
@@ -535,12 +569,12 @@ fun SettingsScreen(
                     Box(
                         modifier = Modifier
                             .fillMaxWidth()
-                            .clip(RoundedCornerShape(8.dp))
+                            .clip(RoundedCornerShape(14.dp))
                             .background(CharcoalSurface)
                             .border(
                                 width = if (isSelected) 1.5.dp else 1.dp,
                                 color = if (isSelected) theme.primaryAccent else WireframeBorder,
-                                shape = RoundedCornerShape(8.dp)
+                                shape = RoundedCornerShape(14.dp)
                             )
                             .clickable { onSelectTheme(theme.id.name) }
                             .padding(14.dp)
@@ -600,10 +634,10 @@ fun SettingsScreen(
 
                             Box(
                                 modifier = Modifier
-                                    .clip(RoundedCornerShape(4.dp))
+                                    .clip(RoundedCornerShape(10.dp))
                                     .background(if (isSelected) theme.primaryAccent else CharcoalSurface)
-                                    .border(1.dp, if (isSelected) theme.primaryAccent else WireframeBorder, RoundedCornerShape(4.dp))
-                                    .padding(horizontal = 8.dp, vertical = 4.dp)
+                                    .border(1.dp, if (isSelected) theme.primaryAccent else WireframeBorder, RoundedCornerShape(10.dp))
+                                    .padding(horizontal = 10.dp, vertical = 5.dp)
                             ) {
                                 Text(
                                     text = if (isSelected) "ATIVO" else "ATIVAR",
@@ -632,7 +666,7 @@ fun SettingsScreen(
                 modifier = Modifier
                     .fillMaxWidth()
                     .neoGlassCard(
-                        cornerRadius = 10.dp,
+                        cornerRadius = 14.dp,
                         backgroundColor = ObsidianGlass,
                         borderWidth = 1.dp,
                         topRimColor = SpecularGlassRimTop
@@ -660,19 +694,16 @@ fun SettingsScreen(
                         )
                     }
 
-                    Slider(
+                    Spacer(modifier = Modifier.height(4.dp))
+
+                    PrecisionSunSlider(
                         value = settings.libraryWallpaperAlpha,
                         onValueChange = onChangeLibraryAlpha,
                         valueRange = 0.05f..0.70f,
-                        colors = SliderDefaults.colors(
-                            thumbColor = HermeticCyan,
-                            activeTrackColor = HermeticCyan,
-                            inactiveTrackColor = WireframeBorder
-                        ),
-                        modifier = Modifier.fillMaxWidth()
+                        accentColor = HermeticCyan
                     )
 
-                    Spacer(modifier = Modifier.height(8.dp))
+                    Spacer(modifier = Modifier.height(10.dp))
 
                     // Expanded Player Wallpaper Opacity
                     Row(
@@ -694,16 +725,13 @@ fun SettingsScreen(
                         )
                     }
 
-                    Slider(
+                    Spacer(modifier = Modifier.height(4.dp))
+
+                    PrecisionSunSlider(
                         value = settings.playerWallpaperAlpha,
                         onValueChange = onChangePlayerAlpha,
                         valueRange = 0.05f..0.70f,
-                        colors = SliderDefaults.colors(
-                            thumbColor = CyberAmber,
-                            activeTrackColor = CyberAmber,
-                            inactiveTrackColor = WireframeBorder
-                        ),
-                        modifier = Modifier.fillMaxWidth()
+                        accentColor = CyberAmber
                     )
                 }
             }
@@ -721,9 +749,9 @@ fun SettingsScreen(
             Box(
                 modifier = Modifier
                     .fillMaxWidth()
-                    .clip(RoundedCornerShape(10.dp))
+                    .clip(RoundedCornerShape(14.dp))
                     .background(CharcoalSurface)
-                    .border(1.dp, CyberAmber.copy(alpha = 0.5f), RoundedCornerShape(10.dp))
+                    .border(1.dp, CyberAmber.copy(alpha = 0.5f), RoundedCornerShape(14.dp))
                     .padding(14.dp)
             ) {
                 Column {
@@ -755,7 +783,7 @@ fun SettingsScreen(
                             containerColor = CyberAmber,
                             contentColor = VoidBlack
                         ),
-                        shape = RoundedCornerShape(6.dp),
+                        shape = RoundedCornerShape(14.dp),
                         modifier = Modifier.fillMaxWidth()
                     ) {
                         Text(
@@ -791,9 +819,9 @@ fun SettingsScreen(
             Box(
                 modifier = Modifier
                     .fillMaxWidth()
-                    .clip(RoundedCornerShape(10.dp))
+                    .clip(RoundedCornerShape(14.dp))
                     .background(CharcoalSurface)
-                    .border(1.dp, WireframeBorder, RoundedCornerShape(10.dp))
+                    .border(1.dp, WireframeBorder, RoundedCornerShape(14.dp))
                     .padding(14.dp)
             ) {
                 Column {
@@ -826,10 +854,10 @@ fun SettingsScreen(
                                 }
                             },
                             colors = ButtonDefaults.buttonColors(
-                                containerColor = KleinBlue,
+                                containerColor = currentTheme.primaryAccent,
                                 contentColor = SigilWhite
                             ),
-                            shape = RoundedCornerShape(6.dp),
+                            shape = RoundedCornerShape(14.dp),
                             modifier = Modifier.weight(1f)
                         ) {
                             Text(
@@ -848,7 +876,7 @@ fun SettingsScreen(
                                 containerColor = CyberAmber,
                                 contentColor = VoidBlack
                             ),
-                            shape = RoundedCornerShape(6.dp),
+                            shape = RoundedCornerShape(14.dp),
                             modifier = Modifier.weight(1f)
                         ) {
                             Text(
@@ -886,7 +914,7 @@ fun SettingsScreen(
                 modifier = Modifier
                     .fillMaxWidth()
                     .neoGlassCard(
-                        cornerRadius = 10.dp,
+                        cornerRadius = 14.dp,
                         backgroundColor = ObsidianGlass,
                         borderWidth = 1.dp,
                         topRimColor = SpecularGlassRimTop
@@ -909,7 +937,7 @@ fun SettingsScreen(
                 contentAlignment = Alignment.Center
             ) {
                 Text(
-                    text = "AETHER VAULT // VERSION 1.4.1 CORE\nSOVEREIGN OFFLINE AUDIO • CO-FOUNDERS: HUGH & ATOM",
+                    text = "AETHER VAULT // VERSION 1.7.0 CORE\nSOVEREIGN OFFLINE AUDIO • CO-FOUNDERS: HUGH & ATOM",
                     color = MutedStone.copy(alpha = 0.6f),
                     fontSize = 10.sp,
                     fontFamily = FontFamily.Monospace,
@@ -973,3 +1001,65 @@ private fun SectionHeader(
         )
     }
 }
+
+@OptIn(ExperimentalMaterial3Api::class)
+@Composable
+private fun PrecisionSunSlider(
+    value: Float,
+    onValueChange: (Float) -> Unit,
+    valueRange: ClosedFloatingPointRange<Float>,
+    steps: Int = 0,
+    accentColor: androidx.compose.ui.graphics.Color = CyberAmber,
+    modifier: Modifier = Modifier
+) {
+    Slider(
+        value = value,
+        onValueChange = onValueChange,
+        valueRange = valueRange,
+        steps = steps,
+        modifier = modifier.fillMaxWidth(),
+        thumb = {
+            // Glowing sun orb thumb
+            Box(
+                modifier = Modifier.size(24.dp),
+                contentAlignment = Alignment.Center
+            ) {
+                // Radiant outer corona halo
+                Box(
+                    modifier = Modifier
+                        .size(22.dp)
+                        .clip(CircleShape)
+                        .background(accentColor.copy(alpha = 0.28f))
+                )
+                // Luminous sun core
+                Box(
+                    modifier = Modifier
+                        .size(13.dp)
+                        .clip(CircleShape)
+                        .background(
+                            Brush.radialGradient(
+                                colors = listOf(
+                                    SigilWhite,
+                                    accentColor,
+                                    accentColor
+                                )
+                            )
+                        )
+                        .border(1.dp, SigilWhite.copy(alpha = 0.85f), CircleShape)
+                )
+            }
+        },
+        track = { sliderState ->
+            SliderDefaults.Track(
+                sliderState = sliderState,
+                modifier = Modifier.height(3.dp),
+                colors = SliderDefaults.colors(
+                    activeTrackColor = accentColor,
+                    inactiveTrackColor = WireframeBorder.copy(alpha = 0.6f)
+                ),
+                drawStopIndicator = null
+            )
+        }
+    )
+}
+

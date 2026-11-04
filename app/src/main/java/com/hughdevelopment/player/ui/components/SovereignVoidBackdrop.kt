@@ -27,7 +27,8 @@ import com.hughdevelopment.player.ui.theme.LocalVaultTheme
 fun SovereignVoidBackdrop(
     modifier: Modifier = Modifier,
     showCybersigil: Boolean = true,
-    auraScale: Float = 1.0f
+    auraScale: Float = 1.0f,
+    centralizeAura: Boolean = false
 ) {
     val theme = LocalVaultTheme.current
     val infiniteTransition = rememberInfiniteTransition(label = "SovereignBackdropBreath")
@@ -49,7 +50,19 @@ fun SovereignVoidBackdrop(
             // 1. Deep Obsidian Void
             drawRect(color = Color(0xFF07070B))
 
-            // 2. Primary Radiant Ambient Aura (Top-Left)
+            val primaryCenter = if (centralizeAura) {
+                Offset(size.width * 0.50f, size.height * 0.32f)
+            } else {
+                Offset(size.width * 0.22f, size.height * 0.15f)
+            }
+
+            val secondaryCenter = if (centralizeAura) {
+                Offset(size.width * 0.50f, size.height * 0.68f)
+            } else {
+                Offset(size.width * 0.82f, size.height * 0.52f)
+            }
+
+            // 2. Primary Radiant Ambient Aura
             drawCircle(
                 brush = Brush.radialGradient(
                     colors = listOf(
@@ -57,12 +70,12 @@ fun SovereignVoidBackdrop(
                         primaryColor.copy(alpha = 0.05f * auraBreath * auraScale),
                         Color.Transparent
                     ),
-                    center = Offset(size.width * 0.22f, size.height * 0.15f),
+                    center = primaryCenter,
                     radius = size.width * 0.85f
                 )
             )
 
-            // 3. Secondary Radiant Ambient Aura (Mid-Right)
+            // 3. Secondary Radiant Ambient Aura
             drawCircle(
                 brush = Brush.radialGradient(
                     colors = listOf(
@@ -70,7 +83,7 @@ fun SovereignVoidBackdrop(
                         secondaryColor.copy(alpha = 0.03f * auraBreath * auraScale),
                         Color.Transparent
                     ),
-                    center = Offset(size.width * 0.82f, size.height * 0.52f),
+                    center = secondaryCenter,
                     radius = size.width * 0.70f
                 )
             )

@@ -37,9 +37,15 @@ import androidx.compose.material.icons.filled.PlayArrow
 import androidx.compose.material.icons.filled.Search
 import androidx.compose.material3.AlertDialog
 import androidx.compose.material3.Button
+import androidx.compose.foundation.lazy.itemsIndexed
+import androidx.compose.material.icons.filled.DeleteOutline
+import androidx.compose.material.icons.filled.MoreVert
 import androidx.compose.material3.ButtonDefaults
 import androidx.compose.material3.Checkbox
 import androidx.compose.material3.CheckboxDefaults
+import androidx.compose.material3.DropdownMenu
+import androidx.compose.material3.DropdownMenuItem
+import androidx.compose.material3.HorizontalDivider
 import androidx.compose.material3.Icon
 import androidx.compose.material3.IconButton
 import androidx.compose.material3.OutlinedTextField
@@ -76,8 +82,8 @@ import com.hughdevelopment.player.ui.components.CybersigilBackground
 import com.hughdevelopment.player.ui.components.SovereignVoidBackdrop
 import com.hughdevelopment.player.ui.theme.CharcoalSurface
 import com.hughdevelopment.player.ui.theme.CyberAmber
+import com.hughdevelopment.player.ui.theme.DangerRed
 import com.hughdevelopment.player.ui.theme.LocalVaultTheme
-import com.hughdevelopment.player.ui.theme.KleinBlue
 import com.hughdevelopment.player.ui.theme.ObsidianGlass
 import com.hughdevelopment.player.ui.theme.SpecularGlassRimTop
 import com.hughdevelopment.player.ui.components.neoGlassCard
@@ -244,10 +250,10 @@ fun FoldersScreen(
                 Box(
                     modifier = Modifier
                         .fillMaxWidth()
-                        .clip(RoundedCornerShape(8.dp))
+                        .clip(RoundedCornerShape(14.dp))
                         .background(CharcoalSurface)
-                        .border(1.dp, WireframeBorder, RoundedCornerShape(8.dp))
-                        .padding(10.dp)
+                        .border(1.dp, WireframeBorder, RoundedCornerShape(14.dp))
+                        .padding(12.dp)
                 ) {
                     Column {
                         Row(
@@ -358,8 +364,8 @@ fun FoldersScreen(
                         modifier = Modifier
                             .fillMaxWidth()
                             .height(130.dp)
-                            .clip(RoundedCornerShape(10.dp))
-                            .border(1.dp, WireframeBorder.copy(alpha = 0.6f), RoundedCornerShape(10.dp))
+                            .clip(RoundedCornerShape(14.dp))
+                            .border(1.dp, WireframeBorder.copy(alpha = 0.6f), RoundedCornerShape(14.dp))
                     ) {
                         Image(
                             painter = painterResource(id = bannerCoverRes),
@@ -367,27 +373,8 @@ fun FoldersScreen(
                             contentScale = ContentScale.Crop,
                             modifier = Modifier.fillMaxSize()
                         )
-                        Box(
-                            modifier = Modifier
-                                .fillMaxSize()
-                                .background(
-                                    androidx.compose.ui.graphics.Brush.verticalGradient(
-                                        colors = listOf(Color.Transparent, VoidBlack.copy(alpha = 0.85f))
-                                    )
-                                )
-                                .padding(12.dp),
-                            contentAlignment = Alignment.BottomStart
-                        ) {
-                            Text(
-                                text = "${activePlaylist.name.uppercase()} • ${activePlaylist.songs.size} FAIXAS",
-                                color = SigilWhite,
-                                fontSize = 11.5.sp,
-                                fontWeight = FontWeight.Bold,
-                                fontFamily = FontFamily.Monospace
-                            )
-                        }
                     }
-                    Spacer(modifier = Modifier.height(8.dp))
+                    Spacer(modifier = Modifier.height(10.dp))
                 }
 
                 val sortedFolderSongs = remember(activePlaylist.songs, folderSearchQuery, folderSortOrder) {
@@ -428,11 +415,11 @@ fun FoldersScreen(
                             focusedContainerColor = CharcoalSurface,
                             unfocusedContainerColor = CharcoalSurface
                         ),
-                        shape = RoundedCornerShape(6.dp),
+                        shape = RoundedCornerShape(12.dp),
                         modifier = Modifier.fillMaxWidth().height(48.dp)
                     )
 
-                    Spacer(modifier = Modifier.height(6.dp))
+                    Spacer(modifier = Modifier.height(8.dp))
 
                     Row(
                         modifier = Modifier
@@ -461,7 +448,7 @@ fun FoldersScreen(
                             onClick = { folderSortOrder = SortOrder.FAVORITES_FIRST }
                         )
                         FolderSortChip(
-                            label = "DURA��O",
+                            label = "DURAÇÃO",
                             isSelected = folderSortOrder == SortOrder.MOST_PLAYED,
                             onClick = { folderSortOrder = SortOrder.MOST_PLAYED }
                         )
@@ -491,7 +478,7 @@ fun FoldersScreen(
                                     containerColor = CyberAmber,
                                     contentColor = VoidBlack
                                 ),
-                                shape = RoundedCornerShape(6.dp)
+                                 shape = RoundedCornerShape(14.dp)
                             ) {
                                 Icon(imageVector = Icons.Default.Add, contentDescription = null)
                                 Spacer(modifier = Modifier.width(6.dp))
@@ -507,25 +494,24 @@ fun FoldersScreen(
                 } else {
                     LazyColumn(
                         modifier = Modifier.fillMaxSize(),
-                        contentPadding = PaddingValues(bottom = 120.dp),
-                        verticalArrangement = Arrangement.spacedBy(6.dp)
+                        contentPadding = PaddingValues(bottom = 120.dp)
                     ) {
-                        items(items = sortedFolderSongs, key = { it.id }) { song ->
+                        itemsIndexed(items = sortedFolderSongs, key = { _, song -> song.id }) { index, song ->
+                            var showSongMenu by remember { mutableStateOf(false) }
+
                             Row(
                                 modifier = Modifier
                                     .fillMaxWidth()
-                                    .clip(RoundedCornerShape(8.dp))
-                                    .background(CharcoalSurface)
-                                    .border(1.dp, WireframeBorder.copy(alpha = 0.5f), RoundedCornerShape(8.dp))
+                                    .clip(RoundedCornerShape(10.dp))
                                     .clickable { onSongSelectedFromPlaylist(song, sortedFolderSongs) }
-                                    .padding(8.dp),
+                                    .padding(horizontal = 6.dp, vertical = 9.dp),
                                 verticalAlignment = Alignment.CenterVertically
                             ) {
                                 ArtworkImage(
                                     artworkUri = song.albumArtUri,
                                     modifier = Modifier.size(42.dp),
-                                    cornerRadius = 6.dp,
-                                    accentColor = CyberAmber
+                                    cornerRadius = 8.dp,
+                                    accentColor = currentTheme.primaryAccent
                                 )
 
                                 Spacer(modifier = Modifier.width(10.dp))
@@ -550,17 +536,58 @@ fun FoldersScreen(
                                     )
                                 }
 
-                                IconButton(
-                                    onClick = { onRemoveSongFromPlaylist(activePlaylist.id, song.id) },
-                                    modifier = Modifier.size(32.dp)
-                                ) {
-                                    Icon(
-                                        imageVector = Icons.Default.Close,
-                                        contentDescription = "Remover da pasta",
-                                        tint = MutedStone,
-                                        modifier = Modifier.size(18.dp)
-                                    )
+                                Box {
+                                    IconButton(
+                                        onClick = { showSongMenu = true },
+                                        modifier = Modifier.size(32.dp)
+                                    ) {
+                                        Icon(
+                                            imageVector = Icons.Default.MoreVert,
+                                            contentDescription = "Opções da faixa",
+                                            tint = MutedStone,
+                                            modifier = Modifier.size(20.dp)
+                                        )
+                                    }
+
+                                    DropdownMenu(
+                                        expanded = showSongMenu,
+                                        onDismissRequest = { showSongMenu = false },
+                                        modifier = Modifier
+                                            .background(CharcoalSurface)
+                                            .border(1.dp, WireframeBorder, RoundedCornerShape(8.dp))
+                                    ) {
+                                        DropdownMenuItem(
+                                            text = {
+                                                Text(
+                                                    text = "Remover da pasta",
+                                                    color = SigilWhite,
+                                                    fontSize = 12.sp,
+                                                    fontFamily = FontFamily.Monospace
+                                                )
+                                            },
+                                            leadingIcon = {
+                                                Icon(
+                                                    imageVector = Icons.Default.DeleteOutline,
+                                                    contentDescription = null,
+                                                    tint = DangerRed,
+                                                    modifier = Modifier.size(18.dp)
+                                                )
+                                            },
+                                            onClick = {
+                                                showSongMenu = false
+                                                onRemoveSongFromPlaylist(activePlaylist.id, song.id)
+                                            }
+                                        )
+                                    }
                                 }
+                            }
+
+                            if (index < sortedFolderSongs.lastIndex) {
+                                HorizontalDivider(
+                                    color = WireframeBorder.copy(alpha = 0.35f),
+                                    thickness = 0.5.dp,
+                                    modifier = Modifier.padding(horizontal = 8.dp)
+                                )
                             }
                         }
                     }
@@ -603,14 +630,7 @@ private fun FolderCardItem(
     onPlay: () -> Unit,
     onDelete: () -> Unit
 ) {
-    val accentColor = remember(playlist.colorHex) {
-        try {
-            Color(android.graphics.Color.parseColor(playlist.colorHex))
-        } catch (e: Exception) {
-            CyberAmber
-        }
-    }
-
+    val theme = LocalVaultTheme.current
     val coverRes = remember(playlist.name, playlist.category) {
         getPlaylistCoverResource(playlist.name, playlist.category)
     }
@@ -619,11 +639,11 @@ private fun FolderCardItem(
         modifier = Modifier
             .fillMaxWidth()
             .neoGlassCard(
-                cornerRadius = 10.dp,
+                cornerRadius = 16.dp,
                 backgroundColor = ObsidianGlass,
-                borderWidth = 1.2.dp,
+                borderWidth = 1.dp,
                 topRimColor = SpecularGlassRimTop,
-                bottomRimColor = accentColor.copy(alpha = 0.5f)
+                bottomRimColor = theme.primaryAccent.copy(alpha = 0.25f)
             )
             .clickable { onOpen() }
             .padding(12.dp),
@@ -631,9 +651,9 @@ private fun FolderCardItem(
     ) {
         Box(
             modifier = Modifier
-                .size(48.dp)
-                .clip(RoundedCornerShape(8.dp))
-                .border(1.dp, accentColor.copy(alpha = 0.5f), RoundedCornerShape(8.dp)),
+                .size(50.dp)
+                .clip(RoundedCornerShape(12.dp))
+                .border(1.dp, theme.primaryAccent.copy(alpha = 0.35f), RoundedCornerShape(12.dp)),
             contentAlignment = Alignment.Center
         ) {
             if (coverRes != null) {
@@ -647,13 +667,13 @@ private fun FolderCardItem(
                 Box(
                     modifier = Modifier
                         .fillMaxSize()
-                        .background(accentColor.copy(alpha = 0.15f)),
+                        .background(theme.primaryAccent.copy(alpha = 0.12f)),
                     contentAlignment = Alignment.Center
                 ) {
                     Icon(
                         imageVector = Icons.Default.Folder,
                         contentDescription = null,
-                        tint = accentColor,
+                        tint = theme.primaryAccent,
                         modifier = Modifier.size(26.dp)
                     )
                 }
@@ -673,18 +693,19 @@ private fun FolderCardItem(
                 overflow = TextOverflow.Ellipsis
             )
 
-            Spacer(modifier = Modifier.height(2.dp))
+            Spacer(modifier = Modifier.height(3.dp))
 
             Row(verticalAlignment = Alignment.CenterVertically) {
                 Box(
                     modifier = Modifier
-                        .clip(RoundedCornerShape(3.dp))
-                        .background(accentColor.copy(alpha = 0.2f))
-                        .padding(horizontal = 5.dp, vertical = 1.5.dp)
+                        .clip(RoundedCornerShape(6.dp))
+                        .background(theme.primaryAccent.copy(alpha = 0.15f))
+                        .border(0.8.dp, theme.primaryAccent.copy(alpha = 0.35f), RoundedCornerShape(6.dp))
+                        .padding(horizontal = 6.dp, vertical = 2.dp)
                 ) {
                     Text(
                         text = playlist.category,
-                        color = accentColor,
+                        color = theme.primaryAccent,
                         fontSize = 9.sp,
                         fontFamily = FontFamily.Monospace,
                         fontWeight = FontWeight.Bold
@@ -1164,17 +1185,18 @@ private fun FolderSortChip(
     isSelected: Boolean,
     onClick: () -> Unit
 ) {
+    val theme = LocalVaultTheme.current
     Box(
         modifier = Modifier
-            .clip(RoundedCornerShape(4.dp))
-            .background(if (isSelected) KleinBlue else ObsidianGlass.copy(alpha = 0.8f))
+            .clip(RoundedCornerShape(12.dp))
+            .background(if (isSelected) theme.primaryAccent else ObsidianGlass.copy(alpha = 0.8f))
             .border(
                 width = 1.dp,
-                color = if (isSelected) KleinBlue else WireframeBorder,
-                shape = RoundedCornerShape(4.dp)
+                color = if (isSelected) theme.primaryAccent else WireframeBorder,
+                shape = RoundedCornerShape(12.dp)
             )
             .clickable { onClick() }
-            .padding(horizontal = 9.dp, vertical = 5.dp)
+            .padding(horizontal = 12.dp, vertical = 6.dp)
     ) {
         Text(
             text = label,

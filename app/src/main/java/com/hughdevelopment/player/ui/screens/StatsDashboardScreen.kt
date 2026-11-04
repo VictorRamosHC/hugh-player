@@ -79,7 +79,6 @@ import com.hughdevelopment.player.ui.theme.LocalVaultTheme
 import com.hughdevelopment.player.ui.theme.CharcoalSurface
 import com.hughdevelopment.player.ui.theme.CyberAmber
 import com.hughdevelopment.player.ui.theme.HermeticCyan
-import com.hughdevelopment.player.ui.theme.KleinBlue
 import com.hughdevelopment.player.ui.theme.MutedStone
 import com.hughdevelopment.player.ui.theme.ObsidianGlass
 import com.hughdevelopment.player.ui.theme.SigilSilver
@@ -87,6 +86,7 @@ import com.hughdevelopment.player.ui.theme.SigilWhite
 import com.hughdevelopment.player.ui.theme.SpecularGlassRimTop
 import com.hughdevelopment.player.ui.theme.VoidBlack
 import com.hughdevelopment.player.ui.theme.WireframeBorder
+import androidx.compose.ui.graphics.Brush
 import kotlinx.coroutines.launch
 import java.text.SimpleDateFormat
 import java.util.Date
@@ -108,10 +108,11 @@ fun StatsDashboardScreen(
             .fillMaxSize()
             .background(currentTheme.background)
     ) {
-        // Pure Obsidian Void & Radiant Auras
+        // Pure Obsidian Void & Centralized Radiant Aura
         SovereignVoidBackdrop(
             showCybersigil = true,
-            auraScale = 1.0f
+            auraScale = 1.0f,
+            centralizeAura = true
         )
 
         Column(
@@ -197,28 +198,28 @@ fun StatsDashboardScreen(
                             title = if (timeDisplayFormat == TimeDisplayFormat.DAYS_AND_HOURS) "TEMPO OUVIDO" else "MINUTOS",
                             value = formatListeningTime(overview.totalSecondsListened, timeDisplayFormat),
                             icon = Icons.Default.Timelapse,
-                            accentColor = currentTheme.primary,
+                            accentColor = currentTheme.primaryAccent,
                             modifier = Modifier.weight(1f)
                         )
                         MetricCard(
                             title = "PLAYS",
                             value = "${overview.totalSongsPlayed}",
                             icon = Icons.Default.Headphones,
-                            accentColor = HermeticCyan,
+                            accentColor = currentTheme.secondaryAccent,
                             modifier = Modifier.weight(1f)
                         )
                         MetricCard(
                             title = "MÉDIA/DIA",
                             value = "${overview.averageDailyMinutes}m",
                             icon = Icons.Default.CalendarMonth,
-                            accentColor = KleinBlue,
+                            accentColor = currentTheme.tertiaryAccent,
                             modifier = Modifier.weight(1f)
                         )
                         MetricCard(
                             title = "DIAS ATIVOS",
                             value = "${overview.streakInfo.totalActiveDays}",
                             icon = Icons.Default.LocalFireDepartment,
-                            accentColor = SigilSilver,
+                            accentColor = currentTheme.primaryAccent,
                             modifier = Modifier.weight(1f)
                         )
                     }
@@ -306,7 +307,7 @@ private fun StreakBannerCard(overview: ListeningOverview) {
         modifier = Modifier
             .fillMaxWidth()
             .neoGlassCard(
-                cornerRadius = 10.dp,
+                cornerRadius = 14.dp,
                 backgroundColor = ObsidianGlass,
                 borderWidth = 1.2.dp,
                 topRimColor = CyberAmber,
@@ -347,9 +348,11 @@ private fun StreakBannerCard(overview: ListeningOverview) {
                         letterSpacing = 1.sp
                     )
                     Spacer(modifier = Modifier.width(6.dp))
-                    Text(
-                        text = if (streak > 0) "🔥" else "⚡",
-                        fontSize = 14.sp
+                    Icon(
+                        imageVector = if (streak > 0) Icons.Default.LocalFireDepartment else Icons.Default.ElectricBolt,
+                        contentDescription = null,
+                        tint = CyberAmber,
+                        modifier = Modifier.size(16.dp)
                     )
                 }
 
@@ -370,6 +373,7 @@ private fun StreakBannerCard(overview: ListeningOverview) {
 
 @Composable
 private fun SovereignLevelCard(overview: ListeningOverview) {
+    val theme = LocalVaultTheme.current
     val rank = overview.rankTier
     val xp = overview.xp
     val progress = (xp.toFloat() / rank.nextThreshold.toFloat()).coerceIn(0.05f, 1.0f)
@@ -378,10 +382,14 @@ private fun SovereignLevelCard(overview: ListeningOverview) {
     Box(
         modifier = Modifier
             .fillMaxWidth()
-            .clip(RoundedCornerShape(10.dp))
-            .background(CharcoalSurface)
-            .border(1.dp, rankColor.copy(alpha = 0.7f), RoundedCornerShape(10.dp))
-            .padding(12.dp)
+            .neoGlassCard(
+                cornerRadius = 14.dp,
+                backgroundColor = ObsidianGlass,
+                borderWidth = 1.dp,
+                topRimColor = SpecularGlassRimTop,
+                bottomRimColor = rankColor.copy(alpha = 0.4f)
+            )
+            .padding(14.dp)
     ) {
         Column {
             Row(
@@ -416,13 +424,14 @@ private fun SovereignLevelCard(overview: ListeningOverview) {
                 )
             }
 
-            Spacer(modifier = Modifier.height(8.dp))
+            Spacer(modifier = Modifier.height(10.dp))
 
             LinearProgressIndicator(
                 progress = { progress },
                 modifier = Modifier
                     .fillMaxWidth()
-                    .height(4.5.dp),
+                    .height(5.dp)
+                    .clip(RoundedCornerShape(3.dp)),
                 color = rankColor,
                 trackColor = WireframeBorder
             )
@@ -432,6 +441,7 @@ private fun SovereignLevelCard(overview: ListeningOverview) {
 
 @Composable
 private fun WeeklyBarChartCard(overview: ListeningOverview) {
+    val theme = LocalVaultTheme.current
     val days = overview.recent7Days
     val maxMins = days.maxOfOrNull { it.minutes }?.coerceAtLeast(15L) ?: 15L
 
@@ -439,35 +449,50 @@ private fun WeeklyBarChartCard(overview: ListeningOverview) {
         modifier = Modifier
             .fillMaxWidth()
             .neoGlassCard(
-                cornerRadius = 10.dp,
+                cornerRadius = 14.dp,
                 backgroundColor = ObsidianGlass,
                 borderWidth = 1.dp,
                 topRimColor = SpecularGlassRimTop,
-                bottomRimColor = WireframeBorder
+                bottomRimColor = theme.primaryAccent.copy(alpha = 0.25f)
             )
-            .padding(12.dp)
+            .padding(14.dp)
     ) {
         Column {
-            Text(
-                text = "MINUTOS NOS ÚLTIMOS 7 DIAS",
-                color = SigilSilver,
-                fontSize = 11.sp,
-                fontFamily = FontFamily.Monospace,
-                fontWeight = FontWeight.Bold
-            )
+            Row(
+                modifier = Modifier.fillMaxWidth(),
+                horizontalArrangement = Arrangement.SpaceBetween,
+                verticalAlignment = Alignment.CenterVertically
+            ) {
+                Text(
+                    text = "MINUTOS NOS ÚLTIMOS 7 DIAS",
+                    color = SigilWhite,
+                    fontSize = 11.5.sp,
+                    fontFamily = FontFamily.Monospace,
+                    fontWeight = FontWeight.Bold,
+                    letterSpacing = 0.5.sp
+                )
+                Text(
+                    text = "COLUNAS SAGRADAS",
+                    color = theme.primaryAccent,
+                    fontSize = 9.sp,
+                    fontFamily = FontFamily.Monospace,
+                    fontWeight = FontWeight.SemiBold
+                )
+            }
 
-            Spacer(modifier = Modifier.height(14.dp))
+            Spacer(modifier = Modifier.height(16.dp))
 
             Row(
                 modifier = Modifier
                     .fillMaxWidth()
-                    .height(80.dp),
+                    .height(90.dp),
                 horizontalArrangement = Arrangement.SpaceBetween,
                 verticalAlignment = Alignment.Bottom
             ) {
                 days.forEach { day ->
-                    val barFrac = (day.minutes.toFloat() / maxMins.toFloat()).coerceIn(0.08f, 1.0f)
-                    val barColor = if (day.hasValidStreak) CyberAmber else if (day.minutes > 0) KleinBlue else WireframeBorder.copy(alpha = 0.4f)
+                    val barFrac = (day.minutes.toFloat() / maxMins.toFloat()).coerceIn(0.10f, 1.0f)
+                    val hasMinutes = day.minutes > 0
+                    val accent = if (day.hasValidStreak) theme.secondaryAccent else if (hasMinutes) theme.primaryAccent else WireframeBorder
 
                     Column(
                         horizontalAlignment = Alignment.CenterHorizontally,
@@ -475,23 +500,74 @@ private fun WeeklyBarChartCard(overview: ListeningOverview) {
                     ) {
                         Text(
                             text = "${day.minutes}m",
-                            color = if (day.minutes > 0) SigilWhite else MutedStone.copy(alpha = 0.5f),
+                            color = if (hasMinutes) SigilWhite else MutedStone.copy(alpha = 0.45f),
                             fontSize = 9.sp,
+                            fontWeight = if (hasMinutes) FontWeight.Bold else FontWeight.Normal,
                             fontFamily = FontFamily.Monospace
                         )
-                        Spacer(modifier = Modifier.height(4.dp))
+                        Spacer(modifier = Modifier.height(6.dp))
+
+                        // Futuristic column with radiant vertical gradient and glowing capitel
                         Box(
                             modifier = Modifier
                                 .width(18.dp)
-                                .height((50 * barFrac).dp)
-                                .clip(RoundedCornerShape(topStart = 4.dp, topEnd = 4.dp))
-                                .background(barColor)
-                        )
-                        Spacer(modifier = Modifier.height(4.dp))
+                                .height((58 * barFrac).dp)
+                                .clip(RoundedCornerShape(topStart = 8.dp, topEnd = 8.dp))
+                                .background(
+                                    if (hasMinutes) {
+                                        Brush.verticalGradient(
+                                            colors = listOf(
+                                                accent,
+                                                accent.copy(alpha = 0.40f),
+                                                accent.copy(alpha = 0.12f)
+                                            )
+                                        )
+                                    } else {
+                                        Brush.verticalGradient(
+                                            colors = listOf(
+                                                WireframeBorder.copy(alpha = 0.5f),
+                                                WireframeBorder.copy(alpha = 0.2f)
+                                            )
+                                        )
+                                    }
+                                )
+                                .border(
+                                    width = 1.dp,
+                                    brush = Brush.verticalGradient(
+                                        colors = listOf(
+                                            if (hasMinutes) SpecularGlassRimTop else WireframeBorder,
+                                            accent.copy(alpha = 0.3f)
+                                        )
+                                    ),
+                                    shape = RoundedCornerShape(topStart = 8.dp, topEnd = 8.dp)
+                                ),
+                            contentAlignment = Alignment.TopCenter
+                        ) {
+                            if (hasMinutes) {
+                                // Glowing capitel (column crown / capitello divino)
+                                Box(
+                                    modifier = Modifier
+                                        .fillMaxWidth()
+                                        .height(3.dp)
+                                        .background(
+                                            Brush.horizontalGradient(
+                                                colors = listOf(
+                                                    accent.copy(alpha = 0.6f),
+                                                    SigilWhite,
+                                                    accent.copy(alpha = 0.6f)
+                                                )
+                                            )
+                                        )
+                                )
+                            }
+                        }
+
+                        Spacer(modifier = Modifier.height(6.dp))
                         Text(
                             text = day.dayOfWeekLabel,
-                            color = MutedStone,
+                            color = if (day.hasValidStreak) theme.primaryAccent else MutedStone,
                             fontSize = 9.sp,
+                            fontWeight = if (day.hasValidStreak) FontWeight.Bold else FontWeight.Normal,
                             fontFamily = FontFamily.Monospace
                         )
                     }
@@ -503,6 +579,7 @@ private fun WeeklyBarChartCard(overview: ListeningOverview) {
 
 @Composable
 private fun MonthlyCalendarCard(overview: ListeningOverview) {
+    val theme = LocalVaultTheme.current
     val monthName = SimpleDateFormat("MMMM yyyy", Locale("pt", "BR")).format(Date()).uppercase()
     val days = overview.monthlyCalendar
     val todayKey = SimpleDateFormat("yyyy-MM-dd", Locale.getDefault()).format(Date())
@@ -511,13 +588,13 @@ private fun MonthlyCalendarCard(overview: ListeningOverview) {
         modifier = Modifier
             .fillMaxWidth()
             .neoGlassCard(
-                cornerRadius = 10.dp,
+                cornerRadius = 14.dp,
                 backgroundColor = ObsidianGlass,
                 borderWidth = 1.dp,
                 topRimColor = SpecularGlassRimTop,
-                bottomRimColor = WireframeBorder
+                bottomRimColor = theme.primaryAccent.copy(alpha = 0.25f)
             )
-            .padding(12.dp)
+            .padding(14.dp)
     ) {
         Column {
             Row(
@@ -555,7 +632,7 @@ private fun MonthlyCalendarCard(overview: ListeningOverview) {
                             val isToday = day.dateKey == todayKey
                             val dayBoxColor = when {
                                 day.hasValidStreak -> CyberAmber.copy(alpha = 0.25f)
-                                day.minutes > 0 -> KleinBlue.copy(alpha = 0.20f)
+                                day.minutes > 0 -> theme.primaryAccent.copy(alpha = 0.22f)
                                 else -> CharcoalSurface.copy(alpha = 0.40f)
                             }
                             val dayBorderColor = when {
@@ -695,7 +772,7 @@ private fun MetricCard(
     Box(
         modifier = modifier
             .neoGlassCard(
-                cornerRadius = 8.dp,
+                cornerRadius = 14.dp,
                 backgroundColor = ObsidianGlass,
                 borderWidth = 1.dp,
                 topRimColor = SpecularGlassRimTop,
@@ -745,10 +822,10 @@ private fun TopSongRow(
     Box(
         modifier = Modifier
             .fillMaxWidth()
-            .clip(RoundedCornerShape(8.dp))
+            .clip(RoundedCornerShape(14.dp))
             .background(CharcoalSurface)
-            .border(1.dp, WireframeBorder.copy(alpha = 0.6f), RoundedCornerShape(8.dp))
-            .padding(10.dp)
+            .border(1.dp, WireframeBorder.copy(alpha = 0.6f), RoundedCornerShape(14.dp))
+            .padding(12.dp)
     ) {
         Column {
             Row(
@@ -810,7 +887,8 @@ private fun TopSongRow(
                 progress = { playRatio },
                 modifier = Modifier
                     .fillMaxWidth()
-                    .height(2.5.dp),
+                    .height(3.dp)
+                    .clip(RoundedCornerShape(2.dp)),
                 color = rankColor,
                 trackColor = WireframeBorder.copy(alpha = 0.4f)
             )
@@ -826,9 +904,13 @@ private fun HermesBriefingActionCard(
     Row(
         modifier = Modifier
             .fillMaxWidth()
-            .clip(RoundedCornerShape(10.dp))
-            .background(theme.cardBackground)
-            .border(1.dp, theme.primary.copy(alpha = 0.5f), RoundedCornerShape(10.dp))
+            .neoGlassCard(
+                cornerRadius = 14.dp,
+                backgroundColor = ObsidianGlass,
+                borderWidth = 1.dp,
+                topRimColor = SpecularGlassRimTop,
+                bottomRimColor = theme.primaryAccent.copy(alpha = 0.35f)
+            )
             .clickable { onSpeakBriefing() }
             .padding(14.dp),
         verticalAlignment = Alignment.CenterVertically
@@ -837,14 +919,14 @@ private fun HermesBriefingActionCard(
             modifier = Modifier
                 .size(42.dp)
                 .clip(CircleShape)
-                .background(theme.primary.copy(alpha = 0.15f))
-                .border(1.dp, theme.primary, CircleShape),
+                .background(theme.primaryAccent.copy(alpha = 0.15f))
+                .border(1.dp, theme.primaryAccent, CircleShape),
             contentAlignment = Alignment.Center
         ) {
             Icon(
                 imageVector = Icons.Default.AutoAwesome,
                 contentDescription = null,
-                tint = theme.primary,
+                tint = theme.primaryAccent,
                 modifier = Modifier.size(22.dp)
             )
         }
@@ -854,7 +936,7 @@ private fun HermesBriefingActionCard(
         Column(modifier = Modifier.weight(1f)) {
             Text(
                 text = "OUVIR BRIEFING DO HERMES",
-                color = theme.primary,
+                color = theme.primaryAccent,
                 fontSize = 13.5.sp,
                 fontWeight = FontWeight.Bold,
                 fontFamily = FontFamily.Monospace,
@@ -886,9 +968,13 @@ private fun SovereignCardExportActionCard(
     Row(
         modifier = Modifier
             .fillMaxWidth()
-            .clip(RoundedCornerShape(10.dp))
-            .background(theme.cardBackground)
-            .border(1.dp, theme.secondaryAccent.copy(alpha = 0.5f), RoundedCornerShape(10.dp))
+            .neoGlassCard(
+                cornerRadius = 14.dp,
+                backgroundColor = ObsidianGlass,
+                borderWidth = 1.dp,
+                topRimColor = SpecularGlassRimTop,
+                bottomRimColor = theme.secondaryAccent.copy(alpha = 0.35f)
+            )
             .clickable(enabled = !isGenerating) {
                 isGenerating = true
                 coroutineScope.launch {

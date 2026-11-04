@@ -43,17 +43,24 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
 import androidx.compose.ui.graphics.Color
+import androidx.compose.foundation.Image
+import androidx.compose.foundation.layout.statusBarsPadding
+import androidx.compose.foundation.text.BasicTextField
+import androidx.compose.ui.draw.alpha
+import androidx.compose.ui.graphics.Brush
+import androidx.compose.ui.layout.ContentScale
+import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.text.font.FontFamily
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
+import com.hughdevelopment.player.R
 import com.hughdevelopment.player.data.ai.HermesPetEngine
 import com.hughdevelopment.player.data.model.ListeningOverview
 import com.hughdevelopment.player.data.model.Playlist
 import com.hughdevelopment.player.ui.theme.CharcoalSurface
 import com.hughdevelopment.player.ui.theme.CyberAmber
 import com.hughdevelopment.player.ui.theme.HermeticCyan
-import com.hughdevelopment.player.ui.theme.KleinBlue
 import com.hughdevelopment.player.ui.theme.MutedStone
 import com.hughdevelopment.player.ui.theme.ObsidianGlass
 import com.hughdevelopment.player.ui.theme.SigilSilver
@@ -186,9 +193,33 @@ fun HermesDialogueSheet(
         Box(
             modifier = Modifier
                 .fillMaxSize()
+                .statusBarsPadding()
                 .padding(16.dp)
         ) {
             CybersigilBackground(showHalo = false)
+
+            // Celestial astrolabe & neoclassical Hermes watermark filling the screen void at 7% opacity
+            Box(
+                modifier = Modifier
+                    .fillMaxSize()
+                    .padding(bottom = 70.dp),
+                contentAlignment = Alignment.Center
+            ) {
+                Image(
+                    painter = painterResource(id = R.drawable.placeholder_statue),
+                    contentDescription = null,
+                    modifier = Modifier
+                        .size(260.dp)
+                        .alpha(0.07f),
+                    contentScale = ContentScale.Fit
+                )
+                HermesAstrolabeOracleEye(
+                    modifier = Modifier
+                        .size(240.dp)
+                        .alpha(0.08f),
+                    size = 240.dp
+                )
+            }
 
             Column(modifier = Modifier.fillMaxSize()) {
                 // Header
@@ -275,36 +306,62 @@ fun HermesDialogueSheet(
 
                 Spacer(modifier = Modifier.height(8.dp))
 
-                // Chat Input Field
+                // Sleek terminal input bar with integrated theme-accented send button
                 Row(
-                    modifier = Modifier.fillMaxWidth(),
+                    modifier = Modifier
+                        .fillMaxWidth()
+                        .clip(RoundedCornerShape(16.dp))
+                        .background(CharcoalSurface)
+                        .border(
+                            width = 1.dp,
+                            brush = Brush.verticalGradient(
+                                listOf(
+                                    SpecularGlassRimTop,
+                                    theme.primaryAccent.copy(alpha = 0.45f)
+                                )
+                            ),
+                            shape = RoundedCornerShape(16.dp)
+                        )
+                        .padding(horizontal = 14.dp, vertical = 4.dp),
                     verticalAlignment = Alignment.CenterVertically
                 ) {
-                    OutlinedTextField(
-                        value = userInput,
-                        onValueChange = { userInput = it },
-                        modifier = Modifier.weight(1f),
-                        placeholder = {
-                            Text(
-                                text = "Fale com o Hermes...",
-                                color = MutedStone,
-                                fontSize = 12.sp,
-                                fontFamily = FontFamily.Monospace
-                            )
-                        },
-                        singleLine = true,
-                        colors = OutlinedTextFieldDefaults.colors(
-                            focusedBorderColor = HermeticCyan,
-                            unfocusedBorderColor = WireframeBorder,
-                            focusedTextColor = SigilWhite,
-                            unfocusedTextColor = SigilSilver,
-                            focusedContainerColor = CharcoalSurface,
-                            unfocusedContainerColor = CharcoalSurface
-                        ),
-                        shape = RoundedCornerShape(8.dp)
+                    Text(
+                        text = ">_",
+                        color = theme.primaryAccent,
+                        fontSize = 14.sp,
+                        fontWeight = FontWeight.Bold,
+                        fontFamily = FontFamily.Monospace
                     )
 
                     Spacer(modifier = Modifier.width(8.dp))
+
+                    BasicTextField(
+                        value = userInput,
+                        onValueChange = { userInput = it },
+                        modifier = Modifier
+                            .weight(1f)
+                            .padding(vertical = 10.dp),
+                        textStyle = androidx.compose.ui.text.TextStyle(
+                            color = SigilWhite,
+                            fontSize = 12.5.sp,
+                            fontFamily = FontFamily.Monospace
+                        ),
+                        singleLine = true,
+                        cursorBrush = androidx.compose.ui.graphics.SolidColor(theme.primaryAccent),
+                        decorationBox = { innerTextField ->
+                            if (userInput.isEmpty()) {
+                                Text(
+                                    text = "Transmitir diretriz ao Hermes...",
+                                    color = MutedStone.copy(alpha = 0.6f),
+                                    fontSize = 12.sp,
+                                    fontFamily = FontFamily.Monospace
+                                )
+                            }
+                            innerTextField()
+                        }
+                    )
+
+                    Spacer(modifier = Modifier.width(6.dp))
 
                     IconButton(
                         onClick = {
@@ -316,15 +373,17 @@ fun HermesDialogueSheet(
                             }
                         },
                         modifier = Modifier
-                            .size(48.dp)
-                            .clip(RoundedCornerShape(8.dp))
-                            .background(KleinBlue)
+                            .size(36.dp)
+                            .clip(CircleShape)
+                            .background(
+                                if (userInput.isNotBlank()) theme.primaryAccent else theme.primaryAccent.copy(alpha = 0.25f)
+                            )
                     ) {
                         Icon(
                             imageVector = Icons.Default.Send,
                             contentDescription = "Enviar",
-                            tint = SigilWhite,
-                            modifier = Modifier.size(20.dp)
+                            tint = if (userInput.isNotBlank()) VoidBlack else SigilWhite.copy(alpha = 0.7f),
+                            modifier = Modifier.size(16.dp)
                         )
                     }
                 }
@@ -338,17 +397,18 @@ private fun SuggestionChip(
     label: String,
     onClick: () -> Unit
 ) {
+    val theme = LocalVaultTheme.current
     Box(
         modifier = Modifier
-            .clip(RoundedCornerShape(4.dp))
+            .clip(RoundedCornerShape(12.dp))
             .background(CharcoalSurface)
-            .border(1.dp, WireframeBorder, RoundedCornerShape(4.dp))
+            .border(1.dp, theme.primaryAccent.copy(alpha = 0.35f), RoundedCornerShape(12.dp))
             .clickable { onClick() }
-            .padding(horizontal = 8.dp, vertical = 5.dp)
+            .padding(horizontal = 10.dp, vertical = 6.dp)
     ) {
         Text(
             text = label,
-            color = HermeticCyan,
+            color = theme.secondaryAccent,
             fontSize = 10.sp,
             fontFamily = FontFamily.Monospace,
             fontWeight = FontWeight.Medium
@@ -361,9 +421,10 @@ private fun ChatBubble(
     message: HermesPetEngine.HermesMessage,
     onTriggerAction: (HermesPetEngine.HermesActionType) -> Unit
 ) {
+    val theme = LocalVaultTheme.current
     val isUser = message.sender == "User"
-    val bubbleBg = if (isUser) KleinBlue.copy(alpha = 0.85f) else CharcoalSurface
-    val bubbleBorder = if (isUser) KleinBlue else WireframeBorder
+    val bubbleBg = if (isUser) theme.primaryAccent.copy(alpha = 0.22f) else CharcoalSurface
+    val bubbleBorder = if (isUser) theme.primaryAccent.copy(alpha = 0.6f) else WireframeBorder
 
     Column(
         modifier = Modifier.fillMaxWidth(),
@@ -372,15 +433,15 @@ private fun ChatBubble(
         Box(
             modifier = Modifier
                 .fillMaxWidth(0.85f)
-                .clip(RoundedCornerShape(8.dp))
+                .clip(RoundedCornerShape(14.dp))
                 .background(bubbleBg)
-                .border(1.dp, bubbleBorder, RoundedCornerShape(8.dp))
-                .padding(10.dp)
+                .border(1.dp, bubbleBorder, RoundedCornerShape(14.dp))
+                .padding(12.dp)
         ) {
             Column {
                 Text(
                     text = if (isUser) "VOCÊ" else "HERMES",
-                    color = if (isUser) SigilWhite else CyberAmber,
+                    color = if (isUser) theme.primaryAccent else CyberAmber,
                     fontSize = 9.sp,
                     fontWeight = FontWeight.Bold,
                     fontFamily = FontFamily.Monospace
@@ -402,7 +463,7 @@ private fun ChatBubble(
                             containerColor = CyberAmber,
                             contentColor = VoidBlack
                         ),
-                        shape = RoundedCornerShape(4.dp),
+                        shape = RoundedCornerShape(12.dp),
                         modifier = Modifier.fillMaxWidth()
                     ) {
                         Text(
