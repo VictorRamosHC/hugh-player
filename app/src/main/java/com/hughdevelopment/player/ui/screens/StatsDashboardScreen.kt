@@ -431,7 +431,7 @@ private fun SovereignLevelCard(overview: ListeningOverview) {
                 modifier = Modifier
                     .fillMaxWidth()
                     .height(5.dp)
-                    .clip(RoundedCornerShape(3.dp)),
+                    .clip(RoundedCornerShape(4.dp)),
                 color = rankColor,
                 trackColor = WireframeBorder
             )
@@ -645,9 +645,9 @@ private fun MonthlyCalendarCard(overview: ListeningOverview) {
                                 modifier = Modifier
                                     .weight(1f)
                                     .aspectRatio(1f)
-                                    .clip(RoundedCornerShape(4.dp))
+                                    .clip(RoundedCornerShape(8.dp))
                                     .background(dayBoxColor)
-                                    .border(if (isToday) 1.5.dp else 0.8.dp, dayBorderColor, RoundedCornerShape(4.dp)),
+                                    .border(if (isToday) 1.5.dp else 0.8.dp, dayBorderColor, RoundedCornerShape(8.dp)),
                                 contentAlignment = Alignment.Center
                             ) {
                                 Column(horizontalAlignment = Alignment.CenterHorizontally) {
@@ -731,12 +731,12 @@ private fun SigilBadgeItem(
 ) {
     Box(
         modifier = modifier
-            .clip(RoundedCornerShape(6.dp))
+            .clip(RoundedCornerShape(12.dp))
             .background(if (isUnlocked) CharcoalSurface else VoidBlack.copy(alpha = 0.5f))
             .border(
                 1.dp,
                 if (isUnlocked) CyberAmber else WireframeBorder.copy(alpha = 0.3f),
-                RoundedCornerShape(6.dp)
+                RoundedCornerShape(12.dp)
             )
             .padding(vertical = 8.dp),
         contentAlignment = Alignment.Center

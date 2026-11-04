@@ -173,9 +173,9 @@ fun LibraryScreen(
                 Row(
                     modifier = Modifier
                         .fillMaxWidth()
-                        .clip(RoundedCornerShape(8.dp))
+                        .clip(RoundedCornerShape(14.dp))
                         .background(currentTheme.cardBackground)
-                        .border(1.dp, currentTheme.primary.copy(alpha = 0.6f), RoundedCornerShape(8.dp))
+                        .border(1.dp, currentTheme.primary.copy(alpha = 0.6f), RoundedCornerShape(14.dp))
                         .padding(horizontal = 8.dp, vertical = 4.dp),
                     verticalAlignment = Alignment.CenterVertically
                 ) {
@@ -407,8 +407,9 @@ fun LibraryScreen(
                             expanded = showHubMenu,
                             onDismissRequest = { showHubMenu = false },
                             modifier = Modifier
+                                .clip(RoundedCornerShape(14.dp))
                                 .background(Color(0xF80E1019))
-                                .border(1.dp, WireframeBorder.copy(alpha = 0.5f), RoundedCornerShape(8.dp))
+                                .border(1.dp, WireframeBorder.copy(alpha = 0.5f), RoundedCornerShape(14.dp))
                         ) {
                             DropdownMenuItem(
                                 text = {
@@ -518,7 +519,7 @@ fun LibraryScreen(
                         tint = MutedStone
                     )
                 },
-                shape = RoundedCornerShape(8.dp),
+                shape = RoundedCornerShape(14.dp),
                 colors = OutlinedTextFieldDefaults.colors(
                     focusedBorderColor = currentTheme.primary,
                     unfocusedBorderColor = WireframeBorder,
@@ -856,15 +857,15 @@ private fun SortChip(
     val theme = LocalVaultTheme.current
     Box(
         modifier = Modifier
-            .clip(RoundedCornerShape(6.dp))
+            .clip(RoundedCornerShape(12.dp))
             .background(if (isSelected) theme.primary.copy(alpha = 0.22f) else Color(0x66131622))
             .border(
                 width = 1.dp,
                 color = if (isSelected) theme.primary else WireframeBorder.copy(alpha = 0.35f),
-                shape = RoundedCornerShape(6.dp)
+                shape = RoundedCornerShape(12.dp)
             )
             .clickable { onClick() }
-            .padding(horizontal = 10.dp, vertical = 6.dp)
+            .padding(horizontal = 12.dp, vertical = 6.dp)
     ) {
         Text(
             text = label,
@@ -903,9 +904,9 @@ private fun SongRowItem(
             .fillMaxWidth()
             .padding(vertical = 2.5.dp)
             .then(
-                if (isSelected) Modifier.activePlayingGlassCard(cornerRadius = 10.dp)
+                if (isSelected) Modifier.activePlayingGlassCard(cornerRadius = 14.dp, accentColor = theme.primaryAccent)
                 else Modifier.neoGlassCard(
-                    cornerRadius = 10.dp,
+                    cornerRadius = 14.dp,
                     backgroundColor = Color(0x730D0F18),
                     borderWidth = 0.6.dp,
                     topRimColor = SpecularGlassRimTop.copy(alpha = 0.35f)
@@ -942,7 +943,7 @@ private fun SongRowItem(
         ArtworkImage(
             artworkUri = song.albumArtUri,
             modifier = Modifier.size(44.dp),
-            cornerRadius = 6.dp,
+            cornerRadius = 10.dp,
             accentColor = if (isSelected) theme.primary else theme.primaryAccent,
             targetDimensionPx = 120
         )

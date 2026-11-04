@@ -133,16 +133,16 @@ fun QueueBottomSheet(
                 Row(
                     modifier = Modifier
                         .fillMaxWidth()
-                        .clip(RoundedCornerShape(8.dp))
+                        .clip(RoundedCornerShape(14.dp))
                         .background(theme.cardBackground)
-                        .border(1.dp, theme.primary.copy(alpha = 0.5f), RoundedCornerShape(8.dp))
+                        .border(1.dp, theme.primary.copy(alpha = 0.5f), RoundedCornerShape(14.dp))
                         .padding(10.dp),
                     verticalAlignment = Alignment.CenterVertically
                 ) {
                     ArtworkImage(
                         artworkUri = currentSong.albumArtUri,
                         modifier = Modifier.size(40.dp),
-                        cornerRadius = 6.dp,
+                        cornerRadius = 10.dp,
                         accentColor = theme.primary
                     )
 
@@ -198,9 +198,9 @@ fun QueueBottomSheet(
                     modifier = Modifier
                         .fillMaxWidth()
                         .height(120.dp)
-                        .clip(RoundedCornerShape(8.dp))
+                        .clip(RoundedCornerShape(14.dp))
                         .background(theme.cardBackground)
-                        .border(1.dp, WireframeBorder.copy(alpha = 0.3f), RoundedCornerShape(8.dp)),
+                        .border(1.dp, WireframeBorder.copy(alpha = 0.3f), RoundedCornerShape(14.dp)),
                     contentAlignment = Alignment.Center
                 ) {
                     Text(
@@ -225,9 +225,9 @@ fun QueueBottomSheet(
                         Row(
                             modifier = Modifier
                                 .fillMaxWidth()
-                                .clip(RoundedCornerShape(6.dp))
+                                .clip(RoundedCornerShape(12.dp))
                                 .background(theme.cardBackground)
-                                .border(0.8.dp, WireframeBorder.copy(alpha = 0.25f), RoundedCornerShape(6.dp))
+                                .border(0.8.dp, WireframeBorder.copy(alpha = 0.25f), RoundedCornerShape(12.dp))
                                 .clickable { onSongSelected(song) }
                                 .padding(horizontal = 8.dp, vertical = 6.dp),
                             verticalAlignment = Alignment.CenterVertically
@@ -235,7 +235,7 @@ fun QueueBottomSheet(
                             ArtworkImage(
                                 artworkUri = song.albumArtUri,
                                 modifier = Modifier.size(36.dp),
-                                cornerRadius = 4.dp,
+                                cornerRadius = 8.dp,
                                 accentColor = theme.primaryAccent
                             )
 

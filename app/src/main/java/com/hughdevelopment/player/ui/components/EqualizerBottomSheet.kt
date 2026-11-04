@@ -153,12 +153,12 @@ fun EqualizerBottomSheet(
                     val isSelected = currentPreset == preset
                     Box(
                         modifier = Modifier
-                            .clip(RoundedCornerShape(6.dp))
+                            .clip(RoundedCornerShape(12.dp))
                             .background(if (isSelected) theme.primary else theme.cardBackground)
                             .border(
                                 width = 1.dp,
                                 color = if (isSelected) theme.primary else WireframeBorder.copy(alpha = 0.3f),
-                                shape = RoundedCornerShape(6.dp)
+                                shape = RoundedCornerShape(12.dp)
                             )
                             .clickable(enabled = isEnabled) { onSelectPreset(preset) }
                             .padding(horizontal = 12.dp, vertical = 6.dp)
@@ -191,9 +191,9 @@ fun EqualizerBottomSheet(
             Column(
                 modifier = Modifier
                     .fillMaxWidth()
-                    .clip(RoundedCornerShape(10.dp))
+                    .clip(RoundedCornerShape(14.dp))
                     .background(theme.cardBackground)
-                    .border(1.dp, WireframeBorder.copy(alpha = 0.25f), RoundedCornerShape(10.dp))
+                    .border(1.dp, WireframeBorder.copy(alpha = 0.25f), RoundedCornerShape(14.dp))
                     .padding(14.dp),
                 verticalArrangement = Arrangement.spacedBy(8.dp)
             ) {
@@ -251,9 +251,9 @@ fun EqualizerBottomSheet(
             Column(
                 modifier = Modifier
                     .fillMaxWidth()
-                    .clip(RoundedCornerShape(10.dp))
+                    .clip(RoundedCornerShape(14.dp))
                     .background(theme.cardBackground)
-                    .border(1.dp, WireframeBorder.copy(alpha = 0.25f), RoundedCornerShape(10.dp))
+                    .border(1.dp, WireframeBorder.copy(alpha = 0.25f), RoundedCornerShape(14.dp))
                     .padding(14.dp)
             ) {
                 Row(

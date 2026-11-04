@@ -324,7 +324,7 @@ fun FoldersScreen(
                                     containerColor = CyberAmber,
                                     contentColor = VoidBlack
                                 ),
-                                shape = RoundedCornerShape(6.dp)
+                                shape = RoundedCornerShape(14.dp)
                             ) {
                                 Icon(imageVector = Icons.Default.AutoAwesome, contentDescription = null)
                                 Spacer(modifier = Modifier.width(6.dp))
@@ -553,8 +553,9 @@ fun FoldersScreen(
                                         expanded = showSongMenu,
                                         onDismissRequest = { showSongMenu = false },
                                         modifier = Modifier
+                                            .clip(RoundedCornerShape(14.dp))
                                             .background(CharcoalSurface)
-                                            .border(1.dp, WireframeBorder, RoundedCornerShape(8.dp))
+                                            .border(1.dp, WireframeBorder, RoundedCornerShape(14.dp))
                                     ) {
                                         DropdownMenuItem(
                                             text = {
@@ -768,7 +769,7 @@ private fun CreateFolderDialog(
         "#06B6D4" to "Cyan",
         "#10B981" to "Emerald",
         "#8B5CF6" to "Purple",
-        "#0022FF" to "Blue"
+        "#E60039" to "Crimson"
     )
 
     AlertDialog(
@@ -897,7 +898,7 @@ private fun CreateFolderDialog(
                     containerColor = CyberAmber,
                     contentColor = VoidBlack
                 ),
-                shape = RoundedCornerShape(6.dp)
+                shape = RoundedCornerShape(14.dp)
             ) {
                 Text(
                     text = "CRIAR PASTA",
@@ -926,11 +927,11 @@ private fun CategoryChip(
 ) {
     Box(
         modifier = Modifier
-            .clip(RoundedCornerShape(4.dp))
+            .clip(RoundedCornerShape(12.dp))
             .background(if (isSelected) CyberAmber else VoidBlack)
-            .border(1.dp, if (isSelected) CyberAmber else WireframeBorder, RoundedCornerShape(4.dp))
+            .border(1.dp, if (isSelected) CyberAmber else WireframeBorder, RoundedCornerShape(12.dp))
             .clickable { onClick() }
-            .padding(horizontal = 6.dp, vertical = 4.dp)
+            .padding(horizontal = 10.dp, vertical = 5.dp)
     ) {
         Text(
             text = label,
@@ -1041,7 +1042,7 @@ private fun AddSongsToFolderDialog(
                         Row(
                             modifier = Modifier
                                 .fillMaxWidth()
-                                .clip(RoundedCornerShape(6.dp))
+                                .clip(RoundedCornerShape(10.dp))
                                 .background(if (isChecked) CyberAmber.copy(alpha = 0.12f) else VoidBlack)
                                 .clickable {
                                     if (isChecked) selectedIds.remove(song.id)
@@ -1097,7 +1098,7 @@ private fun AddSongsToFolderDialog(
                     containerColor = CyberAmber,
                     contentColor = VoidBlack
                 ),
-                shape = RoundedCornerShape(6.dp)
+                shape = RoundedCornerShape(14.dp)
             ) {
                 Text(
                     text = "ADICIONAR (${selectedIds.size})",

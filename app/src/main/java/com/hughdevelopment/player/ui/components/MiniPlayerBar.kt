@@ -253,7 +253,7 @@ fun MiniPlayerBar(
                     ArtworkImage(
                         artworkUri = currentSong.albumArtUri,
                         modifier = Modifier.size(46.dp),
-                        cornerRadius = if (theme.cardCornerRadius < 8.dp) theme.cardCornerRadius else 8.dp,
+                        cornerRadius = 10.dp,
                         accentColor = theme.secondaryAccent
                     )
 

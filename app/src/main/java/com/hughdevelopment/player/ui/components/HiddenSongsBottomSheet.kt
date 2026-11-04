@@ -118,9 +118,9 @@ fun HiddenSongsBottomSheet(
                     modifier = Modifier
                         .fillMaxWidth()
                         .height(130.dp)
-                        .clip(RoundedCornerShape(8.dp))
+                        .clip(RoundedCornerShape(14.dp))
                         .background(theme.cardBackground)
-                        .border(1.dp, WireframeBorder.copy(alpha = 0.3f), RoundedCornerShape(8.dp)),
+                        .border(1.dp, WireframeBorder.copy(alpha = 0.3f), RoundedCornerShape(14.dp)),
                     contentAlignment = Alignment.Center
                 ) {
                     Text(
@@ -143,16 +143,16 @@ fun HiddenSongsBottomSheet(
                         Row(
                             modifier = Modifier
                                 .fillMaxWidth()
-                                .clip(RoundedCornerShape(8.dp))
+                                .clip(RoundedCornerShape(14.dp))
                                 .background(theme.cardBackground)
-                                .border(1.dp, WireframeBorder.copy(alpha = 0.25f), RoundedCornerShape(8.dp))
+                                .border(1.dp, WireframeBorder.copy(alpha = 0.25f), RoundedCornerShape(14.dp))
                                 .padding(10.dp),
                             verticalAlignment = Alignment.CenterVertically
                         ) {
                             ArtworkImage(
                                 artworkUri = song.albumArtUri,
                                 modifier = Modifier.size(40.dp),
-                                cornerRadius = 6.dp,
+                                cornerRadius = 10.dp,
                                 accentColor = theme.primaryAccent
                             )
 
@@ -184,7 +184,7 @@ fun HiddenSongsBottomSheet(
                                     contentColor = theme.primary
                                 ),
                                 border = androidx.compose.foundation.BorderStroke(1.dp, theme.primary),
-                                shape = RoundedCornerShape(6.dp)
+                                shape = RoundedCornerShape(12.dp)
                             ) {
                                 Icon(
                                     imageVector = Icons.Default.Visibility,

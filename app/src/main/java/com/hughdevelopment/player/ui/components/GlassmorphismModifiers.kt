@@ -9,7 +9,7 @@ import androidx.compose.ui.graphics.Brush
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.unit.Dp
 import androidx.compose.ui.unit.dp
-import com.hughdevelopment.player.ui.theme.KleinBlue
+import com.hughdevelopment.player.ui.theme.CyberAmber
 import com.hughdevelopment.player.ui.theme.ObsidianGlass
 import com.hughdevelopment.player.ui.theme.SpecularGlassRimBottom
 import com.hughdevelopment.player.ui.theme.SpecularGlassRimMid
@@ -39,8 +39,8 @@ private val cachedDefaultBrush = Brush.verticalGradient(
 private val cachedActivePlayingBrush = Brush.verticalGradient(
     colors = listOf(
         Color.White.copy(alpha = 0.85f),
-        KleinBlue,
-        KleinBlue
+        CyberAmber,
+        CyberAmber
     )
 )
 
@@ -72,7 +72,7 @@ fun Modifier.neoGlassCard(
 fun Modifier.activePlayingGlassCard(
     cornerRadius: Dp = 14.dp,
     backgroundColor: Color = ObsidianGlass,
-    accentColor: Color? = null
+    accentColor: Color = CyberAmber
 ): Modifier {
     val shape = when (cornerRadius) {
         8.dp -> cachedCardShape8
@@ -81,7 +81,7 @@ fun Modifier.activePlayingGlassCard(
         16.dp -> cachedCardShape16
         else -> RoundedCornerShape(cornerRadius)
     }
-    val brush = if (accentColor == null || accentColor == KleinBlue) {
+    val brush = if (accentColor == CyberAmber) {
         cachedActivePlayingBrush
     } else {
         Brush.verticalGradient(

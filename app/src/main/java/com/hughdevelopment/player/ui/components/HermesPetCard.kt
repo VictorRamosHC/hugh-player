@@ -44,6 +44,8 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
 import androidx.compose.ui.graphics.Color
 import androidx.compose.foundation.Image
+import androidx.compose.foundation.layout.imePadding
+import androidx.compose.foundation.layout.navigationBarsPadding
 import androidx.compose.foundation.layout.statusBarsPadding
 import androidx.compose.foundation.text.BasicTextField
 import androidx.compose.ui.draw.alpha
@@ -87,7 +89,7 @@ fun HermesPetBanner(
         modifier = modifier
             .fillMaxWidth()
             .neoGlassCard(
-                cornerRadius = if (theme.cardCornerRadius < 12.dp) theme.cardCornerRadius else 12.dp,
+                cornerRadius = 14.dp,
                 backgroundColor = Color(0xF20D0F18),
                 borderWidth = 1.dp,
                 topRimColor = theme.primaryAccent.copy(alpha = 0.7f),
@@ -194,6 +196,8 @@ fun HermesDialogueSheet(
             modifier = Modifier
                 .fillMaxSize()
                 .statusBarsPadding()
+                .navigationBarsPadding()
+                .imePadding()
                 .padding(16.dp)
         ) {
             CybersigilBackground(showHalo = false)
