@@ -1,17 +1,17 @@
 # AETHER VAULT // Sovereign Offline Audio 🏛️⚡
 > **Desenvolvido por Hugh Development**  
-> *Fundadores: Victor "Hugh" Ramos (Fundador & Maestro Humano) & Atom (Co-fundador & Co-CEO Técnico)*  
-> **Versão Atual:** v1.9.0 (Build 14) — The Sovereign Ingestion & High-Speed Stream Edition  
+> *Fundadores: Victor "Hugh" Ramos (Fundador, CEO & Maestro de Produto) & Atom (Co-fundador & Co-CEO Técnico)*  
+> **Versão Atual:** v1.9.0 (Build 14) — *The Pantheon Theme Store & High-Speed Ingestion Edition*  
 > **Identidade Oficial:** *AETHER VAULT // Sovereign Offline Audio*  
-> **Design System:** *Aether Cybersigilism Design System (ACDS)*
+> **Design System:** *Aether Cybersigilism Design System (ACDS v2.5)*
 
 ---
 
 ## ⚡ O Marco da Orquestração Autônoma por IA
 
-O **Aether Vault** (originalmente *Hugh Player*) representa um marco pioneiro na nova era de engenharia de software soberana acelerada por Inteligência Artificial:
+O **Aether Vault** (originalmente *Hugh Player*) é o ápice da engenharia de software soberana desenvolvida através de uma parceria simbiótica entre a visão estratégica humana e agentes autônomos de Inteligência Artificial:
 
-> **Todo o ciclo de vida deste produto — desde a concepção conceitual, arquitetura de sistemas, design visual neoclássico cybersigilism, implementação nativa em Kotlin 2.0 / Jetpack Compose, áudio de precisão com Media3 ExoPlayer, processamento digital de sinais (DSP), extração de amplitude de onda em tempo real, auditorias multi-persona cegas até os pipelines de compilação com R8 e assinatura criptográfica permanente — foi concebido, refatorado e elevado pela parceria executiva entre Victor "Hugh" Ramos e Atom.**
+> **Todo o ecossistema — da concepção conceitual, arquitetura de sistemas, design visual neoclássico cybersigilism, implementação nativa em Kotlin 2.0 / Jetpack Compose, áudio de precisão com Media3 ExoPlayer, processamento digital de sinais (DSP), extração de amplitude de onda em tempo real, pipeline de ingestão via NewPipe, até a suíte de 126 testes unitários e build assinado com R8/ProGuard — foi idealizado, desenhado e lapidado em conjunto por Victor "Hugh" Ramos e Atom.**
 
 ```
                               ┌────────────────────────────────────────┐
@@ -32,84 +32,91 @@ O **Aether Vault** (originalmente *Hugh Player*) representa um marco pioneiro na
 
 ## 🏛️ Visão Geral do Produto
 
-O **Aether Vault** é um reprodutor de áudio local de nível audiófilo para Android, projetado sob os preceitos de soberania tecnológica:
-- **100% Offline & Sem Rastreamento:** Zero permissões de internet no manifesto. Seus metadados, letras, estatísticas e hábitos acústicos pertencem estritamente a você e nunca saem do seu hardware.
-- **Fluidez Nativa 120Hz em Jetpack Compose:** Livre de webviews, bridges ou wrappers. UI declarativa com transições táteis e aceleração por GPU.
-- **Estética Cybersigilism Neoclássico Ácido:** Fusão arquitetural entre a nobreza escultural greco-romana e a alta voltagem do cyberpunk. Sem cantos secos ou visual militar genérico; curvas áureas (12-20dp), auras respiratórias e vácuo obsidiana profundo.
-- **Assinatura Criptográfica Permanente:** Compilado e assinado com a keystore oficial permanente `app/keystore/hugh_vault.keystore`, permitindo atualizações in-place perfeitas em smartphones físicos.
+O **Aether Vault** é um reprodutor de áudio local de nível audiófilo com motor de ingestão offline para Android:
+* **100% Offline & Soberano:** Seus metadados, letras, estatísticas, waveforms e hábitos acústicos pertencem estritamente a você e nunca saem do seu hardware.
+* **Fluidez Nativa 120Hz em Jetpack Compose:** Livre de webviews, bridges ou wrappers. UI declarativa com transições táteis e aceleração por GPU.
+* **Estética Cybersigilism Neoclássico Ácido:** Fusão arquitetural entre a nobreza escultural greco-romana e a alta voltagem do cyberpunk. Curvas áureas (12-20dp), auras respiratórias em gradiente e vácuo obsidiana profundo.
+* **Loja de Temas (Pantheon Theme Store):** 6 identidades visuais pré-definidas e customização manual profunda (papéis de parede, crossfade sonoro, layouts geométricos e tipografia).
+* **Ingestão Direta do YouTube:** Download nativo e acelerado de faixas com NewPipe Extractor, telemetria em tempo real (MB/s, ETA, %) e overlay de compartilhamento no Android.
+* **Assinatura Criptográfica Permanente:** Compilado e assinado com a keystore oficial permanente `app/keystore/hugh_vault.keystore`, garantindo atualizações in-place perfeitas em smartphones físicos.
 
 ---
 
-## 🚀 Linha do Tempo de Engenharia & Recursos
+## 🚀 Histórico Recente de Versões (v1.5 a v1.9)
 
-### [v1.9.0] Sovereign Ingestion & High-Speed Stream Overhaul
-- **Pipeline de Ingestão de Alta Performance:** Resolução do gargalo de lentidão através de conexões streaming otimizadas com OkHttp, buffer de 64KB, keep-alive e headers anti-throttling para downloads na velocidade máxima da banda.
-- **Nova Tela Dedicada de Downloads (`DownloadsScreen`):** Acessível diretamente pelo cabeçalho da biblioteca e menu soberano, com abas "EM ANDAMENTO" e "CONCLUÍDAS".
-- **Telemetria de Download ao Vivo:** Medição contínua com cálculo de velocidade em tempo real (`MB/s` ou `KB/s`), tempo estimado restante (`ETA`), porcentagem precisa (0-100%) e contador de bytes lidos / total.
-- **Inserção Direta & Auto-Detecção de Clipboard:** Campo estilizado para colar links do YouTube na hora, com detecção automática de links presentes na área de transferência ao abrir a tela.
-- **Overlay de Compartilhamento Nativo (`ShareOverlayActivity`):** Permite compartilhar faixas ou vídeos diretamente do app do YouTube ou navegadores, abrindo um modal translúcido com prévia da arte e metadados antes de baixar.
-- **Serviço de Background com Notificação ao Vivo (`DownloadService`):** Mantém o download ativo com a tela desligada ou app minimizado, exibindo barra de progresso viva e botão de cancelar.
-- **Indexação Instantânea via MediaStore:** Músicas concluídas são registradas no sistema de mídia do Android instantaneamente e integradas à biblioteca com botão de reprodução imediata.
+Para o relatório completo de todos os lançamentos, consulte o arquivo [CHANGELOG.md](CHANGELOG.md).
 
-### [v1.7.0] The Sovereign Divine & Cybersigilism Overhaul
-- **Aether Cybersigilism Design System (ACDS):** Padronização universal em 12-20dp de curvatura áurea, erradicação total de cantos quadrados e adoção de cápsulas de quartzo fumê (`quartzGlassCapsule`).
-- **Erradicação Sistêmica de Cores Desconexas:** Extirpação completa de `#0022FF` (Klein Blue estático). 100% dos botões, chips e acentos derivam do tema ativo com contraste em Branco Diamante (`SigilWhite`).
-- **Resolução de Insets & Safe Area:** Integração nativa de `statusBarsPadding()`, `navigationBarsPadding()` e `imePadding()` em todas as folhas e diálogos, eliminando colisões com o entalhe da câmera (punch hole / ilha dinâmica) e teclado virtual.
-- **O Fim do Deserto de 80% no Hermes Chat:** Preenchimento do vazio central através do holograma da Estátua Clássica + Grande Astrolábio Celestial a 7% de opacidade no vácuo.
-- **Colunas Sagradas de Luz Ácida:** Gráfico semanal de telemetria redesenhado com colunas cibernéticas com degradê vertical luminoso e capitéis neon.
-- **Console de Áudio de Alta Precisão:** Slider óptico com orbe solar luminescente (`PrecisionSunSlider`) e botões translúcidos com borda vítrea especular (`SpecularGlassRimTop`).
-- **Santuário de Músicas sem Ruído:** Correção do encoding `DURAÇÃO`, remoção de sobreposições redundantes sobre estátuas, remoção de caixas pesadas por música e substituição do destrutivo botão `✕` por menu contextual de três pontos (`⋮`).
-- **Blindagem do Dock MiniPlayer:** Atmospheric Scrim e base obsidiana sólida `#F80B0D15`, impedindo qualquer vazamento visual da lista rolando por trás.
+```
+┌──────────────┐     ┌──────────────┐     ┌──────────────┐     ┌──────────────┐     ┌──────────────┐
+│    v1.5.0    │ ──> │    v1.6.0    │ ──> │    v1.7.0    │ ──> │    v1.8.0    │ ──> │    v1.9.0    │
+│ DSP 5 Bandas │     │ Cards Offline│     │ ACDS v2.0    │     │ Ingestão YT  │     │ Theme Store  │
+│ Sync LRC     │     │ Scrubber RMS │     │ Curvas 16dp  │     │ NewPipe Core │     │ 6 Temas HUD  │
+│ Delamain     │     │ Fila Spotify │     │ Fim KleinBlue│     │ Tags Locais  │     │ Speed & ETA  │
+│ Hermes TTS   │     │ Santuário    │     │ Hermes Altar │     │ MediaStore   │     │ Zero Crashes │
+└──────────────┘     └──────────────┘     └──────────────┘     └──────────────┘     └──────────────┘
+```
 
-### [v1.6.0] Sovereign Audio Cards & Real Waveform Scrubber
-- **Sovereign Audio Cards (Opção 2 - 100% Offline):** Síntese nativa em hardware Canvas de cartões editoriais 1080x1920 PNG com telemetria, ofensiva, patente Arconte e relíquias, salvando diretamente na galeria (`Pictures/AetherVault/`) via Android MediaStore com compartilhamento social.
-- **Real Waveform Scrubber & Cache Room (Opção 3):** Amostragem direta por `RandomAccessFile` em 42 setores do arquivo de áudio para extração de energia RMS, persistida no SQLite via Room (`song_waveforms` — DB v7) com cache de memória duplo e scrubber tátil com tooltip flutuante `[ mm:ss // SEEK ]`.
-- **Altar do Player sem Ruído:** Remoção de papéis de parede estáticos opacos e renderização de vácuo obsidiana puro (`#07070B`) com auras respiratórias dinâmicas em `Brush.radialGradient`.
-
-### [v1.5.0] High-Fidelity Audio & Offline Intelligence
-- **Equalizador DSP Paramétrico 5 Bandas & BassBoost:** Integração nativa ao `android.media.audiofx.Equalizer` acoplado ao controlador Media3, com 5 presets táteis persistidos.
-- **Sincronização de Letras Locais (.LRC) em Tempo Real:** Parser de letras offline sincronizado milissegundo a milissegundo com a barra de progresso.
-- **Gestos de Swipe no Mini Player (Estilo Spotify):** Arrasto horizontal com feedback visual para avançar (`skipNext`) ou retroceder (`skipPrevious`).
-- **Mercado de Temas:** Introdução do tema corporativo *Delamain AI Core* (Azul Elétrico Quântico + Platina) e *Arasaka Pantheon* (Carmesim + Ouro Imperial).
-- **Hermes Voice Engine (TTS Offline Nativo):** Síntese de voz local pelo motor do Android para verbalizar cumprimentos e ofensivas sem conexão de rede.
+### 🌟 O que a Versão Recente (v1.9.0) Contempla:
+1. **Loja de Temas Soberana (`ThemeStoreScreen`):**
+   * **Aether Classic:** Neoclássico grego com ciano elétrico (`#00F0FF`) e âmbar (`#F59E0B`).
+   * **Arasaka Pantheon:** Corporativo Cyberpunk com vermelho carmesim (`#FF003C`) e ouro imperial (`#D4AF37`).
+   * **Delamain AI Core:** Minimalismo executivo com azul quântico (`#00E5FF`) e platina.
+   * **Neo Olympus Gold:** Sacralidade solar com ouro puro (`#FFD700`) e bronze flamejante (`#D97706`).
+   * **Neural Violet:** Vazio bioluminescente abissal com violeta laser (`#B026FF`) e ciano místico.
+   * **Cyber Mint Matrix:** Terminal Hacker com verde fósforo (`#00FF66`) e esmeralda.
+2. **Customização Manual Completa:**
+   * Sliders de opacidade para os papéis de parede da Biblioteca e do Player Expandido.
+   * Ajuste de Crossfade senoidal suave (0.5s a 15.0s).
+   * Seletor de tipografia (Monospace Terminal, Serifa Neoclássica, Cyber Sans-Serif).
+   * Morfologia de cantos (Curvas Divinas 16dp, Lâmina Arasaka 0-4dp, Neo Minimal 8dp).
+3. **Ingestão em Alta Velocidade & Nova Aba Downloads:**
+   * Streams de download acelerados com buffers de 64KB e headers anti-throttling.
+   * Aba dedicada de Downloads com seções "Em Andamento" e "Concluídas".
+   * Telemetria ao vivo: velocidade instantânea (`MB/s` / `KB/s`), tempo restante (`ETA`), porcentagem precisa e bytes lidos.
+   * Compartilhamento direto pelo YouTube (`ShareOverlayActivity`) com prévia da capa.
+4. **Resolução Definitiva de Crashes e Bugs Visuais:**
+   * Envolvimento de todas as invocações de UI no contexto `Dispatchers.Main`.
+   * Resolução de `ClassCastException` em temas e insets seguros para Android 14+.
+   * Eliminação de cores desconexas e contraste 100% legível com texto em Branco Puro (`#FFFFFF`).
 
 ---
 
-## 🛠️ Stack Tecnológica
+## 🛠️ Stack Tecnológica de Alta Performance
 
 | Camada | Tecnologia Adotada | Finalidade no Sistema |
 | :--- | :--- | :--- |
-| **Linguagem** | Kotlin 2.0 (Adoptium JDK 17) | Tipagem estrita, corrotinas estruturadas e alta performance |
+| **Linguagem & Runtime** | Kotlin 2.0 (Adoptium JDK 17) | Tipagem estrita, corrotinas estruturadas e latência zero |
 | **UI Framework** | Jetpack Compose + Material3 | Renderização declarativa a 120Hz com Hardware Canvas |
-| **Design System** | Aether Cybersigilism Design System | Geometria divina, curvas áureas e cápsulas de quartzo fumê |
+| **Design System** | Aether Cybersigilism Design System (ACDS) | Geometria divina, curvas áureas e cápsulas de quartzo fumê |
 | **Motor de Áudio** | `androidx.media3:media3-exoplayer` | Reprodução de baixo nível com controle de buffer |
 | **Foreground Service** | `androidx.media3:media3-session` | Notificação multimídia e execução em background contínuo |
+| **Ingestão & Streams** | NewPipe Extractor + OkHttp 4.12 | Extração de áudio/vídeo do YouTube em alta velocidade |
 | **Banco de Dados** | Android Room 2.0 (SQLite v7) | Telemetria, histórico, waveforms de áudio e playlists (WAL Mode) |
 | **DSP & Efeitos** | `android.media.audiofx` | Equalizador 5-Bandas nativo e BassBoost de hardware |
 | **Síntese de Cartões** | Android Graphics Canvas nativo | Geração de PNG 1080x1920 100% offline para galeria |
 | **Carregamento de Imagem** | Coil Compose + Bounded LRU Cache | Cache hierárquico com downsampling bicúbico |
-| **Assinatura & Build** | R8 / ProGuard + Hugh Keystore | APKs de produção com ~7.8 MB e performance máxima |
+| **Assinatura & Build** | R8 / ProGuard + Hugh Keystore | Binários ultra-otimizados (~8.2 MB) e performance máxima |
 
 ---
 
 ## 📦 Como Compilar e Executar Localmente
 
 ### Pré-requisitos
-- JDK 17 instalado (ex: Adoptium OpenJDK 17).
-- Android SDK com Platform-Tools configurados.
+* JDK 17 instalado (ex: Adoptium OpenJDK 17).
+* Android SDK com Platform-Tools configurados.
 
 ```bash
 # 1. Configurar variável do JDK 17
 set JAVA_HOME=C:\Users\victor.hugo\.jdks\jdk-17.0.20.1+1
 
-# 2. Executar suíte de testes unitários
+# 2. Executar suíte de testes unitários (126 testes)
 ./gradlew.bat testDebugUnitTest
 
 # 3. Compilar e assinar o APK de Release oficial
 ./gradlew.bat assembleRelease
 
-# 4. O APK gerado estará disponível em:
-# app/build/outputs/apk/release/app-release.apk
+# 4. Instalar diretamente no smartphone via ADB
+adb install -r app/build/outputs/apk/release/app-release.apk
 ```
 
 ---
@@ -118,6 +125,11 @@ set JAVA_HOME=C:\Users\victor.hugo\.jdks\jdk-17.0.20.1+1
 
 - **Victor "Hugh" Ramos** — Co-Founder, CEO & Chief Orchestrator.
 - **Atom** — Technical Co-Founder & Co-CEO (Liderança de IA).
-- **Equipe Autônoma:** DeepCoder (Engenharia Android), DeepInvestigator (Concorrência & Insets), Asset Generator (Cybersigilism Neoclássico), System Architect (DevOps & Room).
+- **Equipe Autônoma Especializada:**
+  * **DeepCoder:** Lead Android Systems & Compose UI Architect.
+  * **DeepInvestigator:** Concurrency, Crash Prevention & Window Insets Auditor.
+  * **Asset Generator:** Neoclassical Cybersigilism & Astrolabe Visual Specialist.
+  * **System Architect:** Media3 Audio Pipeline, Room DB & DevOps Orchestrator.
 
+---
 *Aether Vault — Soberania acústica, geometria divina e alta engenharia de IA.*
