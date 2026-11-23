@@ -1,6 +1,8 @@
 package com.hughdevelopment.player.ui.theme
 
 import android.app.Activity
+import android.content.Context
+import android.content.ContextWrapper
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.darkColorScheme
 import androidx.compose.runtime.Composable
@@ -10,6 +12,12 @@ import androidx.compose.ui.graphics.toArgb
 import androidx.compose.ui.platform.LocalView
 import androidx.core.view.WindowCompat
 
+private tailrec fun Context.findActivity(): Activity? = when (this) {
+    is Activity -> this
+    is ContextWrapper -> baseContext.findActivity()
+    else -> null
+}
+
 @Composable
 fun HughPlayerTheme(
     themeConfig: VaultThemeConfig = VaultThemes.Classic,
@@ -18,11 +26,12 @@ fun HughPlayerTheme(
     val view = LocalView.current
     if (!view.isInEditMode) {
         SideEffect {
-            val window = (view.context as Activity).window
-            window.statusBarColor = themeConfig.backgroundColor.toArgb()
-            window.navigationBarColor = themeConfig.backgroundColor.toArgb()
-            WindowCompat.getInsetsController(window, view).isAppearanceLightStatusBars = false
-            WindowCompat.getInsetsController(window, view).isAppearanceLightNavigationBars = false
+            view.context.findActivity()?.window?.let { window ->
+                window.statusBarColor = themeConfig.backgroundColor.toArgb()
+                window.navigationBarColor = themeConfig.backgroundColor.toArgb()
+                WindowCompat.getInsetsController(window, view).isAppearanceLightStatusBars = false
+                WindowCompat.getInsetsController(window, view).isAppearanceLightNavigationBars = false
+            }
         }
     }
 

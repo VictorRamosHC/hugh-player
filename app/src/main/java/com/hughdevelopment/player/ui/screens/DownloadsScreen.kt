@@ -31,28 +31,26 @@ import androidx.compose.foundation.text.BasicTextField
 import androidx.compose.foundation.text.KeyboardActions
 import androidx.compose.foundation.text.KeyboardOptions
 import androidx.compose.material.icons.Icons
-import androidx.compose.material.icons.outlined.ArrowBack
+import androidx.compose.material.icons.automirrored.outlined.ArrowBack
 import androidx.compose.material.icons.outlined.CheckCircle
 import androidx.compose.material.icons.outlined.Clear
 import androidx.compose.material.icons.outlined.CloudDownload
 import androidx.compose.material.icons.outlined.ContentPaste
 import androidx.compose.material.icons.outlined.Delete
-import androidx.compose.material.icons.outlined.ErrorOutline
 import androidx.compose.material.icons.outlined.MusicNote
 import androidx.compose.material.icons.outlined.PlayArrow
 import androidx.compose.material.icons.outlined.Speed
 import androidx.compose.material.icons.outlined.Timer
 import androidx.compose.material3.CircularProgressIndicator
 import androidx.compose.material3.Icon
-import androidx.compose.material3.LinearProgressIndicator
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
-import androidx.compose.runtime.mutableIntStateOf
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
+import androidx.compose.runtime.rememberCoroutineScope
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
@@ -80,11 +78,9 @@ import com.hughdevelopment.player.data.model.Song
 import com.hughdevelopment.player.ui.components.SovereignVoidBackdrop
 import com.hughdevelopment.player.ui.components.neoGlassCard
 import com.hughdevelopment.player.ui.components.quartzGlassCapsule
-import com.hughdevelopment.player.ui.theme.CyberAmber
-import com.hughdevelopment.player.ui.theme.DangerRed
-import com.hughdevelopment.player.ui.theme.HermeticCyan
 import com.hughdevelopment.player.ui.theme.LocalVaultTheme
 import com.hughdevelopment.player.ui.theme.SigilWhite
+import kotlinx.coroutines.launch
 
 enum class DownloadTab {
     IN_PROGRESS,
@@ -101,6 +97,7 @@ fun DownloadsScreen(
     val context = LocalContext.current
     val focusManager = LocalFocusManager.current
     val theme = LocalVaultTheme.current
+    val scope = rememberCoroutineScope()
 
     val allDownloads by downloadManager.allDownloads.collectAsState(initial = emptyList())
     val liveStates by downloadManager.liveStates.collectAsState()
@@ -109,7 +106,6 @@ fun DownloadsScreen(
     var inputUrl by remember { mutableStateOf("") }
     var isSubmitting by remember { mutableStateOf(false) }
 
-    // Separação em andamento vs concluídas
     val inProgressDownloads = remember(allDownloads, liveStates) {
         allDownloads.filter { it.status == DownloadEntity.STATUS_DOWNLOADING || it.status == DownloadEntity.STATUS_PENDING }
     }
@@ -119,27 +115,27 @@ fun DownloadsScreen(
 
     // Auto-detecta link do YouTube na área de transferência ao entrar na tela
     LaunchedEffect(Unit) {
-        val clipboard = context.getSystemService(Context.CLIPBOARD_SERVICE) as ClipboardManager
-        val clipData = clipboard.primaryClip
-        if (clipData != null && clipData.itemCount > 0) {
-            val pastedText = clipData.getItemAt(0)?.text?.toString().orEmpty()
-            if (YouTubeExtractorHelper.isYouTubeUrl(pastedText) && inputUrl.isBlank()) {
-                inputUrl = pastedText
+        try {
+            val clipboard = context.getSystemService(Context.CLIPBOARD_SERVICE) as ClipboardManager
+            val clipData = clipboard.primaryClip
+            if (clipData != null && clipData.itemCount > 0) {
+                val pastedText = clipData.getItemAt(0)?.text?.toString().orEmpty()
+                if (YouTubeExtractorHelper.isYouTubeUrl(pastedText) && inputUrl.isBlank()) {
+                    inputUrl = pastedText
+                }
             }
-        }
+        } catch (_: Exception) {}
     }
 
     Box(
         modifier = Modifier
             .fillMaxSize()
-            .statusBarsPadding()
-            .navigationBarsPadding()
             .imePadding()
     ) {
-        // Fundo Divino Obsidian
+        // Fundo com auras derivadas estritamente do tema ativo
         SovereignVoidBackdrop(
             showCybersigil = true,
-            auraScale = 0.9f
+            auraScale = 0.95f
         )
 
         Column(
@@ -160,12 +156,15 @@ fun DownloadsScreen(
                     Box(
                         modifier = Modifier
                             .size(38.dp)
-                            .quartzGlassCapsule(cornerRadius = 12.dp)
+                            .quartzGlassCapsule(
+                                cornerRadius = theme.cardCornerRadius.coerceAtLeast(8.dp),
+                                accentColor = theme.primaryAccent
+                            )
                             .clickable(onClick = onBack),
                         contentAlignment = Alignment.Center
                     ) {
                         Icon(
-                            imageVector = Icons.Outlined.ArrowBack,
+                            imageVector = Icons.AutoMirrored.Outlined.ArrowBack,
                             contentDescription = "Voltar",
                             tint = SigilWhite,
                             modifier = Modifier.size(18.dp)
@@ -176,26 +175,29 @@ fun DownloadsScreen(
 
                     Column {
                         Text(
-                            text = "AETHER // INGESTÃO",
+                            text = "${theme.lexicon.brandHeader.split("//").first().trim()} // INGESTÃO",
                             fontFamily = FontFamily.Monospace,
                             fontWeight = FontWeight.Bold,
                             fontSize = 13.sp,
-                            color = HermeticCyan,
+                            color = theme.primaryAccent,
                             letterSpacing = 1.sp
                         )
                         Text(
                             text = "DOWNLOAD DIRETO DO YOUTUBE",
                             fontFamily = FontFamily.Monospace,
                             fontSize = 10.sp,
-                            color = SigilWhite.copy(alpha = 0.6f)
+                            color = theme.textMuted
                         )
                     }
                 }
 
-                // Ícone de status
+                // Badge de status dinâmico
                 Box(
                     modifier = Modifier
-                        .quartzGlassCapsule(cornerRadius = 10.dp)
+                        .quartzGlassCapsule(
+                            cornerRadius = 10.dp,
+                            accentColor = theme.primaryAccent
+                        )
                         .padding(horizontal = 10.dp, vertical = 6.dp)
                 ) {
                     Row(verticalAlignment = Alignment.CenterVertically) {
@@ -203,7 +205,7 @@ fun DownloadsScreen(
                             modifier = Modifier
                                 .size(6.dp)
                                 .clip(CircleShape)
-                                .background(if (inProgressDownloads.isNotEmpty()) HermeticCyan else Color(0xFF10B981))
+                                .background(if (inProgressDownloads.isNotEmpty()) theme.primaryAccent else theme.secondaryAccent)
                         )
                         Spacer(modifier = Modifier.width(6.dp))
                         Text(
@@ -224,10 +226,10 @@ fun DownloadsScreen(
                 modifier = Modifier
                     .fillMaxWidth()
                     .neoGlassCard(
-                        cornerRadius = 14.dp,
-                        backgroundColor = Color(0xD90B0B14),
+                        cornerRadius = theme.cardCornerRadius.coerceAtLeast(10.dp),
+                        backgroundColor = theme.surfaceColor.copy(alpha = 0.85f),
                         borderWidth = 1.dp,
-                        topRimColor = HermeticCyan.copy(alpha = 0.35f)
+                        topRimColor = theme.primaryAccent.copy(alpha = 0.45f)
                     )
                     .padding(12.dp)
             ) {
@@ -247,7 +249,7 @@ fun DownloadsScreen(
                                 fontSize = 12.sp,
                                 fontFamily = FontFamily.Monospace
                             ),
-                            cursorBrush = SolidColor(HermeticCyan),
+                            cursorBrush = SolidColor(theme.primaryAccent),
                             singleLine = true,
                             keyboardOptions = KeyboardOptions(
                                 keyboardType = KeyboardType.Uri,
@@ -299,18 +301,23 @@ fun DownloadsScreen(
                             Spacer(modifier = Modifier.width(8.dp))
                         }
 
-                        // Botão Colar se o campo estiver vazio
+                        // Botão Colar
                         if (inputUrl.isBlank()) {
                             Box(
                                 modifier = Modifier
-                                    .quartzGlassCapsule(cornerRadius = 10.dp)
+                                    .quartzGlassCapsule(
+                                        cornerRadius = 10.dp,
+                                        accentColor = theme.primaryAccent
+                                    )
                                     .clickable {
-                                        val clipboard = context.getSystemService(Context.CLIPBOARD_SERVICE) as ClipboardManager
-                                        val clipData = clipboard.primaryClip
-                                        if (clipData != null && clipData.itemCount > 0) {
-                                            val text = clipData.getItemAt(0)?.text?.toString().orEmpty()
-                                            inputUrl = text
-                                        }
+                                        try {
+                                            val clipboard = context.getSystemService(Context.CLIPBOARD_SERVICE) as ClipboardManager
+                                            val clipData = clipboard.primaryClip
+                                            if (clipData != null && clipData.itemCount > 0) {
+                                                val text = clipData.getItemAt(0)?.text?.toString().orEmpty()
+                                                inputUrl = text
+                                            }
+                                        } catch (_: Exception) {}
                                     }
                                     .padding(horizontal = 8.dp, vertical = 6.dp)
                             ) {
@@ -318,7 +325,7 @@ fun DownloadsScreen(
                                     Icon(
                                         imageVector = Icons.Outlined.ContentPaste,
                                         contentDescription = "Colar",
-                                        tint = HermeticCyan,
+                                        tint = theme.primaryAccent,
                                         modifier = Modifier.size(14.dp)
                                     )
                                     Spacer(modifier = Modifier.width(4.dp))
@@ -326,7 +333,7 @@ fun DownloadsScreen(
                                         text = "COLAR",
                                         fontFamily = FontFamily.Monospace,
                                         fontSize = 10.sp,
-                                        color = HermeticCyan,
+                                        color = theme.primaryAccent,
                                         fontWeight = FontWeight.Bold
                                     )
                                 }
@@ -336,15 +343,15 @@ fun DownloadsScreen(
 
                     Spacer(modifier = Modifier.height(10.dp))
 
-                    // Botão Iniciar Download
+                    // Botão Iniciar Download com cores do tema ativo
                     Box(
                         modifier = Modifier
                             .fillMaxWidth()
-                            .height(40.dp)
+                            .height(42.dp)
                             .quartzGlassCapsule(
                                 cornerRadius = 10.dp,
-                                backgroundColor = if (inputUrl.isNotBlank()) HermeticCyan.copy(alpha = 0.25f) else Color(0x1AFFFFFF),
-                                accentColor = if (inputUrl.isNotBlank()) HermeticCyan else Color.White.copy(alpha = 0.2f)
+                                backgroundColor = if (inputUrl.isNotBlank()) theme.primaryAccent.copy(alpha = 0.25f) else Color(0x1AFFFFFF),
+                                accentColor = if (inputUrl.isNotBlank()) theme.primaryAccent else Color.White.copy(alpha = 0.2f)
                             )
                             .clickable(enabled = inputUrl.isNotBlank() && !isSubmitting) {
                                 focusManager.clearFocus()
@@ -367,7 +374,7 @@ fun DownloadsScreen(
                     ) {
                         if (isSubmitting) {
                             CircularProgressIndicator(
-                                color = HermeticCyan,
+                                color = theme.primaryAccent,
                                 strokeWidth = 2.dp,
                                 modifier = Modifier.size(20.dp)
                             )
@@ -376,7 +383,7 @@ fun DownloadsScreen(
                                 Icon(
                                     imageVector = Icons.Outlined.CloudDownload,
                                     contentDescription = null,
-                                    tint = if (inputUrl.isNotBlank()) HermeticCyan else SigilWhite.copy(alpha = 0.5f),
+                                    tint = if (inputUrl.isNotBlank()) theme.primaryAccent else SigilWhite.copy(alpha = 0.5f),
                                     modifier = Modifier.size(16.dp)
                                 )
                                 Spacer(modifier = Modifier.width(8.dp))
@@ -411,8 +418,8 @@ fun DownloadsScreen(
                         .height(38.dp)
                         .quartzGlassCapsule(
                             cornerRadius = 10.dp,
-                            backgroundColor = if (isSelectedProgress) HermeticCyan.copy(alpha = 0.20f) else Color(0x10FFFFFF),
-                            accentColor = if (isSelectedProgress) HermeticCyan else Color.Transparent
+                            backgroundColor = if (isSelectedProgress) theme.primaryAccent.copy(alpha = 0.22f) else Color(0x10FFFFFF),
+                            accentColor = if (isSelectedProgress) theme.primaryAccent else Color.Transparent
                         )
                         .clickable { activeTab = DownloadTab.IN_PROGRESS },
                     contentAlignment = Alignment.Center
@@ -431,7 +438,7 @@ fun DownloadsScreen(
                                 modifier = Modifier
                                     .size(18.dp)
                                     .clip(CircleShape)
-                                    .background(HermeticCyan),
+                                    .background(theme.primaryAccent),
                                 contentAlignment = Alignment.Center
                             ) {
                                 Text(
@@ -453,8 +460,8 @@ fun DownloadsScreen(
                         .height(38.dp)
                         .quartzGlassCapsule(
                             cornerRadius = 10.dp,
-                            backgroundColor = if (isSelectedCompleted) CyberAmber.copy(alpha = 0.20f) else Color(0x10FFFFFF),
-                            accentColor = if (isSelectedCompleted) CyberAmber else Color.Transparent
+                            backgroundColor = if (isSelectedCompleted) theme.secondaryAccent.copy(alpha = 0.22f) else Color(0x10FFFFFF),
+                            accentColor = if (isSelectedCompleted) theme.secondaryAccent else Color.Transparent
                         )
                         .clickable { activeTab = DownloadTab.COMPLETED },
                     contentAlignment = Alignment.Center
@@ -473,7 +480,7 @@ fun DownloadsScreen(
                                 modifier = Modifier
                                     .size(18.dp)
                                     .clip(CircleShape)
-                                    .background(CyberAmber),
+                                    .background(theme.secondaryAccent),
                                 contentAlignment = Alignment.Center
                             ) {
                                 Text(
@@ -496,7 +503,8 @@ fun DownloadsScreen(
                     if (inProgressDownloads.isEmpty()) {
                         EmptyDownloadView(
                             title = "NENHUM DOWNLOAD ATIVO",
-                            subtitle = "Cole um link do YouTube acima ou compartilhe direto do app do YouTube."
+                            subtitle = "Cole um link do YouTube acima ou compartilhe direto do app do YouTube.",
+                            accentColor = theme.primaryAccent
                         )
                     } else {
                         LazyColumn(
@@ -520,7 +528,8 @@ fun DownloadsScreen(
                     if (completedDownloads.isEmpty()) {
                         EmptyDownloadView(
                             title = "COFRE DE DOWNLOADS VAZIO",
-                            subtitle = "As faixas concluídas aparecerão aqui e na sua Biblioteca principal automaticamente."
+                            subtitle = "As faixas concluídas aparecerão aqui e na sua Biblioteca principal automaticamente.",
+                            accentColor = theme.secondaryAccent
                         )
                     } else {
                         LazyColumn(
@@ -545,7 +554,7 @@ fun DownloadsScreen(
 }
 
 /**
- * Card vivo de download com telemetria: %, velocidade e ETA
+ * Card vivo de download com telemetria: %, velocidade e ETA (100% theme-aware)
  */
 @Composable
 fun DownloadProgressCard(
@@ -553,6 +562,7 @@ fun DownloadProgressCard(
     liveState: DownloadLiveState?,
     onCancel: () -> Unit
 ) {
+    val theme = LocalVaultTheme.current
     val percent = liveState?.progressPercent ?: entity.progressPercent
     val speed = liveState?.speedFormatted ?: "CONECTANDO..."
     val eta = liveState?.etaFormatted ?: "--:--"
@@ -563,10 +573,10 @@ fun DownloadProgressCard(
         modifier = Modifier
             .fillMaxWidth()
             .neoGlassCard(
-                cornerRadius = 14.dp,
-                backgroundColor = Color(0xCC0E0E18),
+                cornerRadius = theme.cardCornerRadius.coerceAtLeast(10.dp),
+                backgroundColor = theme.surfaceColor.copy(alpha = 0.85f),
                 borderWidth = 1.dp,
-                topRimColor = HermeticCyan.copy(alpha = 0.5f)
+                topRimColor = theme.primaryAccent.copy(alpha = 0.5f)
             )
             .padding(12.dp)
     ) {
@@ -596,7 +606,7 @@ fun DownloadProgressCard(
                         Icon(
                             imageVector = Icons.Outlined.MusicNote,
                             contentDescription = null,
-                            tint = HermeticCyan,
+                            tint = theme.primaryAccent,
                             modifier = Modifier.size(20.dp)
                         )
                     }
@@ -637,7 +647,7 @@ fun DownloadProgressCard(
 
             Spacer(modifier = Modifier.height(10.dp))
 
-            // Barra de Progresso Neon
+            // Barra de Progresso Neon com as cores do tema ativo
             val progressFraction = (percent / 100f).coerceIn(0f, 1f)
             Box(
                 modifier = Modifier
@@ -652,7 +662,7 @@ fun DownloadProgressCard(
                         .height(6.dp)
                         .background(
                             Brush.horizontalGradient(
-                                colors = listOf(HermeticCyan, CyberAmber)
+                                colors = listOf(theme.primaryAccent, theme.secondaryAccent)
                             )
                         )
                 )
@@ -673,7 +683,7 @@ fun DownloadProgressCard(
                         fontFamily = FontFamily.Monospace,
                         fontWeight = FontWeight.Bold,
                         fontSize = 11.sp,
-                        color = HermeticCyan
+                        color = theme.primaryAccent
                     )
                     if (totalBytes > 0) {
                         Spacer(modifier = Modifier.width(6.dp))
@@ -691,7 +701,7 @@ fun DownloadProgressCard(
                     Icon(
                         imageVector = Icons.Outlined.Speed,
                         contentDescription = null,
-                        tint = CyberAmber,
+                        tint = theme.secondaryAccent,
                         modifier = Modifier.size(12.dp)
                     )
                     Spacer(modifier = Modifier.width(4.dp))
@@ -700,7 +710,7 @@ fun DownloadProgressCard(
                         fontFamily = FontFamily.Monospace,
                         fontWeight = FontWeight.SemiBold,
                         fontSize = 10.sp,
-                        color = CyberAmber
+                        color = theme.secondaryAccent
                     )
                 }
 
@@ -735,7 +745,8 @@ fun DownloadCompletedCard(
     onPlay: (Song) -> Unit,
     onDelete: () -> Unit
 ) {
-    // Procura a música na biblioteca carregada para tocar
+    val theme = LocalVaultTheme.current
+
     val matchingSong = remember(allSongs, entity) {
         allSongs.find { song ->
             song.title.contains(entity.title, ignoreCase = true) ||
@@ -747,10 +758,10 @@ fun DownloadCompletedCard(
         modifier = Modifier
             .fillMaxWidth()
             .neoGlassCard(
-                cornerRadius = 14.dp,
-                backgroundColor = Color(0xCC0E0E18),
+                cornerRadius = theme.cardCornerRadius.coerceAtLeast(10.dp),
+                backgroundColor = theme.surfaceColor.copy(alpha = 0.85f),
                 borderWidth = 1.dp,
-                topRimColor = CyberAmber.copy(alpha = 0.35f)
+                topRimColor = theme.secondaryAccent.copy(alpha = 0.35f)
             )
             .padding(12.dp)
     ) {
@@ -778,7 +789,7 @@ fun DownloadCompletedCard(
                     Icon(
                         imageVector = Icons.Outlined.MusicNote,
                         contentDescription = null,
-                        tint = CyberAmber,
+                        tint = theme.secondaryAccent,
                         modifier = Modifier.size(20.dp)
                     )
                 }
@@ -822,8 +833,8 @@ fun DownloadCompletedCard(
                         .size(34.dp)
                         .quartzGlassCapsule(
                             cornerRadius = 10.dp,
-                            backgroundColor = CyberAmber.copy(alpha = 0.2f),
-                            accentColor = CyberAmber
+                            backgroundColor = theme.secondaryAccent.copy(alpha = 0.2f),
+                            accentColor = theme.secondaryAccent
                         )
                         .clickable { onPlay(matchingSong) },
                     contentAlignment = Alignment.Center
@@ -831,7 +842,7 @@ fun DownloadCompletedCard(
                     Icon(
                         imageVector = Icons.Outlined.PlayArrow,
                         contentDescription = "Tocar",
-                        tint = CyberAmber,
+                        tint = theme.secondaryAccent,
                         modifier = Modifier.size(18.dp)
                     )
                 }
@@ -854,7 +865,8 @@ fun DownloadCompletedCard(
 @Composable
 fun EmptyDownloadView(
     title: String,
-    subtitle: String
+    subtitle: String,
+    accentColor: Color
 ) {
     Box(
         modifier = Modifier
@@ -869,13 +881,16 @@ fun EmptyDownloadView(
             Box(
                 modifier = Modifier
                     .size(64.dp)
-                    .quartzGlassCapsule(cornerRadius = 18.dp),
+                    .quartzGlassCapsule(
+                        cornerRadius = 18.dp,
+                        accentColor = accentColor
+                    ),
                 contentAlignment = Alignment.Center
             ) {
                 Icon(
                     imageVector = Icons.Outlined.CloudDownload,
                     contentDescription = null,
-                    tint = HermeticCyan.copy(alpha = 0.8f),
+                    tint = accentColor.copy(alpha = 0.85f),
                     modifier = Modifier.size(30.dp)
                 )
             }

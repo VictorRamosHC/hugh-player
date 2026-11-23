@@ -45,3 +45,27 @@ val DelamainSurface = Color(0xFF12141F)     // Corporate Console Surface
 val DelamainBorder = Color(0xFF1E2438)      // Geometric Precision Border
 val DelamainMuted = Color(0xFF828FA3)       // Cold Slate Muted
 
+// Neo-Olympus Alchemy Palette (Sacred Sun & Bronze)
+val OlympusGold = Color(0xFFFFB703)         // Alchemical Pure Gold
+val OlympusGoldGlow = Color(0x4DFFB703)     // Radiant Sun Amber Glow
+val AlchemicalBronze = Color(0xFFFB8500)    // Polished Altar Bronze
+val SolarVoid = Color(0xFF080603)           // Black Sun Obsidian Void
+val OlympusSurface = Color(0xFF141009)      // Temple Console Surface
+val OlympusBorder = Color(0xFF3D2C10)       // Hermetic Gold Edge
+
+// Neural Violet Olympia Palette (Bioluminescent Void)
+val NeuralPurple = Color(0xFFA855F7)        // Quantum Neural Purple
+val NeuralPurpleGlow = Color(0x4DA855F7)    // Violet Aura
+val BiolumMagenta = Color(0xFFEC4899)       // Electric Bioluminescent Rose
+val NeuralVoid = Color(0xFF07040E)          // Deep Space Void
+val NeuralSurface = Color(0xFF120B20)       // Synthesizer Console
+val NeuralBorder = Color(0xFF351C5C)        // Violet Laser Rim
+
+// Cyber-Mint Matrix Palette (Terminal Zero)
+val MatrixMint = Color(0xFF00FF9D)          // Phosphor Terminal Mint
+val MatrixMintGlow = Color(0x4D00FF9D)      // Green Phosphor Aura
+val EmeraldTerminal = Color(0xFF10B981)     // High-Grade Emerald
+val MatrixVoid = Color(0xFF020704)          // Air-Gapped Terminal Black
+val MatrixSurface = Color(0xFF08140B)       // Server Rack Green-Black
+val MatrixBorder = Color(0xFF123B1E)        // Wireframe Matrix Border
+

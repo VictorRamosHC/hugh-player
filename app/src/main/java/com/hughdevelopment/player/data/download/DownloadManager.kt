@@ -71,7 +71,9 @@ class DownloadManager private constructor(
                 val videoId = YouTubeExtractorHelper.extractVideoId(url)
                     ?: throw IllegalArgumentException("Link do YouTube inválido: $url")
 
-                onStarted?.invoke(videoId)
+                withContext(Dispatchers.Main) {
+                    onStarted?.invoke(videoId)
+                }
 
                 // 1. Extração rápida de metadados
                 val audioInfo = YouTubeExtractorHelper.extractAudio(url)
@@ -98,7 +100,9 @@ class DownloadManager private constructor(
                 startDownloadJob(entity)
 
             } catch (e: Exception) {
-                onError?.invoke(e.message ?: "Falha ao processar link")
+                withContext(Dispatchers.Main) {
+                    onError?.invoke(e.message ?: "Falha ao processar link")
+                }
             }
         }
     }

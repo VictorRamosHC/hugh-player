@@ -45,16 +45,17 @@ import androidx.compose.ui.text.style.TextOverflow
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import coil.compose.AsyncImage
+import com.hughdevelopment.player.HughPlayerApplication
 import com.hughdevelopment.player.data.download.ExtractedAudioInfo
 import com.hughdevelopment.player.data.download.YouTubeExtractorHelper
 import com.hughdevelopment.player.service.DownloadService
 import com.hughdevelopment.player.ui.components.neoGlassCard
 import com.hughdevelopment.player.ui.components.quartzGlassCapsule
-import com.hughdevelopment.player.ui.theme.CyberAmber
-import com.hughdevelopment.player.ui.theme.HermeticCyan
 import com.hughdevelopment.player.ui.theme.HughPlayerTheme
 import com.hughdevelopment.player.ui.theme.LocalVaultTheme
 import com.hughdevelopment.player.ui.theme.SigilWhite
+import com.hughdevelopment.player.ui.theme.VaultThemes
+import kotlinx.coroutines.delay
 import kotlinx.coroutines.launch
 
 class ShareOverlayActivity : ComponentActivity() {
@@ -62,16 +63,35 @@ class ShareOverlayActivity : ComponentActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
 
+        val app = application as? HughPlayerApplication
+        val activeThemeId = app?.settingsManager?.settings?.value?.activeThemeId ?: VaultThemes.Classic.id.name
+        val themeConfig = VaultThemes.fromId(activeThemeId)
+
         val sharedText = extractSharedUrl(intent)
 
         setContent {
-            HughPlayerTheme {
+            HughPlayerTheme(themeConfig = themeConfig) {
                 ShareOverlayContent(
                     initialUrl = sharedText,
                     onDismiss = { finish() },
                     onConfirmDownload = { url ->
-                        DownloadService.startDownload(this, url)
-                        Toast.makeText(this, "Ingestão iniciada em background!", Toast.LENGTH_SHORT).show()
+                        try {
+                            app?.downloadManager?.enqueueDownload(
+                                url = url,
+                                onStarted = {
+                                    Toast.makeText(this@ShareOverlayActivity, "Ingestão iniciada no Vault!", Toast.LENGTH_SHORT).show()
+                                },
+                                onError = { err ->
+                                    Toast.makeText(this@ShareOverlayActivity, "Erro: $err", Toast.LENGTH_LONG).show()
+                                }
+                            )
+                            // Tenta iniciar serviço de notificação em background de forma segura
+                            try {
+                                DownloadService.startDownload(this@ShareOverlayActivity, url)
+                            } catch (_: Exception) {}
+                        } catch (e: Exception) {
+                            Toast.makeText(this@ShareOverlayActivity, "Falha ao enfileirar: ${e.message}", Toast.LENGTH_SHORT).show()
+                        }
                         finish()
                     }
                 )
@@ -115,11 +135,11 @@ fun ShareOverlayContent(
         }
     }
 
-    // Modal com fundo escurecido estilo cyber-altar
+    // Modal translúcido
     Box(
         modifier = Modifier
             .fillMaxSize()
-            .background(Color.Black.copy(alpha = 0.75f))
+            .background(Color.Black.copy(alpha = 0.78f))
             .clickable(onClick = onDismiss),
         contentAlignment = Alignment.Center
     ) {
@@ -129,11 +149,11 @@ fun ShareOverlayContent(
                 .fillMaxWidth()
                 .clickable(enabled = false) {}
                 .neoGlassCard(
-                    cornerRadius = 18.dp,
-                    backgroundColor = Color(0xF2090910),
+                    cornerRadius = theme.cardCornerRadius.coerceAtLeast(14.dp),
+                    backgroundColor = theme.surfaceColor.copy(alpha = 0.95f),
                     borderWidth = 1.dp,
-                    topRimColor = HermeticCyan.copy(alpha = 0.5f),
-                    bottomRimColor = HermeticCyan.copy(alpha = 0.2f)
+                    topRimColor = theme.primaryAccent.copy(alpha = 0.6f),
+                    bottomRimColor = theme.secondaryAccent.copy(alpha = 0.2f)
                 )
                 .padding(20.dp)
         ) {
@@ -141,7 +161,7 @@ fun ShareOverlayContent(
                 modifier = Modifier.fillMaxWidth(),
                 horizontalAlignment = Alignment.CenterHorizontally
             ) {
-                // Header com glifo celestial
+                // Header com glifo do tema
                 Row(
                     modifier = Modifier.fillMaxWidth(),
                     horizontalArrangement = Arrangement.SpaceBetween,
@@ -151,16 +171,16 @@ fun ShareOverlayContent(
                         Icon(
                             imageVector = Icons.Outlined.CloudDownload,
                             contentDescription = null,
-                            tint = HermeticCyan,
+                            tint = theme.primaryAccent,
                             modifier = Modifier.size(18.dp)
                         )
                         Spacer(modifier = Modifier.width(8.dp))
                         Text(
-                            text = "AETHER // INGESTÃO YOUTUBE",
+                            text = "${theme.lexicon.brandHeader.split("//").first().trim()} // INGESTÃO",
                             fontFamily = FontFamily.Monospace,
                             fontWeight = FontWeight.Bold,
                             fontSize = 11.sp,
-                            color = HermeticCyan,
+                            color = theme.primaryAccent,
                             letterSpacing = 1.sp
                         )
                     }
@@ -168,7 +188,7 @@ fun ShareOverlayContent(
                     Icon(
                         imageVector = Icons.Outlined.Close,
                         contentDescription = "Fechar",
-                        tint = Color.White.copy(alpha = 0.6f),
+                        tint = SigilWhite.copy(alpha = 0.6f),
                         modifier = Modifier
                             .size(20.dp)
                             .clickable(onClick = onDismiss)
@@ -180,7 +200,7 @@ fun ShareOverlayContent(
                 when {
                     isLoading -> {
                         CircularProgressIndicator(
-                            color = HermeticCyan,
+                            color = theme.primaryAccent,
                             strokeWidth = 2.dp,
                             modifier = Modifier.size(36.dp)
                         )
@@ -195,11 +215,11 @@ fun ShareOverlayContent(
 
                     errorMessage != null -> {
                         Text(
-                            text = "ERRO NA EXTRAÇÃO",
+                            text = "AVISO DE CONEXÃO",
                             fontFamily = FontFamily.Monospace,
                             fontWeight = FontWeight.Bold,
                             fontSize = 13.sp,
-                            color = Color(0xFFFF5252)
+                            color = theme.secondaryAccent
                         )
                         Spacer(modifier = Modifier.height(6.dp))
                         Text(
@@ -213,12 +233,12 @@ fun ShareOverlayContent(
                     extractedInfo != null -> {
                         val info = extractedInfo!!
 
-                        // Card da mídia encontrada
+                        // Card da mídia encontrada com as cores do tema
                         Row(
                             modifier = Modifier
                                 .fillMaxWidth()
-                                .clip(RoundedCornerShape(12.dp))
-                                .background(Color(0xFF13131E))
+                                .clip(RoundedCornerShape(theme.cardCornerRadius.coerceAtLeast(8.dp)))
+                                .background(theme.cardBorderColor.copy(alpha = 0.4f))
                                 .padding(10.dp),
                             verticalAlignment = Alignment.CenterVertically
                         ) {
@@ -242,7 +262,7 @@ fun ShareOverlayContent(
                                     Icon(
                                         imageVector = Icons.Outlined.MusicNote,
                                         contentDescription = null,
-                                        tint = CyberAmber
+                                        tint = theme.primaryAccent
                                     )
                                 }
                             }
@@ -260,10 +280,10 @@ fun ShareOverlayContent(
                                 )
                                 Spacer(modifier = Modifier.height(2.dp))
                                 Text(
-                                    text = "${info.artist} • ${info.format.uppercase()} (128 kbps)",
+                                    text = "${info.artist} • ${info.format.uppercase()}",
                                     fontSize = 11.sp,
                                     fontFamily = FontFamily.Monospace,
-                                    color = HermeticCyan.copy(alpha = 0.85f),
+                                    color = theme.primaryAccent.copy(alpha = 0.9f),
                                     maxLines = 1,
                                     overflow = TextOverflow.Ellipsis
                                 )
@@ -279,8 +299,8 @@ fun ShareOverlayContent(
                                 .height(46.dp)
                                 .quartzGlassCapsule(
                                     cornerRadius = 14.dp,
-                                    backgroundColor = HermeticCyan.copy(alpha = 0.22f),
-                                    accentColor = HermeticCyan
+                                    backgroundColor = theme.primaryAccent.copy(alpha = 0.25f),
+                                    accentColor = theme.primaryAccent
                                 )
                                 .clickable {
                                     onConfirmDownload(info.originalUrl)

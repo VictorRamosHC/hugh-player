@@ -61,10 +61,10 @@ data class ListeningOverview(
 
     val rankTier: SovereignRank
         get() = when {
-            xp < 500 -> SovereignRank(1, "INICIADO DO AETHER", 500, "#06B6D4")
+            xp < 500 -> SovereignRank(1, "INICIADO DO AETHER", 500, "#00F0FF")
             xp < 1500 -> SovereignRank(2, "GUARDIÃO DO VAULT", 1500, "#F59E0B")
-            xp < 3500 -> SovereignRank(3, "ALQUIMISTA DO SOM", 3500, "#0022FF")
-            else -> SovereignRank(4, "ARCONTE SOBERANO", 6000, "#A855F7")
+            xp < 3500 -> SovereignRank(3, "ALQUIMISTA DO SOM", 3500, "#00E5FF")
+            else -> SovereignRank(4, "ARCONTE SOBERANO", 6000, "#FFD700")
         }
 
     val formattedTotalTime: String

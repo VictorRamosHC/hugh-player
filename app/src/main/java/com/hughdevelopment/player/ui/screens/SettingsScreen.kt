@@ -101,6 +101,7 @@ fun SettingsScreen(
     onOpenHiddenSongs: () -> Unit = {},
     hiddenSongsCount: Int = 0,
     onChangeTimeDisplayFormat: (TimeDisplayFormat) -> Unit = {},
+    onOpenThemeStore: () -> Unit = {},
     modifier: Modifier = Modifier
 ) {
     val context = LocalContext.current
@@ -560,6 +561,82 @@ fun SettingsScreen(
                 title = "COFRE DE TEMAS // MERCADO DE IDENTIDADES",
                 icon = Icons.Default.AutoAwesome
             )
+
+            Spacer(modifier = Modifier.height(10.dp))
+
+            // BANNER LOJA DE TEMAS COMPLETA
+            Box(
+                modifier = Modifier
+                    .fillMaxWidth()
+                    .quartzGlassCapsule(
+                        cornerRadius = 14.dp,
+                        backgroundColor = currentTheme.primaryAccent.copy(alpha = 0.18f),
+                        accentColor = currentTheme.primaryAccent,
+                        topRimColor = SpecularGlassRimTop,
+                        borderWidth = 1.2.dp
+                    )
+                    .clickable { onOpenThemeStore() }
+                    .padding(14.dp)
+            ) {
+                Row(
+                    modifier = Modifier.fillMaxWidth(),
+                    verticalAlignment = Alignment.CenterVertically,
+                    horizontalArrangement = Arrangement.SpaceBetween
+                ) {
+                    Row(
+                        modifier = Modifier.weight(1f),
+                        verticalAlignment = Alignment.CenterVertically
+                    ) {
+                        Box(
+                            modifier = Modifier
+                                .size(38.dp)
+                                .clip(CircleShape)
+                                .background(currentTheme.primaryAccent.copy(alpha = 0.25f))
+                                .border(1.dp, currentTheme.primaryAccent, CircleShape),
+                            contentAlignment = Alignment.Center
+                        ) {
+                            Icon(
+                                imageVector = Icons.Default.Palette,
+                                contentDescription = null,
+                                tint = currentTheme.primaryAccent,
+                                modifier = Modifier.size(20.dp)
+                            )
+                        }
+                        Spacer(modifier = Modifier.width(12.dp))
+                        Column {
+                            Text(
+                                text = "ENTRAR NA LOJA DE TEMAS",
+                                color = SigilWhite,
+                                fontSize = 13.sp,
+                                fontWeight = FontWeight.Bold,
+                                fontFamily = FontFamily.Monospace,
+                                letterSpacing = 1.sp
+                            )
+                            Text(
+                                text = "Catálogo completo, 6 temas, layouts e letras",
+                                color = currentTheme.secondaryAccent,
+                                fontSize = 10.sp,
+                                fontFamily = FontFamily.Monospace
+                            )
+                        }
+                    }
+
+                    Box(
+                        modifier = Modifier
+                            .clip(RoundedCornerShape(10.dp))
+                            .background(currentTheme.primaryAccent)
+                            .padding(horizontal = 12.dp, vertical = 7.dp)
+                    ) {
+                        Text(
+                            text = "ABRIR",
+                            color = VoidBlack,
+                            fontSize = 11.sp,
+                            fontWeight = FontWeight.Black,
+                            fontFamily = FontFamily.Monospace
+                        )
+                    }
+                }
+            }
 
             Spacer(modifier = Modifier.height(10.dp))
 

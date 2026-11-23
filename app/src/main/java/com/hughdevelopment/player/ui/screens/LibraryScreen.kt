@@ -35,6 +35,7 @@ import androidx.compose.material.icons.filled.FavoriteBorder
 import androidx.compose.material.icons.filled.Folder
 import androidx.compose.material.icons.filled.GraphicEq
 import androidx.compose.material.icons.filled.MoreVert
+import androidx.compose.material.icons.filled.Palette
 import androidx.compose.material.icons.filled.PlaylistAdd
 import androidx.compose.material.icons.filled.PlaylistPlay
 import androidx.compose.material.icons.filled.Refresh
@@ -111,6 +112,7 @@ fun LibraryScreen(
     onOpenDownloads: () -> Unit = {},
     onOpenDashboard: () -> Unit,
     onOpenSettings: () -> Unit,
+    onOpenThemeStore: () -> Unit = {},
     onToggleFavorite: (Song) -> Unit,
     onAddSongToPlaylist: (Long, Long) -> Unit = { _, _ -> },
     onAddSongsToPlaylist: (Long, List<Long>) -> Unit = { _, _ -> },
@@ -335,19 +337,19 @@ fun LibraryScreen(
                         Text(
                             text = currentTheme.lexicon.brandHeader,
                             color = currentTheme.textPrimary,
-                            fontSize = 17.sp,
+                            fontSize = 15.sp,
                             fontWeight = FontWeight.Black,
                             fontFamily = FontFamily.Monospace,
-                            letterSpacing = 1.2.sp,
+                            letterSpacing = 0.8.sp,
                             maxLines = 1,
                             overflow = TextOverflow.Ellipsis
                         )
                         Text(
                             text = "${currentTheme.lexicon.brandSub} • ${songs.size} FAIXAS",
                             color = currentTheme.primaryAccent,
-                            fontSize = 10.sp,
+                            fontSize = 9.5.sp,
                             fontFamily = FontFamily.Monospace,
-                            letterSpacing = 0.5.sp,
+                            letterSpacing = 0.4.sp,
                             maxLines = 1,
                             overflow = TextOverflow.Ellipsis
                         )
@@ -400,7 +402,7 @@ fun LibraryScreen(
                         Icon(
                             imageVector = Icons.Outlined.CloudDownload,
                             contentDescription = "Ingestão & Downloads",
-                            tint = HermeticCyan,
+                            tint = currentTheme.primaryAccent,
                             modifier = Modifier.size(20.dp)
                         )
                     }
@@ -434,14 +436,14 @@ fun LibraryScreen(
                                         fontFamily = FontFamily.Monospace,
                                         fontSize = 12.sp,
                                         fontWeight = FontWeight.Bold,
-                                        color = HermeticCyan
+                                        color = currentTheme.primaryAccent
                                     )
                                 },
                                 leadingIcon = {
                                     Icon(
                                         imageVector = Icons.Outlined.CloudDownload,
                                         contentDescription = null,
-                                        tint = HermeticCyan,
+                                        tint = currentTheme.primaryAccent,
                                         modifier = Modifier.size(18.dp)
                                     )
                                 },
@@ -472,6 +474,30 @@ fun LibraryScreen(
                                 onClick = {
                                     showHubMenu = false
                                     onOpenDashboard()
+                                }
+                            )
+
+                            DropdownMenuItem(
+                                text = {
+                                    Text(
+                                        text = "LOJA DE TEMAS // PANTHEON",
+                                        fontFamily = FontFamily.Monospace,
+                                        fontSize = 12.sp,
+                                        fontWeight = FontWeight.Bold,
+                                        color = currentTheme.secondaryAccent
+                                    )
+                                },
+                                leadingIcon = {
+                                    Icon(
+                                        imageVector = Icons.Default.Palette,
+                                        contentDescription = null,
+                                        tint = currentTheme.secondaryAccent,
+                                        modifier = Modifier.size(18.dp)
+                                    )
+                                },
+                                onClick = {
+                                    showHubMenu = false
+                                    onOpenThemeStore()
                                 }
                             )
 

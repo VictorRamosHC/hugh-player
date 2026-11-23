@@ -484,5 +484,6 @@ enum class AppScreen {
     FOLDERS,
     STATS_DASHBOARD,
     SETTINGS,
-    DOWNLOADS
+    DOWNLOADS,
+    THEME_STORE
 }

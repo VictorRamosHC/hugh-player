@@ -44,6 +44,7 @@ import com.hughdevelopment.player.ui.screens.FoldersScreen
 import com.hughdevelopment.player.ui.screens.LibraryScreen
 import com.hughdevelopment.player.ui.screens.SettingsScreen
 import com.hughdevelopment.player.ui.screens.StatsDashboardScreen
+import com.hughdevelopment.player.ui.screens.ThemeStoreScreen
 import com.hughdevelopment.player.ui.theme.HughPlayerTheme
 import com.hughdevelopment.player.ui.theme.LocalVaultTheme
 import com.hughdevelopment.player.ui.viewmodel.AppScreen
@@ -221,6 +222,7 @@ fun MainScreen(
                         onOpenDownloads = { viewModel.navigateTo(AppScreen.DOWNLOADS) },
                         onOpenDashboard = { viewModel.navigateTo(AppScreen.STATS_DASHBOARD) },
                         onOpenSettings = { viewModel.navigateTo(AppScreen.SETTINGS) },
+                        onOpenThemeStore = { viewModel.navigateTo(AppScreen.THEME_STORE) },
                         onToggleFavorite = { song -> viewModel.toggleFavorite(song) },
                         onAddSongToPlaylist = { playlistId, songId ->
                             viewModel.addSongToPlaylist(playlistId, songId)
@@ -322,6 +324,7 @@ fun MainScreen(
                         onImportBackup = { json, cb -> viewModel.importBackup(json, cb) },
                         onOpenEqualizer = { showEqualizerSheet = true },
                         onOpenHiddenSongs = { showHiddenSongsSheet = true },
+                        onOpenThemeStore = { viewModel.navigateTo(AppScreen.THEME_STORE) },
                         hiddenSongsCount = hiddenSongs.size,
                         onChangeTimeDisplayFormat = { viewModel.setTimeDisplayFormat(it) }
                     )
@@ -334,6 +337,23 @@ fun MainScreen(
                             viewModel.playSong(song, listOf(song))
                         },
                         onBack = { viewModel.navigateTo(AppScreen.LIBRARY) }
+                    )
+                }
+                AppScreen.THEME_STORE -> {
+                    ThemeStoreScreen(
+                        settings = settings,
+                        onSelectTheme = { viewModel.setThemeId(it) },
+                        onChangeLibraryAlpha = { viewModel.setLibraryWallpaperAlpha(it) },
+                        onChangePlayerAlpha = { viewModel.setPlayerWallpaperAlpha(it) },
+                        onToggleFade = { viewModel.setFadeEnabled(it) },
+                        onChangeFadeDuration = { viewModel.setFadeDuration(it) },
+                        onBack = {
+                            if (viewModel.canNavigateBack()) {
+                                viewModel.navigateBack()
+                            } else {
+                                viewModel.navigateTo(AppScreen.LIBRARY)
+                            }
+                        }
                     )
                 }
             }

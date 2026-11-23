@@ -38,7 +38,7 @@ class VaultV170FeaturesTest {
 
     @Test
     fun testAllThemes_registeredInAllThemesList() {
-        assertEquals(3, VaultThemes.AllThemes.size)
+        assertEquals(6, VaultThemes.AllThemes.size)
         assertTrue(VaultThemes.AllThemes.contains(VaultThemes.Classic))
         assertTrue(VaultThemes.AllThemes.contains(VaultThemes.ArasakaPantheon))
         assertTrue(VaultThemes.AllThemes.contains(VaultThemes.DelamainAiCore))
