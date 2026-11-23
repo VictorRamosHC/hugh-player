@@ -39,6 +39,7 @@ import com.hughdevelopment.player.ui.components.HiddenSongsBottomSheet
 import com.hughdevelopment.player.ui.components.MiniPlayerBar
 import com.hughdevelopment.player.ui.components.QueueBottomSheet
 import com.hughdevelopment.player.ui.components.SplashScreenView
+import com.hughdevelopment.player.ui.screens.DownloadsScreen
 import com.hughdevelopment.player.ui.screens.FoldersScreen
 import com.hughdevelopment.player.ui.screens.LibraryScreen
 import com.hughdevelopment.player.ui.screens.SettingsScreen
@@ -217,6 +218,7 @@ fun MainScreen(
                         },
                         onRefresh = { viewModel.loadLocalMusic() },
                         onOpenFolders = { viewModel.navigateTo(AppScreen.FOLDERS) },
+                        onOpenDownloads = { viewModel.navigateTo(AppScreen.DOWNLOADS) },
                         onOpenDashboard = { viewModel.navigateTo(AppScreen.STATS_DASHBOARD) },
                         onOpenSettings = { viewModel.navigateTo(AppScreen.SETTINGS) },
                         onToggleFavorite = { song -> viewModel.toggleFavorite(song) },
@@ -322,6 +324,16 @@ fun MainScreen(
                         onOpenHiddenSongs = { showHiddenSongsSheet = true },
                         hiddenSongsCount = hiddenSongs.size,
                         onChangeTimeDisplayFormat = { viewModel.setTimeDisplayFormat(it) }
+                    )
+                }
+                AppScreen.DOWNLOADS -> {
+                    DownloadsScreen(
+                        downloadManager = viewModel.downloadManager,
+                        allSongs = sortedSongs,
+                        onPlaySong = { song ->
+                            viewModel.playSong(song, listOf(song))
+                        },
+                        onBack = { viewModel.navigateTo(AppScreen.LIBRARY) }
                     )
                 }
             }

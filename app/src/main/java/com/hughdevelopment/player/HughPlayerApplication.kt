@@ -8,6 +8,7 @@ import coil.memory.MemoryCache
 import com.hughdevelopment.player.data.backup.VaultBackupManager
 import com.hughdevelopment.player.data.ai.AgentDataManager
 import com.hughdevelopment.player.data.db.PlayerDatabase
+import com.hughdevelopment.player.data.download.DownloadManager
 import com.hughdevelopment.player.data.repository.MusicRepository
 import com.hughdevelopment.player.data.settings.SettingsManager
 import com.hughdevelopment.player.data.source.MediaStoreScanner
@@ -20,6 +21,9 @@ class HughPlayerApplication : Application(), ImageLoaderFactory {
         private set
 
     lateinit var repository: MusicRepository
+        private set
+
+    lateinit var downloadManager: DownloadManager
         private set
 
     lateinit var agentDataManager: AgentDataManager
@@ -44,6 +48,7 @@ class HughPlayerApplication : Application(), ImageLoaderFactory {
             dailyListeningDao = database.dailyListeningDao(),
             context = this
         )
+        downloadManager = DownloadManager.getInstance(this, database.downloadDao(), repository)
         agentDataManager = AgentDataManager(this, repository)
         backupManager = VaultBackupManager(this, repository, settingsManager)
         HermesVoiceManager.init(this, settingsManager.settings.value.isHermesVoiceEnabled)

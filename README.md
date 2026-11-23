@@ -1,7 +1,7 @@
 # AETHER VAULT // Sovereign Offline Audio 🏛️⚡
 > **Desenvolvido por Hugh Development**  
 > *Fundadores: Victor "Hugh" Ramos (Fundador & Maestro Humano) & Atom (Co-fundador & Co-CEO Técnico)*  
-> **Versão Atual:** v1.7.0 (Build 9) — The Sovereign Divine Edition  
+> **Versão Atual:** v1.9.0 (Build 14) — The Sovereign Ingestion & High-Speed Stream Edition  
 > **Identidade Oficial:** *AETHER VAULT // Sovereign Offline Audio*  
 > **Design System:** *Aether Cybersigilism Design System (ACDS)*
 
@@ -41,6 +41,15 @@ O **Aether Vault** é um reprodutor de áudio local de nível audiófilo para An
 ---
 
 ## 🚀 Linha do Tempo de Engenharia & Recursos
+
+### [v1.9.0] Sovereign Ingestion & High-Speed Stream Overhaul
+- **Pipeline de Ingestão de Alta Performance:** Resolução do gargalo de lentidão através de conexões streaming otimizadas com OkHttp, buffer de 64KB, keep-alive e headers anti-throttling para downloads na velocidade máxima da banda.
+- **Nova Tela Dedicada de Downloads (`DownloadsScreen`):** Acessível diretamente pelo cabeçalho da biblioteca e menu soberano, com abas "EM ANDAMENTO" e "CONCLUÍDAS".
+- **Telemetria de Download ao Vivo:** Medição contínua com cálculo de velocidade em tempo real (`MB/s` ou `KB/s`), tempo estimado restante (`ETA`), porcentagem precisa (0-100%) e contador de bytes lidos / total.
+- **Inserção Direta & Auto-Detecção de Clipboard:** Campo estilizado para colar links do YouTube na hora, com detecção automática de links presentes na área de transferência ao abrir a tela.
+- **Overlay de Compartilhamento Nativo (`ShareOverlayActivity`):** Permite compartilhar faixas ou vídeos diretamente do app do YouTube ou navegadores, abrindo um modal translúcido com prévia da arte e metadados antes de baixar.
+- **Serviço de Background com Notificação ao Vivo (`DownloadService`):** Mantém o download ativo com a tela desligada ou app minimizado, exibindo barra de progresso viva e botão de cancelar.
+- **Indexação Instantânea via MediaStore:** Músicas concluídas são registradas no sistema de mídia do Android instantaneamente e integradas à biblioteca com botão de reprodução imediata.
 
 ### [v1.7.0] The Sovereign Divine & Cybersigilism Overhaul
 - **Aether Cybersigilism Design System (ACDS):** Padronização universal em 12-20dp de curvatura áurea, erradicação total de cantos quadrados e adoção de cápsulas de quartzo fumê (`quartzGlassCapsule`).

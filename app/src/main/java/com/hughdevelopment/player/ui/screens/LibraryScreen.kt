@@ -42,6 +42,7 @@ import androidx.compose.material.icons.filled.Search
 import androidx.compose.material.icons.filled.Settings
 import androidx.compose.material.icons.filled.Shuffle
 import androidx.compose.material.icons.filled.VisibilityOff
+import androidx.compose.material.icons.outlined.CloudDownload
 import androidx.compose.material3.AlertDialog
 import androidx.compose.material3.Checkbox
 import androidx.compose.material3.CheckboxDefaults
@@ -86,6 +87,7 @@ import com.hughdevelopment.player.ui.components.HermesPetBanner
 import com.hughdevelopment.player.ui.components.SovereignVoidBackdrop
 import com.hughdevelopment.player.ui.components.activePlayingGlassCard
 import com.hughdevelopment.player.ui.components.neoGlassCard
+import com.hughdevelopment.player.ui.theme.HermeticCyan
 import com.hughdevelopment.player.ui.theme.LocalVaultTheme
 import com.hughdevelopment.player.ui.theme.MutedStone
 import com.hughdevelopment.player.ui.theme.SigilSilver
@@ -106,6 +108,7 @@ fun LibraryScreen(
     onSongSelected: (Song, List<Song>) -> Unit,
     onRefresh: () -> Unit,
     onOpenFolders: () -> Unit,
+    onOpenDownloads: () -> Unit = {},
     onOpenDashboard: () -> Unit,
     onOpenSettings: () -> Unit,
     onToggleFavorite: (Song) -> Unit,
@@ -389,7 +392,20 @@ fun LibraryScreen(
                         )
                     }
 
-                    // 4. Sovereign Hub Menu (Stats, Settings, Refresh)
+                    // 4. Ingestion / Downloads Quick Action
+                    IconButton(
+                        onClick = onOpenDownloads,
+                        modifier = Modifier.size(34.dp)
+                    ) {
+                        Icon(
+                            imageVector = Icons.Outlined.CloudDownload,
+                            contentDescription = "Ingestão & Downloads",
+                            tint = HermeticCyan,
+                            modifier = Modifier.size(20.dp)
+                        )
+                    }
+
+                    // 5. Sovereign Hub Menu (Stats, Settings, Refresh)
                     Box {
                         IconButton(
                             onClick = { showHubMenu = true },
@@ -411,6 +427,30 @@ fun LibraryScreen(
                                 .background(Color(0xF80E1019))
                                 .border(1.dp, WireframeBorder.copy(alpha = 0.5f), RoundedCornerShape(14.dp))
                         ) {
+                            DropdownMenuItem(
+                                text = {
+                                    Text(
+                                        text = "INGESTÃO // DOWNLOADS",
+                                        fontFamily = FontFamily.Monospace,
+                                        fontSize = 12.sp,
+                                        fontWeight = FontWeight.Bold,
+                                        color = HermeticCyan
+                                    )
+                                },
+                                leadingIcon = {
+                                    Icon(
+                                        imageVector = Icons.Outlined.CloudDownload,
+                                        contentDescription = null,
+                                        tint = HermeticCyan,
+                                        modifier = Modifier.size(18.dp)
+                                    )
+                                },
+                                onClick = {
+                                    showHubMenu = false
+                                    onOpenDownloads()
+                                }
+                            )
+
                             DropdownMenuItem(
                                 text = {
                                     Text(

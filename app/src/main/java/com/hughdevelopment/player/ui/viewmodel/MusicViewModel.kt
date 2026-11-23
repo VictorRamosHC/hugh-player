@@ -31,6 +31,7 @@ class MusicViewModel(application: Application) : AndroidViewModel(application) {
     private val app = application as HughPlayerApplication
     val database = app.database
     val repository = app.repository
+    val downloadManager = app.downloadManager
     val agentManager = app.agentDataManager
     val backupManager = app.backupManager
     val settingsManager = SettingsManager.getInstance(application)
@@ -482,5 +483,6 @@ enum class AppScreen {
     LIBRARY,
     FOLDERS,
     STATS_DASHBOARD,
-    SETTINGS
+    SETTINGS,
+    DOWNLOADS
 }

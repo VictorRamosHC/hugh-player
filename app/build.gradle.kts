@@ -13,8 +13,8 @@ android {
         applicationId = "com.hughdevelopment.player"
         minSdk = 26
         targetSdk = 35
-        versionCode = 13
-        versionName = "1.7.0"
+        versionCode = 14
+        versionName = "1.9.0"
 
         testInstrumentationRunner = "androidx.test.runner.AndroidJUnitRunner"
         vectorDrawables {
@@ -102,6 +102,12 @@ dependencies {
 
     // Coil Image Loading (High-performance caching)
     implementation(libs.coil.compose)
+
+    // Networking & Streaming Engine
+    implementation("com.squareup.okhttp3:okhttp:4.12.0")
+
+    // YouTube Extractor Core
+    implementation("com.github.TeamNewPipe:NewPipeExtractor:v0.24.4")
 
     // Unit Testing
     testImplementation("junit:junit:4.13.2")
