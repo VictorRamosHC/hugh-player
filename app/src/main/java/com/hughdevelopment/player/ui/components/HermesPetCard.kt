@@ -81,16 +81,20 @@ fun HermesPetBanner(
     modifier: Modifier = Modifier
 ) {
     val theme = LocalVaultTheme.current
-    val quip = remember(overview, songsCount, playlistsCount) {
-        HermesPetEngine.getDynamicGreeting(overview, songsCount, playlistsCount)
+    val quip = remember(overview, songsCount, playlistsCount, theme.id) {
+        if (theme.lexicon.greetingPhrase.isNotBlank()) {
+            theme.lexicon.greetingPhrase
+        } else {
+            HermesPetEngine.getDynamicGreeting(overview, songsCount, playlistsCount)
+        }
     }
 
     Box(
         modifier = modifier
             .fillMaxWidth()
             .neoGlassCard(
-                cornerRadius = 14.dp,
-                backgroundColor = Color(0xF20D0F18),
+                cornerRadius = theme.cardCornerRadius.coerceAtLeast(10.dp),
+                backgroundColor = theme.surfaceColor.copy(alpha = 0.92f),
                 borderWidth = 1.dp,
                 topRimColor = theme.primaryAccent.copy(alpha = 0.7f),
                 bottomRimColor = SpecularGlassRimTop
@@ -102,10 +106,19 @@ fun HermesPetBanner(
             modifier = Modifier.fillMaxWidth(),
             verticalAlignment = Alignment.CenterVertically
         ) {
-            // Sovereign Astrolabe Oracle Eye for Hermes (Compact HUD size)
-            HermesAstrolabeOracleEye(
-                modifier = Modifier.size(34.dp)
-            )
+            Box(
+                modifier = Modifier
+                    .size(36.dp)
+                    .clip(CircleShape)
+                    .background(theme.primaryAccent.copy(alpha = 0.18f))
+                    .border(1.dp, theme.primaryAccent.copy(alpha = 0.45f), CircleShape),
+                contentAlignment = Alignment.Center
+            ) {
+                Text(
+                    text = theme.iconEmoji,
+                    fontSize = 18.sp
+                )
+            }
 
             Spacer(modifier = Modifier.width(10.dp))
 
@@ -124,7 +137,7 @@ fun HermesPetBanner(
                         modifier = Modifier
                             .size(6.dp)
                             .clip(CircleShape)
-                            .background(theme.primary)
+                            .background(theme.secondaryAccent)
                     )
                 }
 
@@ -135,7 +148,7 @@ fun HermesPetBanner(
                     color = SigilWhite,
                     fontSize = 11.sp,
                     fontFamily = FontFamily.Monospace,
-                    maxLines = 1,
+                    maxLines = 2,
                     lineHeight = 15.sp,
                     overflow = androidx.compose.ui.text.style.TextOverflow.Ellipsis
                 )
@@ -233,9 +246,19 @@ fun HermesDialogueSheet(
                     verticalAlignment = Alignment.CenterVertically
                 ) {
                     Row(verticalAlignment = Alignment.CenterVertically) {
-                        HermesAstrolabeOracleEye(
-                            modifier = Modifier.size(36.dp)
-                        )
+                        Box(
+                            modifier = Modifier
+                                .size(36.dp)
+                                .clip(CircleShape)
+                                .background(theme.primaryAccent.copy(alpha = 0.20f))
+                                .border(1.dp, theme.primaryAccent.copy(alpha = 0.50f), CircleShape),
+                            contentAlignment = Alignment.Center
+                        ) {
+                            Text(
+                                text = theme.iconEmoji,
+                                fontSize = 18.sp
+                            )
+                        }
                         Spacer(modifier = Modifier.width(10.dp))
                         Column {
                             Text(

@@ -60,6 +60,7 @@ import androidx.compose.ui.text.style.TextOverflow
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import com.hughdevelopment.player.data.settings.SettingsState
+import com.hughdevelopment.player.ui.components.VaultThemeWallpaperBackdrop
 import com.hughdevelopment.player.ui.components.SovereignVoidBackdrop
 import com.hughdevelopment.player.ui.components.neoGlassCard
 import com.hughdevelopment.player.ui.components.quartzGlassCapsule
@@ -346,24 +347,39 @@ fun ThemeCatalogCard(
                 horizontalArrangement = Arrangement.SpaceBetween,
                 verticalAlignment = Alignment.CenterVertically
             ) {
-                Column(modifier = Modifier.weight(1f)) {
-                    Text(
-                        text = themeConfig.displayName,
-                        fontFamily = FontFamily.Monospace,
-                        fontWeight = FontWeight.Black,
-                        fontSize = 14.sp,
-                        color = themeConfig.primaryAccent,
-                        letterSpacing = 1.sp
-                    )
-                    Spacer(modifier = Modifier.height(2.dp))
-                    Text(
-                        text = themeConfig.badgeTag,
-                        fontFamily = FontFamily.Monospace,
-                        fontSize = 9.sp,
-                        fontWeight = FontWeight.Bold,
-                        color = themeConfig.secondaryAccent,
-                        letterSpacing = 0.5.sp
-                    )
+                Row(verticalAlignment = Alignment.CenterVertically, modifier = Modifier.weight(1f)) {
+                    Box(
+                        modifier = Modifier
+                            .size(38.dp)
+                            .clip(RoundedCornerShape(8.dp))
+                            .background(themeConfig.primaryAccent.copy(alpha = 0.20f))
+                            .border(1.dp, themeConfig.primaryAccent.copy(alpha = 0.50f), RoundedCornerShape(8.dp)),
+                        contentAlignment = Alignment.Center
+                    ) {
+                        Text(text = themeConfig.iconEmoji, fontSize = 20.sp)
+                    }
+
+                    Spacer(modifier = Modifier.width(10.dp))
+
+                    Column {
+                        Text(
+                            text = themeConfig.displayName,
+                            fontFamily = FontFamily.Monospace,
+                            fontWeight = FontWeight.Black,
+                            fontSize = 13.5.sp,
+                            color = themeConfig.primaryAccent,
+                            letterSpacing = 1.sp
+                        )
+                        Spacer(modifier = Modifier.height(2.dp))
+                        Text(
+                            text = themeConfig.badgeTag,
+                            fontFamily = FontFamily.Monospace,
+                            fontSize = 9.sp,
+                            fontWeight = FontWeight.Bold,
+                            color = themeConfig.secondaryAccent,
+                            letterSpacing = 0.5.sp
+                        )
+                    }
                 }
 
                 // Amostras de cores
@@ -371,13 +387,63 @@ fun ThemeCatalogCard(
                     horizontalArrangement = Arrangement.spacedBy(4.dp),
                     verticalAlignment = Alignment.CenterVertically
                 ) {
-                    Box(modifier = Modifier.size(14.dp).clip(CircleShape).background(themeConfig.primaryAccent))
-                    Box(modifier = Modifier.size(14.dp).clip(CircleShape).background(themeConfig.secondaryAccent))
-                    Box(modifier = Modifier.size(14.dp).clip(CircleShape).background(themeConfig.backgroundColor).border(1.dp, Color.White.copy(alpha = 0.3f), CircleShape))
+                    Box(modifier = Modifier.size(13.dp).clip(CircleShape).background(themeConfig.primaryAccent))
+                    Box(modifier = Modifier.size(13.dp).clip(CircleShape).background(themeConfig.secondaryAccent))
+                    Box(modifier = Modifier.size(13.dp).clip(CircleShape).background(themeConfig.backgroundColor).border(1.dp, Color.White.copy(alpha = 0.3f), CircleShape))
                 }
             }
 
-            Spacer(modifier = Modifier.height(8.dp))
+            Spacer(modifier = Modifier.height(10.dp))
+
+            // Miniatura Live do Wallpaper e Estética Arquitetônica
+            Box(
+                modifier = Modifier
+                    .fillMaxWidth()
+                    .height(68.dp)
+                    .clip(RoundedCornerShape(8.dp))
+                    .border(1.dp, themeConfig.cardBorderColor.copy(alpha = 0.6f), RoundedCornerShape(8.dp))
+            ) {
+                VaultThemeWallpaperBackdrop(
+                    modifier = Modifier.fillMaxSize(),
+                    wallpaperAlpha = 0.90f,
+                    theme = themeConfig
+                )
+                Row(
+                    modifier = Modifier
+                        .fillMaxSize()
+                        .padding(horizontal = 8.dp, vertical = 6.dp),
+                    verticalAlignment = Alignment.Bottom,
+                    horizontalArrangement = Arrangement.SpaceBetween
+                ) {
+                    Box(
+                        modifier = Modifier
+                            .background(Color.Black.copy(alpha = 0.70f), RoundedCornerShape(4.dp))
+                            .padding(horizontal = 6.dp, vertical = 2.dp)
+                    ) {
+                        Text(
+                            text = "📐 ${themeConfig.cardCornerRadius.value.toInt()}DP • ${themeConfig.fontCategory.name}",
+                            fontFamily = FontFamily.Monospace,
+                            fontSize = 8.5.sp,
+                            color = SigilWhite
+                        )
+                    }
+
+                    Box(
+                        modifier = Modifier
+                            .background(Color.Black.copy(alpha = 0.70f), RoundedCornerShape(4.dp))
+                            .padding(horizontal = 6.dp, vertical = 2.dp)
+                    ) {
+                        Text(
+                            text = "HERMES: ${themeConfig.lexicon.petName.take(16)}",
+                            fontFamily = FontFamily.Monospace,
+                            fontSize = 8.5.sp,
+                            color = themeConfig.primaryAccent
+                        )
+                    }
+                }
+            }
+
+            Spacer(modifier = Modifier.height(10.dp))
 
             // Descrição da alma visual
             Text(

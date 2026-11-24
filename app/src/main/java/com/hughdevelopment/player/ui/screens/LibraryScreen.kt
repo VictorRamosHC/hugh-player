@@ -163,7 +163,7 @@ fun LibraryScreen(
         // Pure Obsidian Void & Radiant Auras
         SovereignVoidBackdrop(
             showCybersigil = true,
-            auraScale = 1.0f
+            auraScale = wallpaperAlpha
         )
 
         Column(

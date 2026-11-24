@@ -191,6 +191,13 @@ fun ExpandedPlayerSheet(
                 .fillMaxSize()
                 .background(theme.background)
         ) {
+            // Theme Procedural Wallpaper Backdrop
+            VaultThemeWallpaperBackdrop(
+                modifier = Modifier.fillMaxSize(),
+                wallpaperAlpha = wallpaperAlpha,
+                theme = theme
+            )
+
             // 1. Luminous Ambient Aura (Top-Left primary radiant cloud)
             Box(
                 modifier = Modifier

@@ -38,10 +38,13 @@ class VaultV170FeaturesTest {
 
     @Test
     fun testAllThemes_registeredInAllThemesList() {
-        assertEquals(6, VaultThemes.AllThemes.size)
+        assertEquals(16, VaultThemes.AllThemes.size)
         assertTrue(VaultThemes.AllThemes.contains(VaultThemes.Classic))
         assertTrue(VaultThemes.AllThemes.contains(VaultThemes.ArasakaPantheon))
         assertTrue(VaultThemes.AllThemes.contains(VaultThemes.DelamainAiCore))
+        assertTrue(VaultThemes.AllThemes.contains(VaultThemes.SovereignArchon))
+        assertTrue(VaultThemes.AllThemes.contains(VaultThemes.DogeSovereign))
+        assertTrue(VaultThemes.AllThemes.contains(VaultThemes.Win95Vaporwave))
     }
 
     @Test

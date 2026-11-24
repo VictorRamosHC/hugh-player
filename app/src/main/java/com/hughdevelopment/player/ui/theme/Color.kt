@@ -69,3 +69,77 @@ val MatrixVoid = Color(0xFF020704)          // Air-Gapped Terminal Black
 val MatrixSurface = Color(0xFF08140B)       // Server Rack Green-Black
 val MatrixBorder = Color(0xFF123B1E)        // Wireframe Matrix Border
 
+// 10 Model Themes Palettes (Aether Vault v1.9.0 Pantheon Theme Store)
+// 1. Doge Soberano Palette (Meme Tier)
+val DogeYellow = Color(0xFFF5A623)
+val DogeGold = Color(0xFFFFD166)
+val DogeDark = Color(0xFF0F0E0A)
+val DogeSurface = Color(0xFF1C1911)
+val DogeBorder = Color(0xFF4D3F1D)
+
+// 2. Win95 Vaporwave Palette (Nostalgia Glitch)
+val VaporMagenta = Color(0xFFFF71CE)
+val VaporCyan = Color(0xFF01CDFE)
+val Win95Gray = Color(0xFFC0C0C0)
+val Win95Void = Color(0xFF0D0221)
+val Win95Surface = Color(0xFF1B033A)
+val Win95Border = Color(0xFFB967FF)
+
+// 3. Terra Brasilis Palette (Tropical Brutalist)
+val TerraEmerald = Color(0xFF10B981)
+val TerraCotta = Color(0xFFC2410C)
+val ConcreteDark = Color(0xFF0C0F0E)
+val ConcreteSurface = Color(0xFF161C18)
+val ConcreteBorder = Color(0xFF2E3D35)
+
+// 4. Monolith Null Palette (Abyssal Minimal)
+val NullOled = Color(0xFF000000)
+val NullWhite = Color(0xFFFFFFFF)
+val NullUltraviolet = Color(0xFF8B5CF6)
+val NullSurface = Color(0xFF080808)
+val NullBorder = Color(0xFF1C1C1C)
+val NullTitanium = Color(0xFF9CA3AF)
+
+// 5. Acid Protocol Palette (Biohazard Containment)
+val AcidGreen = Color(0xFF39FF14)
+val HazardYellow = Color(0xFFEAB308)
+val RadiationVoid = Color(0xFF050905)
+val RadiationSurface = Color(0xFF0B140C)
+val RadiationBorder = Color(0xFF1C421E)
+
+// 6. Eldritch Cathedral Palette (Souls-Like Gothic)
+val EldritchBlood = Color(0xFF881337)
+val EldritchGold = Color(0xFFD4AF37)
+val CathedralVoid = Color(0xFF090306)
+val CathedralSurface = Color(0xFF16080E)
+val CathedralBorder = Color(0xFF4A1024)
+
+// 7. Apollo 1970 Palette (Analog Hardware)
+val ApolloAmber = Color(0xFFF59E0B)
+val ApolloVfdGreen = Color(0xFF34D399)
+val CockpitVoid = Color(0xFF0B0A06)
+val CockpitSurface = Color(0xFF17130B)
+val CockpitBorder = Color(0xFF45361A)
+
+// 8. Neo-Kyoto Zero Palette (Cyber-Shogunate)
+val KatanaCrimson = Color(0xFFE11D48)
+val KyotoGold = Color(0xFFFACC15)
+val CarbonVoid = Color(0xFF07070A)
+val CarbonSurface = Color(0xFF101017)
+val CarbonBorder = Color(0xFF3B1220)
+
+// 9. Weyland Deep Space Palette (Sci-Fi Corp)
+val WeylandCyan = Color(0xFF38BDF8)
+val AirlockOrange = Color(0xFFF97316)
+val HullVoid = Color(0xFF06090F)
+val HullSurface = Color(0xFF0D1522)
+val HullBorder = Color(0xFF1E2D44)
+
+// 10. Sovereign Archon Palette (Supremo Olympus Ascended)
+val ArchonGold = Color(0xFFFFD700)
+val ArchonCyan = Color(0xFF00F0FF)
+val ArchonVoid = Color(0xFF040407)
+val ArchonSurface = Color(0xFF0F101A)
+val ArchonBorder = Color(0xFF4A3E1E)
+
+
