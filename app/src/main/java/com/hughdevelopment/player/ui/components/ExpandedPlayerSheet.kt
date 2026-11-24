@@ -536,8 +536,8 @@ fun ExpandedPlayerSheet(
                         .padding(horizontal = 8.dp),
                     barCount = 30,
                     height = 32.dp,
-                    activeColor = theme.primary,
-                    secondaryColor = theme.primaryAccent
+                    activeColor = theme.primaryAccent,
+                    secondaryColor = theme.secondaryAccent
                 )
 
                 Spacer(modifier = Modifier.height(16.dp))

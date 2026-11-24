@@ -78,6 +78,8 @@ fun ThemeStoreScreen(
     onChangePlayerAlpha: (Float) -> Unit,
     onToggleFade: (Boolean) -> Unit,
     onChangeFadeDuration: (Float) -> Unit,
+    onSelectFont: (VaultFontCategory?) -> Unit = {},
+    onSelectShape: (VaultLayoutShape?) -> Unit = {},
     onBack: () -> Unit
 ) {
     val context = LocalContext.current
@@ -290,14 +292,18 @@ fun ThemeStoreScreen(
 
                         item {
                             CustomizationTypographyCard(
-                                currentFont = currentTheme.fontCategory
+                                currentFont = currentTheme.fontCategory,
+                                customFont = settings.customFontCategory,
+                                onSelectFont = onSelectFont
                             )
                         }
 
                         item {
                             CustomizationGeometryCard(
                                 currentShape = currentTheme.layoutShape,
-                                cornerRadius = currentTheme.cardCornerRadius
+                                customShape = settings.customLayoutShape,
+                                cornerRadius = currentTheme.cardCornerRadius,
+                                onSelectShape = onSelectShape
                             )
                         }
                     }
@@ -675,7 +681,9 @@ fun CustomizationFadeCard(
  */
 @Composable
 fun CustomizationTypographyCard(
-    currentFont: VaultFontCategory
+    currentFont: VaultFontCategory,
+    customFont: VaultFontCategory?,
+    onSelectFont: (VaultFontCategory?) -> Unit
 ) {
     val theme = LocalVaultTheme.current
 
@@ -691,28 +699,53 @@ fun CustomizationTypographyCard(
             .padding(16.dp)
     ) {
         Column {
-            Row(verticalAlignment = Alignment.CenterVertically) {
-                Icon(
-                    imageVector = Icons.Outlined.FormatShapes,
-                    contentDescription = null,
-                    tint = theme.primaryAccent,
-                    modifier = Modifier.size(18.dp)
-                )
-                Spacer(modifier = Modifier.width(8.dp))
-                Text(
-                    text = "ESTILO DE LETRAS // TIPOGRAFIA",
-                    fontFamily = FontFamily.Monospace,
-                    fontWeight = FontWeight.Bold,
-                    fontSize = 12.sp,
-                    color = SigilWhite,
-                    letterSpacing = 1.sp
-                )
+            Row(
+                modifier = Modifier.fillMaxWidth(),
+                horizontalArrangement = Arrangement.SpaceBetween,
+                verticalAlignment = Alignment.CenterVertically
+            ) {
+                Row(verticalAlignment = Alignment.CenterVertically) {
+                    Icon(
+                        imageVector = Icons.Outlined.FormatShapes,
+                        contentDescription = null,
+                        tint = theme.primaryAccent,
+                        modifier = Modifier.size(18.dp)
+                    )
+                    Spacer(modifier = Modifier.width(8.dp))
+                    Text(
+                        text = "ESTILO DE LETRAS // TIPOGRAFIA",
+                        fontFamily = FontFamily.Monospace,
+                        fontWeight = FontWeight.Bold,
+                        fontSize = 12.sp,
+                        color = SigilWhite,
+                        letterSpacing = 1.sp
+                    )
+                }
+
+                if (customFont != null) {
+                    Box(
+                        modifier = Modifier
+                            .clip(RoundedCornerShape(6.dp))
+                            .background(Color(0x22FFFFFF))
+                            .clickable { onSelectFont(null) }
+                            .padding(horizontal = 8.dp, vertical = 4.dp)
+                    ) {
+                        Text(
+                            text = "RESET TEMA",
+                            fontSize = 9.sp,
+                            fontFamily = FontFamily.Monospace,
+                            fontWeight = FontWeight.Bold,
+                            color = theme.primaryAccent
+                        )
+                    }
+                }
             }
 
             Spacer(modifier = Modifier.height(10.dp))
 
             Text(
-                text = "A tipografia é otimizada por tema, refletindo o caráter neoclássico, militar Arasaka ou cockpit IA Delamain.",
+                text = if (customFont != null) "Tipografia personalizada ativa: ${customFont.name} (Sobrepondo o tema)."
+                else "Tipografia padrão do tema ativa (${currentFont.name}). Toque para alterar.",
                 fontFamily = FontFamily.Monospace,
                 fontSize = 11.sp,
                 color = SigilWhite.copy(alpha = 0.7f),
@@ -728,32 +761,45 @@ fun CustomizationTypographyCard(
                 val fonts = listOf(
                     "MONOSPACE" to VaultFontCategory.MONOSPACE,
                     "SANS-SERIF" to VaultFontCategory.SANS_SERIF,
-                    "SERIF CLÁSSICO" to VaultFontCategory.SERIF
+                    "SERIF" to VaultFontCategory.SERIF
                 )
                 fonts.forEach { (label, cat) ->
                     val isSelected = currentFont == cat
                     Box(
                         modifier = Modifier
                             .weight(1f)
-                            .height(34.dp)
+                            .height(38.dp)
                             .quartzGlassCapsule(
                                 cornerRadius = 8.dp,
-                                backgroundColor = if (isSelected) theme.primaryAccent.copy(alpha = 0.25f) else Color(0x10FFFFFF),
-                                accentColor = if (isSelected) theme.primaryAccent else Color.Transparent
-                            ),
+                                backgroundColor = if (isSelected) theme.primaryAccent.copy(alpha = 0.32f) else Color(0x10FFFFFF),
+                                accentColor = if (isSelected) theme.primaryAccent else Color.Transparent,
+                                borderWidth = if (isSelected) 1.5.dp else 0.8.dp
+                            )
+                            .clickable { onSelectFont(cat) },
                         contentAlignment = Alignment.Center
                     ) {
-                        Text(
-                            text = label,
-                            fontFamily = when (cat) {
-                                VaultFontCategory.MONOSPACE -> FontFamily.Monospace
-                                VaultFontCategory.SERIF -> FontFamily.Serif
-                                else -> FontFamily.SansSerif
-                            },
-                            fontWeight = if (isSelected) FontWeight.Bold else FontWeight.Normal,
-                            fontSize = 9.sp,
-                            color = if (isSelected) SigilWhite else SigilWhite.copy(alpha = 0.6f)
-                        )
+                        Row(verticalAlignment = Alignment.CenterVertically) {
+                            if (isSelected) {
+                                Icon(
+                                    imageVector = Icons.Outlined.Check,
+                                    contentDescription = null,
+                                    tint = SigilWhite,
+                                    modifier = Modifier.size(12.dp)
+                                )
+                                Spacer(modifier = Modifier.width(4.dp))
+                            }
+                            Text(
+                                text = label,
+                                fontFamily = when (cat) {
+                                    VaultFontCategory.MONOSPACE -> FontFamily.Monospace
+                                    VaultFontCategory.SERIF -> FontFamily.Serif
+                                    else -> FontFamily.SansSerif
+                                },
+                                fontWeight = if (isSelected) FontWeight.Bold else FontWeight.Normal,
+                                fontSize = 9.5.sp,
+                                color = if (isSelected) SigilWhite else SigilWhite.copy(alpha = 0.6f)
+                            )
+                        }
                     }
                 }
             }
@@ -767,7 +813,9 @@ fun CustomizationTypographyCard(
 @Composable
 fun CustomizationGeometryCard(
     currentShape: VaultLayoutShape,
-    cornerRadius: androidx.compose.ui.unit.Dp
+    customShape: VaultLayoutShape?,
+    cornerRadius: androidx.compose.ui.unit.Dp,
+    onSelectShape: (VaultLayoutShape?) -> Unit
 ) {
     val theme = LocalVaultTheme.current
 
@@ -783,28 +831,53 @@ fun CustomizationGeometryCard(
             .padding(16.dp)
     ) {
         Column {
-            Row(verticalAlignment = Alignment.CenterVertically) {
-                Icon(
-                    imageVector = Icons.Outlined.Layers,
-                    contentDescription = null,
-                    tint = theme.secondaryAccent,
-                    modifier = Modifier.size(18.dp)
-                )
-                Spacer(modifier = Modifier.width(8.dp))
-                Text(
-                    text = "GEOMETRIA DE LAYOUT // BORDAS",
-                    fontFamily = FontFamily.Monospace,
-                    fontWeight = FontWeight.Bold,
-                    fontSize = 12.sp,
-                    color = SigilWhite,
-                    letterSpacing = 1.sp
-                )
+            Row(
+                modifier = Modifier.fillMaxWidth(),
+                horizontalArrangement = Arrangement.SpaceBetween,
+                verticalAlignment = Alignment.CenterVertically
+            ) {
+                Row(verticalAlignment = Alignment.CenterVertically) {
+                    Icon(
+                        imageVector = Icons.Outlined.Layers,
+                        contentDescription = null,
+                        tint = theme.secondaryAccent,
+                        modifier = Modifier.size(18.dp)
+                    )
+                    Spacer(modifier = Modifier.width(8.dp))
+                    Text(
+                        text = "GEOMETRIA DE LAYOUT // BORDAS",
+                        fontFamily = FontFamily.Monospace,
+                        fontWeight = FontWeight.Bold,
+                        fontSize = 12.sp,
+                        color = SigilWhite,
+                        letterSpacing = 1.sp
+                    )
+                }
+
+                if (customShape != null) {
+                    Box(
+                        modifier = Modifier
+                            .clip(RoundedCornerShape(6.dp))
+                            .background(Color(0x22FFFFFF))
+                            .clickable { onSelectShape(null) }
+                            .padding(horizontal = 8.dp, vertical = 4.dp)
+                    ) {
+                        Text(
+                            text = "RESET TEMA",
+                            fontSize = 9.sp,
+                            fontFamily = FontFamily.Monospace,
+                            fontWeight = FontWeight.Bold,
+                            color = theme.secondaryAccent
+                        )
+                    }
+                }
             }
 
             Spacer(modifier = Modifier.height(10.dp))
 
             Text(
-                text = "Geometria ativa: ${theme.layoutShape.name} (Curvatura de $cornerRadius). Segue a regra áurea do ACDS.",
+                text = if (customShape != null) "Morfologia personalizada ativa: ${customShape.name} ($cornerRadius)."
+                else "Geometria padrão do tema ativa: ${currentShape.name} ($cornerRadius). Toque para alterar.",
                 fontFamily = FontFamily.Monospace,
                 fontSize = 11.sp,
                 color = SigilWhite.copy(alpha = 0.7f),
@@ -818,7 +891,7 @@ fun CustomizationGeometryCard(
                 horizontalArrangement = Arrangement.spacedBy(8.dp)
             ) {
                 val shapes = listOf(
-                    "DIVINO (14dp)" to VaultLayoutShape.DIVINE_CURVES,
+                    "DIVINO (16dp)" to VaultLayoutShape.DIVINE_CURVES,
                     "BRUTAL (4dp)" to VaultLayoutShape.BRUTALIST_SHARP,
                     "MINIMAL (8dp)" to VaultLayoutShape.NEO_MINIMAL
                 )
@@ -827,21 +900,34 @@ fun CustomizationGeometryCard(
                     Box(
                         modifier = Modifier
                             .weight(1f)
-                            .height(34.dp)
+                            .height(38.dp)
                             .quartzGlassCapsule(
                                 cornerRadius = 8.dp,
-                                backgroundColor = if (isSelected) theme.secondaryAccent.copy(alpha = 0.25f) else Color(0x10FFFFFF),
-                                accentColor = if (isSelected) theme.secondaryAccent else Color.Transparent
-                            ),
+                                backgroundColor = if (isSelected) theme.secondaryAccent.copy(alpha = 0.32f) else Color(0x10FFFFFF),
+                                accentColor = if (isSelected) theme.secondaryAccent else Color.Transparent,
+                                borderWidth = if (isSelected) 1.5.dp else 0.8.dp
+                            )
+                            .clickable { onSelectShape(shape) },
                         contentAlignment = Alignment.Center
                     ) {
-                        Text(
-                            text = label,
-                            fontFamily = FontFamily.Monospace,
-                            fontWeight = if (isSelected) FontWeight.Bold else FontWeight.Normal,
-                            fontSize = 9.sp,
-                            color = if (isSelected) SigilWhite else SigilWhite.copy(alpha = 0.6f)
-                        )
+                        Row(verticalAlignment = Alignment.CenterVertically) {
+                            if (isSelected) {
+                                Icon(
+                                    imageVector = Icons.Outlined.Check,
+                                    contentDescription = null,
+                                    tint = SigilWhite,
+                                    modifier = Modifier.size(12.dp)
+                                )
+                                Spacer(modifier = Modifier.width(4.dp))
+                            }
+                            Text(
+                                text = label,
+                                fontFamily = FontFamily.Monospace,
+                                fontWeight = if (isSelected) FontWeight.Bold else FontWeight.Normal,
+                                fontSize = 9.5.sp,
+                                color = if (isSelected) SigilWhite else SigilWhite.copy(alpha = 0.6f)
+                            )
+                        }
                     }
                 }
             }

@@ -79,8 +79,35 @@ class MainActivity : ComponentActivity() {
 
         setContent {
             val settings by viewModel.settings.collectAsState()
-            val currentTheme = remember(settings.activeThemeId) {
-                com.hughdevelopment.player.ui.theme.VaultThemes.fromId(settings.activeThemeId)
+            val currentTheme = remember(settings.activeThemeId, settings.customFontCategory, settings.customLayoutShape) {
+                val base = com.hughdevelopment.player.ui.theme.VaultThemes.fromId(settings.activeThemeId)
+                if (settings.customFontCategory == null && settings.customLayoutShape == null) {
+                    base
+                } else {
+                    val font = settings.customFontCategory ?: base.fontCategory
+                    val shape = settings.customLayoutShape ?: base.layoutShape
+                    val radius = if (settings.customLayoutShape != null) {
+                        when (settings.customLayoutShape) {
+                            com.hughdevelopment.player.ui.theme.VaultLayoutShape.BRUTALIST_SHARP -> 4.dp
+                            com.hughdevelopment.player.ui.theme.VaultLayoutShape.NEO_MINIMAL -> 8.dp
+                            com.hughdevelopment.player.ui.theme.VaultLayoutShape.DIVINE_CURVES -> 16.dp
+                            null -> base.cardCornerRadius
+                        }
+                    } else {
+                        base.cardCornerRadius
+                    }
+                    val isSharp = if (settings.customLayoutShape != null) {
+                        settings.customLayoutShape == com.hughdevelopment.player.ui.theme.VaultLayoutShape.BRUTALIST_SHARP
+                    } else {
+                        base.isBrutalistSharp
+                    }
+                    base.copy(
+                        fontCategory = font,
+                        layoutShape = shape,
+                        cardCornerRadius = radius,
+                        isBrutalistSharp = isSharp
+                    )
+                }
             }
 
             HughPlayerTheme(themeConfig = currentTheme) {
@@ -347,6 +374,8 @@ fun MainScreen(
                         onChangePlayerAlpha = { viewModel.setPlayerWallpaperAlpha(it) },
                         onToggleFade = { viewModel.setFadeEnabled(it) },
                         onChangeFadeDuration = { viewModel.setFadeDuration(it) },
+                        onSelectFont = { viewModel.setCustomFontCategory(it) },
+                        onSelectShape = { viewModel.setCustomLayoutShape(it) },
                         onBack = {
                             if (viewModel.canNavigateBack()) {
                                 viewModel.navigateBack()

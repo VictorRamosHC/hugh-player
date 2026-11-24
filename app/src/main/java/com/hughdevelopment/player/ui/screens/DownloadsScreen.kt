@@ -2,7 +2,10 @@ package com.hughdevelopment.player.ui.screens
 
 import android.content.ClipboardManager
 import android.content.Context
+import android.net.Uri
+import android.os.Environment
 import android.widget.Toast
+import java.io.File
 import androidx.compose.animation.AnimatedVisibility
 import androidx.compose.animation.fadeIn
 import androidx.compose.animation.fadeOut
@@ -746,13 +749,75 @@ fun DownloadCompletedCard(
     onDelete: () -> Unit
 ) {
     val theme = LocalVaultTheme.current
+    val context = LocalContext.current
 
-    val matchingSong = remember(allSongs, entity) {
-        allSongs.find { song ->
-            song.title.contains(entity.title, ignoreCase = true) ||
-            entity.title.contains(song.title, ignoreCase = true)
+    // 1. Determinação determinística do arquivo final no disco (hoisted para uso no matching e no fallback)
+    val finalFile = remember(entity) {
+        val sanitizedTitle = entity.title.replace(Regex("[\\\\/:*?\"<>|]"), "").trim()
+        val sanitizedArtist = entity.artist.replace(Regex("[\\\\/:*?\"<>|]"), "").trim()
+        val baseFileName = if (sanitizedArtist.isNotBlank() && sanitizedArtist != "Unknown") {
+            "$sanitizedArtist - $sanitizedTitle"
+        } else sanitizedTitle
+
+        val publicFolder = File(
+            Environment.getExternalStoragePublicDirectory(Environment.DIRECTORY_MUSIC),
+            "AetherVault"
+        )
+        val appMusicFolder = context.getExternalFilesDir(Environment.DIRECTORY_MUSIC)
+
+        val primaryFile = File(publicFolder, "$baseFileName.${entity.format}")
+        val fallbackFile = if (appMusicFolder != null) File(appMusicFolder, "$baseFileName.${entity.format}") else null
+
+        when {
+            primaryFile.exists() -> primaryFile
+            fallbackFile != null && fallbackFile.exists() -> fallbackFile
+            else -> primaryFile
         }
     }
+
+    // 2. Busca hierárquica e rigorosa de correspondência na biblioteca local
+    // Tier 1: Caminho exato do arquivo no disco (100% de precisão com MediaStore DATA)
+    // Tier 2: Título exato + Artista exato
+    // Tier 3: Substring de título estritamente protegido por correspondência de artista e tamanho mínimo
+    val matchingSong = remember(allSongs, entity, finalFile) {
+        val finalPath = finalFile.absolutePath
+        val hasValidArtist = entity.artist.isNotBlank() && entity.artist != "Unknown"
+
+        // Tier 1: Match por caminho absoluto no disco
+        allSongs.find { it.dataPath.equals(finalPath, ignoreCase = true) }
+            // Tier 2: Match exato por Título e Artista
+            ?: allSongs.find { song ->
+                song.title.equals(entity.title, ignoreCase = true) &&
+                    (!hasValidArtist || song.artist.equals(entity.artist, ignoreCase = true))
+            }
+            // Tier 3: Match por substring de título protegido por artista conhecido e tamanho de título >= 4
+            ?: if (hasValidArtist && entity.title.length >= 4) {
+                allSongs.find { song ->
+                    song.artist.equals(entity.artist, ignoreCase = true) &&
+                        (song.title.contains(entity.title, ignoreCase = true) ||
+                         entity.title.contains(song.title, ignoreCase = true))
+                }
+            } else null
+    }
+
+    // 3. Fallback sintetizado imediato (instanciado incondicionalmente para estabilidade de slots Compose)
+    val fallbackSong = remember(entity, finalFile) {
+        Song(
+            id = (entity.videoId.hashCode().toLong() and 0x7FFFFFFFFFFFFFFFL),
+            title = entity.title,
+            artist = if (entity.artist.isNotBlank() && entity.artist != "Unknown") entity.artist else "Artista Desconhecido",
+            album = "Aether Vault",
+            durationMs = entity.durationSeconds * 1000L,
+            contentUri = Uri.fromFile(finalFile),
+            albumArtUri = entity.thumbnailUrl?.let { Uri.parse(it) },
+            dataPath = finalFile.absolutePath,
+            sizeBytes = if (finalFile.exists()) finalFile.length() else entity.totalBytes,
+            dateAdded = System.currentTimeMillis() / 1000L
+        )
+    }
+
+    // 4. Faixa reproduzível: prioriza a faixa indexada do MediaStore; se pendente, toca o arquivo físico imediatamente
+    val playableSong = matchingSong ?: fallbackSong
 
     Box(
         modifier = Modifier
@@ -826,8 +891,8 @@ fun DownloadCompletedCard(
                 }
             }
 
-            // Botão Play se encontrar a música no MediaStore
-            if (matchingSong != null) {
+            // Botão Play (disponível imediatamente via playableSong)
+            if (playableSong != null) {
                 Box(
                     modifier = Modifier
                         .size(34.dp)
@@ -836,7 +901,7 @@ fun DownloadCompletedCard(
                             backgroundColor = theme.secondaryAccent.copy(alpha = 0.2f),
                             accentColor = theme.secondaryAccent
                         )
-                        .clickable { onPlay(matchingSong) },
+                        .clickable { onPlay(playableSong) },
                     contentAlignment = Alignment.Center
                 ) {
                     Icon(

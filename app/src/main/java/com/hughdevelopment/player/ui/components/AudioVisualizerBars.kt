@@ -34,8 +34,8 @@ fun AudioVisualizerBars(
     secondaryColor: Color = Color.Unspecified
 ) {
     val theme = LocalVaultTheme.current
-    val resolvedActiveColor = if (activeColor != Color.Unspecified) activeColor else theme.primary
-    val resolvedSecondaryColor = if (secondaryColor != Color.Unspecified) secondaryColor else theme.primaryAccent
+    val resolvedActiveColor = if (activeColor != Color.Unspecified) activeColor else theme.primaryAccent
+    val resolvedSecondaryColor = if (secondaryColor != Color.Unspecified) secondaryColor else theme.secondaryAccent
     val transition = rememberInfiniteTransition(label = "VisualizerTransition")
     val phase by transition.animateFloat(
         initialValue = 0f,

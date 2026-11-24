@@ -2,6 +2,8 @@ package com.hughdevelopment.player.data.settings
 
 import android.content.Context
 import android.content.SharedPreferences
+import com.hughdevelopment.player.ui.theme.VaultFontCategory
+import com.hughdevelopment.player.ui.theme.VaultLayoutShape
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.asStateFlow
 
@@ -75,7 +77,9 @@ data class SettingsState(
     val equalizerBandLevels: List<Int> = EqualizerPreset.FLAT.bandLevels,
     val bassBoostStrength: Int = EqualizerPreset.FLAT.bassBoost,
     val isHermesVoiceEnabled: Boolean = true,
-    val timeDisplayFormat: TimeDisplayFormat = TimeDisplayFormat.MINUTES
+    val timeDisplayFormat: TimeDisplayFormat = TimeDisplayFormat.MINUTES,
+    val customFontCategory: VaultFontCategory? = null,
+    val customLayoutShape: VaultLayoutShape? = null
 )
 
 class SettingsManager(context: Context) {
@@ -131,6 +135,16 @@ class SettingsManager(context: Context) {
             TimeDisplayFormat.MINUTES
         }
 
+        val customFontName = prefs.getString(KEY_CUSTOM_FONT_CATEGORY, null)
+        val customFont = if (!customFontName.isNullOrEmpty()) {
+            try { VaultFontCategory.valueOf(customFontName) } catch (_: Exception) { null }
+        } else null
+
+        val customShapeName = prefs.getString(KEY_CUSTOM_LAYOUT_SHAPE, null)
+        val customShape = if (!customShapeName.isNullOrEmpty()) {
+            try { VaultLayoutShape.valueOf(customShapeName) } catch (_: Exception) { null }
+        } else null
+
         return SettingsState(
             isFadeEnabled = fadeEnabled,
             fadeDurationSeconds = fadeDuration,
@@ -145,13 +159,31 @@ class SettingsManager(context: Context) {
             equalizerBandLevels = eqBandLevels,
             bassBoostStrength = bassStrength,
             isHermesVoiceEnabled = hermesVoice,
-            timeDisplayFormat = timeDisplayFormat
+            timeDisplayFormat = timeDisplayFormat,
+            customFontCategory = customFont,
+            customLayoutShape = customShape
         )
     }
 
     fun setThemeId(themeId: String) {
         prefs.edit().putString(KEY_THEME_ID, themeId).apply()
         _settings.value = _settings.value.copy(activeThemeId = themeId)
+    }
+
+    fun setCustomFontCategory(category: VaultFontCategory?) {
+        prefs.edit().apply {
+            if (category != null) putString(KEY_CUSTOM_FONT_CATEGORY, category.name)
+            else remove(KEY_CUSTOM_FONT_CATEGORY)
+        }.apply()
+        _settings.value = _settings.value.copy(customFontCategory = category)
+    }
+
+    fun setCustomLayoutShape(shape: VaultLayoutShape?) {
+        prefs.edit().apply {
+            if (shape != null) putString(KEY_CUSTOM_LAYOUT_SHAPE, shape.name)
+            else remove(KEY_CUSTOM_LAYOUT_SHAPE)
+        }.apply()
+        _settings.value = _settings.value.copy(customLayoutShape = shape)
     }
 
     fun setFadeEnabled(enabled: Boolean) {
@@ -295,6 +327,8 @@ class SettingsManager(context: Context) {
         private const val KEY_PLAYER_ALPHA = "key_player_alpha"
         private const val KEY_HAPTIC = "key_haptic"
         private const val KEY_THEME_ID = "key_theme_id"
+        private const val KEY_CUSTOM_FONT_CATEGORY = "key_custom_font_category"
+        private const val KEY_CUSTOM_LAYOUT_SHAPE = "key_custom_layout_shape"
         private const val KEY_HERMES_VOICE_ENABLED = "key_hermes_voice_enabled"
         private const val KEY_TIME_DISPLAY_FORMAT = "key_time_display_format"
 

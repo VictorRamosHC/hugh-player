@@ -28,7 +28,7 @@ class MediaStoreScanner(private val context: Context) {
         )
 
         // Exclude system sounds/ringtones/alarms and files shorter than 5 seconds
-        val selection = "(${MediaStore.Audio.Media.IS_MUSIC} != 0 OR ${MediaStore.Audio.Media.DATA} LIKE '%.mp3' OR ${MediaStore.Audio.Media.DATA} LIKE '%.m4a' OR ${MediaStore.Audio.Media.DATA} LIKE '%.wav' OR ${MediaStore.Audio.Media.DATA} LIKE '%.aac') AND ${MediaStore.Audio.Media.DURATION} >= 5000 AND ${MediaStore.Audio.Media.IS_RINGTONE} == 0 AND ${MediaStore.Audio.Media.IS_NOTIFICATION} == 0 AND ${MediaStore.Audio.Media.IS_ALARM} == 0"
+        val selection = DEFAULT_SELECTION
         val sortOrder = "${MediaStore.Audio.Media.TITLE} ASC"
 
         try {
@@ -124,5 +124,9 @@ class MediaStoreScanner(private val context: Context) {
         } else {
             text.trim()
         }
+    }
+
+    companion object {
+        const val DEFAULT_SELECTION = "(${MediaStore.Audio.Media.IS_MUSIC} != 0 OR ${MediaStore.Audio.Media.DATA} LIKE '%.mp3' OR ${MediaStore.Audio.Media.DATA} LIKE '%.m4a' OR ${MediaStore.Audio.Media.DATA} LIKE '%.wav' OR ${MediaStore.Audio.Media.DATA} LIKE '%.aac' OR ${MediaStore.Audio.Media.DATA} LIKE '%.opus') AND ${MediaStore.Audio.Media.DURATION} >= 5000 AND ${MediaStore.Audio.Media.IS_RINGTONE} == 0 AND ${MediaStore.Audio.Media.IS_NOTIFICATION} == 0 AND ${MediaStore.Audio.Media.IS_ALARM} == 0"
     }
 }

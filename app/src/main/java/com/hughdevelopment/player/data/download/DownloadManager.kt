@@ -1,8 +1,10 @@
 package com.hughdevelopment.player.data.download
 
+import android.content.ContentValues
 import android.content.Context
 import android.media.MediaScannerConnection
 import android.os.Environment
+import android.provider.MediaStore
 import com.hughdevelopment.player.data.db.DownloadDao
 import com.hughdevelopment.player.data.db.DownloadEntity
 import com.hughdevelopment.player.data.repository.MusicRepository
@@ -241,12 +243,36 @@ class DownloadManager private constructor(
                     )
                 )
 
-                // Notifica o MediaStore do Android para que o player liste a nova faixa instantaneamente
+                // 1. Direct MediaStore registration with audio tags & metadata
+                val mimeType = if (entity.format.equals("opus", ignoreCase = true)) "audio/ogg" else "audio/mp4"
+                try {
+                    val values = ContentValues().apply {
+                        put(MediaStore.Audio.Media.TITLE, entity.title)
+                        put(MediaStore.Audio.Media.ARTIST, if (entity.artist.isNotBlank() && entity.artist != "Unknown") entity.artist else "Artista Desconhecido")
+                        put(MediaStore.Audio.Media.ALBUM, "Aether Vault")
+                        put(MediaStore.Audio.Media.IS_MUSIC, 1)
+                        put(MediaStore.Audio.Media.DATA, finalFile.absolutePath)
+                        put(MediaStore.Audio.Media.DISPLAY_NAME, finalFile.name)
+                        put(MediaStore.Audio.Media.MIME_TYPE, mimeType)
+                        put(MediaStore.Audio.Media.SIZE, finalFile.length())
+                        if (entity.durationSeconds > 0) {
+                            put(MediaStore.Audio.Media.DURATION, entity.durationSeconds * 1000L)
+                        }
+                    }
+                    context.contentResolver.insert(MediaStore.Audio.Media.EXTERNAL_CONTENT_URI, values)
+                } catch (_: Exception) {}
+
+                // 2. Notifica o MediaScannerConnection do Android para indexação imediata
                 withContext(Dispatchers.Main) {
+                    val scanMimeTypes = if (entity.format.equals("opus", ignoreCase = true)) {
+                        arrayOf("audio/ogg", "audio/opus")
+                    } else {
+                        arrayOf("audio/mp4", "audio/m4a", "audio/aac")
+                    }
                     MediaScannerConnection.scanFile(
                         context,
                         arrayOf(finalFile.absolutePath),
-                        arrayOf("audio/mp4", "audio/m4a", "audio/aac")
+                        scanMimeTypes
                     ) { _, _ ->
                         scope.launch {
                             // Se havia playlist de destino, adiciona após recarregar

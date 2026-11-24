@@ -18,6 +18,8 @@ import com.hughdevelopment.player.data.settings.TimeDisplayFormat
 import com.hughdevelopment.player.data.settings.formatListeningTime
 import com.hughdevelopment.player.hermes.HermesVoiceManager
 import com.hughdevelopment.player.service.MusicPlayerController
+import com.hughdevelopment.player.ui.theme.VaultFontCategory
+import com.hughdevelopment.player.ui.theme.VaultLayoutShape
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.SharingStarted
 import kotlinx.coroutines.flow.StateFlow
@@ -441,6 +443,14 @@ class MusicViewModel(application: Application) : AndroidViewModel(application) {
 
     fun setThemeId(themeId: String) {
         settingsManager.setThemeId(themeId)
+    }
+
+    fun setCustomFontCategory(category: VaultFontCategory?) {
+        settingsManager.setCustomFontCategory(category)
+    }
+
+    fun setCustomLayoutShape(shape: VaultLayoutShape?) {
+        settingsManager.setCustomLayoutShape(shape)
     }
 
     fun exportAiManifest(context: Context, onResult: (String) -> Unit) {
