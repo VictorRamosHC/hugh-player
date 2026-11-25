@@ -48,11 +48,4 @@ object HermesDialogueEngine {
 
         return "$intro $timePhrase $streakPhrase $rankPhrase $tip"
     }
-
-    /**
-     * Returns a random standalone strategic narrator tip.
-     */
-    fun getRandomTip(): String {
-        return sovereignTips[Random.nextInt(sovereignTips.size)]
-    }
 }

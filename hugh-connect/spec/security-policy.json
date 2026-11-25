@@ -1,0 +1,20 @@
+{
+  "$schema": "http://json-schema.org/draft-07/schema#",
+  "title": "HughConnectSecurityPolicyV1",
+  "description": "Hugh Connect Security and Validation Specification",
+  "rules": {
+    "max_payload_size_bytes": 65536,
+    "allowed_packages": [
+      "com.anonymous.nightcity",
+      "com.hughdevelopment.player",
+      "com.hughdevelopment.player.debug"
+    ],
+    "explicit_intent_targeting_required": true,
+    "signature_permission_name": "com.hughdevelopment.permission.ECOSYSTEM_BRIDGE",
+    "permission_protection_level": "signature",
+    "caller_package_validation": "MANDATORY_VIA_BINDING_OR_ACTIVITY_CALLER",
+    "caller_signature_validation": "DYNAMIC_PACKAGE_SIGNATURE_VERIFICATION",
+    "sanitization_policy": "Strict JSON parser rejection for malformed fields, unknown types, or oversized payloads.",
+    "privacy_enforcement": "NO raw GPS tracks, coordinates, browsing logs, or full listening history permitted in IPC payloads."
+  }
+}

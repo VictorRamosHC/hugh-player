@@ -7,6 +7,7 @@ import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.withContext
 import java.io.File
 import java.io.RandomAccessFile
+import java.util.Locale
 import java.util.concurrent.ConcurrentHashMap
 import kotlin.math.abs
 import kotlin.math.cos
@@ -51,7 +52,7 @@ object WaveformExtractor {
 
         // 4. Save to Room database
         try {
-            val serialized = points.joinToString(",") { "%.3f".format(it) }
+            val serialized = points.joinToString(",") { "%.3f".format(Locale.US, it) }
             db.waveformDao().insertWaveform(
                 WaveformEntity(songId = song.id, points = serialized)
             )

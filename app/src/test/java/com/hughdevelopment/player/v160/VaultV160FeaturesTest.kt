@@ -67,11 +67,16 @@ class VaultV160FeaturesTest {
     }
 
     @Test
-    fun `hermesDialogueEngine returns valid philosophical tips`() {
+    fun `hermesDialogueEngine returns valid daily briefing with philosophical tips`() {
         for (i in 0..10) {
-            val tip = HermesDialogueEngine.getRandomTip()
-            assertTrue(tip.isNotBlank())
-            assertTrue(tip.length > 10)
+            val briefing = HermesDialogueEngine.buildDailyBriefing(
+                formattedTime = "15 min",
+                streakDays = i,
+                rankTitle = "NEÓFITO ACÚSTICO",
+                totalTracks = 50
+            )
+            assertTrue(briefing.isNotBlank())
+            assertTrue(briefing.length > 20)
         }
     }
 

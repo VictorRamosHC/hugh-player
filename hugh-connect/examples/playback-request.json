@@ -1,0 +1,13 @@
+{
+  "protocol": "HUGH_CONNECT",
+  "version": 1,
+  "message_id": "msg-play-001",
+  "sender": "com.anonymous.nightcity",
+  "recipient": "com.hughdevelopment.player",
+  "type": "COMMAND",
+  "action": "PLAYBACK_CONTROL",
+  "timestamp": 1732446010000,
+  "payload": {
+    "command": "PLAY_PAUSE"
+  }
+}

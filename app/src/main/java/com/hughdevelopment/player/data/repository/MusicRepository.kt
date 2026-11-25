@@ -111,6 +111,13 @@ class MusicRepository(
             title = song.title,
             artist = song.artist
         )
+        val todayKey = SimpleDateFormat("yyyy-MM-dd", Locale.getDefault()).format(Date())
+        dailyListeningDao.recordDailyListening(todayKey, addedSeconds = 0L, isNewSongPlay = true)
+    }
+
+    suspend fun recordSongThreshold(song: Song) {
+        val todayKey = SimpleDateFormat("yyyy-MM-dd", Locale.getDefault()).format(Date())
+        dailyListeningDao.recordDailyListening(todayKey, addedSeconds = 0L, isNewSongPlay = true)
     }
 
     suspend fun recordSongPlayed(song: Song, secondsPlayed: Long) {
@@ -131,7 +138,7 @@ class MusicRepository(
             val prevRecord = dailyListeningDao.getRecordForDate(todayKey)
             val wasAlreadyValid = prevRecord?.hasValidStreakDay == true
 
-            dailyListeningDao.recordDailyListening(todayKey, secondsPlayed)
+            dailyListeningDao.recordDailyListening(todayKey, secondsPlayed, isNewSongPlay = false)
 
             val updatedRecord = dailyListeningDao.getRecordForDate(todayKey)
             if (!wasAlreadyValid && updatedRecord?.hasValidStreakDay == true) {

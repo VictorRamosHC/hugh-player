@@ -346,13 +346,15 @@ class DownloadManager private constructor(
     }
 
     private fun getDownloadDestinationFolder(): File {
-        // Tenta salvar na pasta pública de Música para que apareça em qualquer app e seja persistente
-        val musicDir = Environment.getExternalStoragePublicDirectory(Environment.DIRECTORY_MUSIC)
-        val vaultDir = File(musicDir, "AetherVault")
+        // Scoped Storage compliance (TargetSdk 35):
+        // Avoid direct public path writes (Environment.getExternalStoragePublicDirectory) which throw EACCES.
+        // Route to app-specific external storage or fallback to internal filesDir.
+        val baseDir = context.getExternalFilesDir(Environment.DIRECTORY_MUSIC) ?: context.filesDir
+        val vaultDir = File(baseDir, "AetherVault")
         if (vaultDir.exists() || vaultDir.mkdirs()) {
             return vaultDir
         }
-        return context.getExternalFilesDir(Environment.DIRECTORY_MUSIC) ?: context.filesDir
+        return baseDir
     }
 
     companion object {

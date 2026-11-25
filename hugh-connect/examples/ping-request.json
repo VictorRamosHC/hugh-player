@@ -1,0 +1,13 @@
+{
+  "protocol": "HUGH_CONNECT",
+  "version": 1,
+  "message_id": "msg-ping-001",
+  "sender": "com.anonymous.nightcity",
+  "recipient": "com.hughdevelopment.player",
+  "type": "COMMAND",
+  "action": "PING",
+  "timestamp": 1732446000000,
+  "payload": {
+    "client_timestamp": 1732446000000
+  }
+}

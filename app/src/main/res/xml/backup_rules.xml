@@ -1,0 +1,7 @@
+<?xml version="1.0" encoding="utf-8"?>
+<full-backup-content>
+    <exclude domain="database" path="hugh_player_stats.db" />
+    <exclude domain="database" path="hugh_player_stats.db-wal" />
+    <exclude domain="database" path="hugh_player_stats.db-shm" />
+    <exclude domain="sharedpref" path="hugh_player_vault_prefs.xml" />
+</full-backup-content>

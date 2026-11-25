@@ -1,9 +1,6 @@
 package com.hughdevelopment.player.ui.screens
 
 import android.content.Context
-import androidx.compose.runtime.Composable
-import androidx.compose.runtime.LaunchedEffect
-import androidx.compose.ui.platform.LocalContext
 import com.hughdevelopment.player.data.model.ListeningOverview
 import com.hughdevelopment.player.data.model.SovereignRank
 import com.hughdevelopment.player.hermes.HermesVoiceManager
@@ -60,15 +57,4 @@ object RankPromotionVoiceDispatcher {
      * Gets the currently recorded rank level.
      */
     fun getLastRecordedRankLevel(): Int = lastRecordedRankLevel
-}
-
-/**
- * Composable side-effect observing ListeningOverview rankTier and triggering Hermes Voice celebration.
- */
-@Composable
-fun RankPromotionVoiceEffect(overview: ListeningOverview) {
-    val context = LocalContext.current
-    LaunchedEffect(overview.rankTier.level) {
-        RankPromotionVoiceDispatcher.checkAndAnnouncePromotion(overview.rankTier, context)
-    }
 }

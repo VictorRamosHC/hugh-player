@@ -20,9 +20,22 @@
     <uses-permission android:name="android.permission.WAKE_LOCK" />
     <uses-permission android:name="android.permission.MODIFY_AUDIO_SETTINGS" />
 
+    <!-- Hugh Connect Ecosystem Permission & Queries -->
+    <permission
+        android:name="com.hughdevelopment.permission.ECOSYSTEM_BRIDGE"
+        android:protectionLevel="normal" />
+
+    <uses-permission android:name="com.hughdevelopment.permission.ECOSYSTEM_BRIDGE" />
+
+    <queries>
+        <package android:name="com.anonymous.nightcity" />
+    </queries>
+
     <application
         android:name=".HughPlayerApplication"
         android:allowBackup="true"
+        android:dataExtractionRules="@xml/data_extraction_rules"
+        android:fullBackupContent="@xml/backup_rules"
         android:icon="@mipmap/ic_launcher"
         android:label="@string/app_name"
         android:roundIcon="@mipmap/ic_launcher_round"
@@ -69,6 +82,26 @@
             android:name=".service.DownloadService"
             android:exported="false"
             android:foregroundServiceType="dataSync" />
+
+        <!-- Hugh Connect Inter-Application Communication Service -->
+        <service
+            android:name=".connect.HughConnectService"
+            android:exported="true"
+            android:permission="com.hughdevelopment.permission.ECOSYSTEM_BRIDGE">
+            <intent-filter>
+                <action android:name="com.hughdevelopment.action.HUGH_CONNECT_COMMAND" />
+            </intent-filter>
+        </service>
+
+        <!-- Hugh Connect Inter-Application Event Receiver -->
+        <receiver
+            android:name=".connect.HughConnectReceiver"
+            android:exported="true"
+            android:permission="com.hughdevelopment.permission.ECOSYSTEM_BRIDGE">
+            <intent-filter>
+                <action android:name="com.hughdevelopment.action.HUGH_CONNECT_EVENT" />
+            </intent-filter>
+        </receiver>
     </application>
 
 </manifest>

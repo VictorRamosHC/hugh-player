@@ -1,0 +1,21 @@
+{
+  "protocol": "HUGH_CONNECT",
+  "version": 1,
+  "message_id": "msg-play-001",
+  "sender": "com.hughdevelopment.player",
+  "recipient": "com.anonymous.nightcity",
+  "type": "RESPONSE",
+  "action": "PLAYBACK_CONTROL",
+  "status": "SUCCESS",
+  "timestamp": 1732446010020,
+  "payload": {
+    "command_executed": "PLAY_PAUSE",
+    "is_playing": true,
+    "current_track": {
+      "id": 101,
+      "title": "Cyber City Theme",
+      "artist": "Aether Sound",
+      "duration_ms": 240000
+    }
+  }
+}

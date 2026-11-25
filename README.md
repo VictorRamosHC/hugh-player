@@ -1,7 +1,7 @@
 # AETHER VAULT // Sovereign Offline Audio 🏛️⚡
 > **Desenvolvido por Hugh Development**  
 > *Fundadores: Victor "Hugh" Ramos (Fundador, CEO & Maestro de Produto) & Atom (Co-fundador & Co-CEO Técnico)*  
-> **Versão Atual:** v1.9.0 (Build 14) — *The Pantheon Theme Store & High-Speed Ingestion Edition*  
+> **Versão Atual:** v2.0.0 (Build 15) — *Fastex Enterprise Hardening & Sovereign Architecture v2.0*  
 > **Identidade Oficial:** *AETHER VAULT // Sovereign Offline Audio*  
 > **Design System:** *Aether Cybersigilism Design System (ACDS v2.5)*
 

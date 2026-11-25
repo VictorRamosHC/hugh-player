@@ -1,0 +1,73 @@
+{
+  "$schema": "http://json-schema.org/draft-07/schema#",
+  "title": "HughConnectProtocolV1",
+  "description": "Hugh Development Sovereign Inter-Application Communication Protocol Contract V1",
+  "type": "object",
+  "required": [
+    "protocol",
+    "version",
+    "message_id",
+    "sender",
+    "recipient",
+    "type",
+    "timestamp"
+  ],
+  "properties": {
+    "protocol": {
+      "type": "string",
+      "enum": ["HUGH_CONNECT"]
+    },
+    "version": {
+      "type": "integer",
+      "const": 1
+    },
+    "message_id": {
+      "type": "string",
+      "minLength": 8,
+      "maxLength": 64
+    },
+    "sender": {
+      "type": "string",
+      "enum": [
+        "com.anonymous.nightcity",
+        "com.hughdevelopment.player",
+        "com.hughdevelopment.player.debug"
+      ]
+    },
+    "recipient": {
+      "type": "string",
+      "enum": [
+        "com.anonymous.nightcity",
+        "com.hughdevelopment.player",
+        "com.hughdevelopment.player.debug"
+      ]
+    },
+    "type": {
+      "type": "string",
+      "enum": ["COMMAND", "RESPONSE", "EVENT"]
+    },
+    "action": {
+      "type": "string"
+    },
+    "status": {
+      "type": "string",
+      "enum": ["SUCCESS", "ERROR", "UNSUPPORTED_VERSION", "PERMISSION_DENIED", "REJECTED"]
+    },
+    "timestamp": {
+      "type": "integer",
+      "minimum": 0
+    },
+    "payload": {
+      "type": "object",
+      "default": {}
+    },
+    "error": {
+      "type": "object",
+      "properties": {
+        "code": { "type": "string" },
+        "message": { "type": "string" }
+      }
+    }
+  },
+  "additionalProperties": false
+}

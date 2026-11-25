@@ -45,7 +45,8 @@ class DownloadService : Service() {
                     val notification = buildDownloadNotification(current)
                     startForeground(NOTIFICATION_ID, notification)
                 } else {
-                    stopForeground(STOP_FOREGROUND_DETACH)
+                    stopForeground(STOP_FOREGROUND_REMOVE)
+                    stopSelf()
                 }
             }
         }

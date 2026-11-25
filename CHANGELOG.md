@@ -10,12 +10,40 @@ O projeto segue estritamente o versionamento semântico (*SemVer*), sob lideran�
 
 ## 📑 Índice de Versões
 
+* [v2.0.0 — Fastex Enterprise Hardening & Sovereign Architecture v2.0](#v200--2026-11-25)
 * [v1.9.0 — The Pantheon Theme Store & High-Speed Ingestion Edition](#v190--2026-11-23)
 * [v1.8.0 — Direct YouTube Ingestion & Media Pipeline](#v180--2026-11-20)
 * [v1.7.0 — The Sovereign Divine & Cybersigilism Overhaul](#v170--2026-11-04)
 * [v1.6.0 — Sovereign Audio Cards & Real Waveform Scrubber](#v160--2026-10-31)
 * [v1.5.0 — High-Fidelity Audio DSP & Offline Intelligence](#v150--2026-10-27)
 * [v1.0.0 a v1.4.5 — Fundação, Motor de Áudio & Gamificação](#versões-anteriores-v100---v145)
+
+---
+
+## [v2.0.0] — (2026-11-25)
+### 🏛️🛡️ Fastex Enterprise Hardening & Sovereign Architecture v2.0
+
+A versão **2.0.0** representa o maior salto qualitativo, estrutural e de segurança da história do Aether Vault. Conduzida sob a auditoria rigorosa da **Fastex Enterprise**, esta entrega consolida a blindagem criptográfica total, resolução definitiva de bugs de engenharia e ciclo de vida, expansão de acessibilidade e novos pilares de design e UX.
+
+#### 🔐 1. Blindagem Criptográfica & Segurança (OWASP MASVS)
+* **Externalização de Credenciais:** Extração de senhas e dados sensíveis de assinatura do Gradle para `local.properties` e variáveis de ambiente seguras com fallbacks.
+* **Blindagem de Repositório (.gitignore):** Inclusão estrita de regras para `*.keystore`, `*.jks`, ferramentas internas de agente e transcrições de logs com PII.
+* **Regras de Extração e Backup Seguro:** Implementação de `data_extraction_rules.xml` e `backup_rules.xml` no AndroidManifest, bloqueando extrações não autorizadas de credenciais e histórico local via USB/adb backup.
+
+#### ⚡ 2. Correções Críticas de Engenharia & Ciclo de Vida
+* **Telemetria e Streak Preciso:** Correção do contador de reproduções (`songsPlayedCount`) no `DailyListeningDao`, impedindo que flushes periódicos de 5 segundos inflassem falsamente as métricas.
+* **Internacionalização do Cache de Waveform:** Formatação forçada em `Locale.US` na serialização de amplitudes do `WaveformExtractor`, garantindo que o separador decimal seja sempre ponto e restaurando o cache de 42 barras em aparelhos configurados em `pt-BR`.
+* **Reconexão Imediata em Cold Start:** Sincronização do estado da faixa ativa mesmo com a lista de reprodução vazia na inicialização, restaurando a exibição imediata do `MiniPlayerBar`.
+* **Ciclo de Vida do DownloadService:** Invocação explícita de `stopSelf()` ao esvaziar a fila de downloads, eliminando vazamento de processo e consumo indevido de bateria.
+* **Resiliência na Ingestão do YouTube & Scoped Storage:** Tratamento de erros de conexão, fallback seguro para SignatureCipher e gravação compatível com Scoped Storage no Android 11+ (TargetSdk 35) via MediaStore.
+* **Otimização de Binder IPC:** Suavização dos passos de volume no `AudioFadeManager`, evitando engasgos de frames no Jetpack Compose.
+* **Limpeza de Código Morto:** Remoção de typealiases órfãos (`HermesPetEngine.kt`, `MusicRepository.kt`) e métodos inativos mapeados na auditoria.
+
+#### 🎨 3. Inovações de Design & Acessibilidade M3
+* **Acessibilidade e Ergonomia:** Todos os controles interativos satisfazem a área mínima de toque de 48x48dp (`minimumInteractiveComponentSize`).
+* **Contraste Aprimorado:** Elevação do contraste de texto secundário para `#94A3B8` (>4.8:1).
+* **Semântica TalkBack:** Suporte a `progressBarRangeInfo` no `WaveformScrubber` para leitores de tela.
+* **Preservação Soberana:** Manutenção integral dos 8 componentes lendários (gestos físicos do MiniPlayer, wallpapers procedurais em Canvas por GPU, letras LRC sincronizadas, glassmorphism com iluminação specular top-rim, visualizador polimórfico, personas do Hermes, scrubber tátil e busto clássico).
 
 ---
 

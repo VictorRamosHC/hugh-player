@@ -1,8 +1,25 @@
+import java.util.Properties
+
 plugins {
     alias(libs.plugins.android.application)
     alias(libs.plugins.kotlin.android)
     alias(libs.plugins.kotlin.compose)
     alias(libs.plugins.ksp)
+}
+
+// OWASP MASVS: Externalize signing credentials from local.properties or environment variables
+val localProperties = Properties().apply {
+    val localPropertiesFile = rootProject.file("local.properties")
+    if (localPropertiesFile.exists()) {
+        localPropertiesFile.inputStream().use { load(it) }
+    }
+}
+
+fun getSigningProperty(propKey: String, envKey: String, fallback: String): String {
+    return System.getenv(envKey)
+        ?: localProperties.getProperty(propKey)
+        ?: localProperties.getProperty(envKey)
+        ?: fallback
 }
 
 android {
@@ -13,8 +30,8 @@ android {
         applicationId = "com.hughdevelopment.player"
         minSdk = 26
         targetSdk = 35
-        versionCode = 14
-        versionName = "1.9.0"
+        versionCode = 15
+        versionName = "2.0.0"
 
         testInstrumentationRunner = "androidx.test.runner.AndroidJUnitRunner"
         vectorDrawables {
@@ -24,10 +41,11 @@ android {
 
     signingConfigs {
         create("hughSigning") {
-            storeFile = file("keystore/hugh_vault.keystore")
-            storePassword = "hughdevelopment"
-            keyAlias = "hughvaultkey"
-            keyPassword = "hughdevelopment"
+            val signingStoreFilePath = getSigningProperty("signing.storeFile", "SIGNING_STORE_FILE", "keystore/hugh_vault.keystore")
+            storeFile = file(signingStoreFilePath)
+            storePassword = getSigningProperty("signing.storePassword", "SIGNING_STORE_PASSWORD", "hughdevelopment")
+            keyAlias = getSigningProperty("signing.keyAlias", "SIGNING_KEY_ALIAS", "hughvaultkey")
+            keyPassword = getSigningProperty("signing.keyPassword", "SIGNING_KEY_PASSWORD", "hughdevelopment")
         }
     }
 
@@ -111,4 +129,5 @@ dependencies {
 
     // Unit Testing
     testImplementation("junit:junit:4.13.2")
+    testImplementation("org.json:json:20240303")
 }

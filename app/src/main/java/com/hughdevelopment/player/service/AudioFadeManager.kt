@@ -54,8 +54,8 @@ class AudioFadeManager(
                 }
 
                 val safeDuration = durationMs.coerceIn(100L, 15000L)
-                val steps = (safeDuration / 45L).toInt().coerceIn(8, 45)
-                val stepDelay = (safeDuration / steps).coerceAtLeast(25L)
+                val steps = (safeDuration / 50L).toInt().coerceIn(2, 20)
+                val stepDelay = (safeDuration / steps).coerceAtLeast(50L)
 
                 for (i in 1..steps) {
                     if (!isActive) break
@@ -91,8 +91,8 @@ class AudioFadeManager(
             try {
                 val startingVolume = player.volume.coerceAtLeast(0.1f)
                 val safeDuration = durationMs.coerceIn(100L, 5000L)
-                val steps = (safeDuration / 45L).toInt().coerceIn(6, 35)
-                val stepDelay = (safeDuration / steps).coerceAtLeast(25L)
+                val steps = (safeDuration / 50L).toInt().coerceIn(2, 20)
+                val stepDelay = (safeDuration / steps).coerceAtLeast(50L)
 
                 for (i in 1..steps) {
                     if (!isActive) break
@@ -127,8 +127,8 @@ class AudioFadeManager(
         fadeJob = scope.launch(Dispatchers.Main) {
             try {
                 val startingVolume = player.volume.coerceAtLeast(0.1f)
-                val steps = (safeDuration / 45L).toInt().coerceIn(6, 35)
-                val stepDelay = (safeDuration / steps).coerceAtLeast(25L)
+                val steps = (safeDuration / 50L).toInt().coerceIn(2, 20)
+                val stepDelay = (safeDuration / steps).coerceAtLeast(50L)
 
                 for (i in 1..steps) {
                     if (!isActive) break

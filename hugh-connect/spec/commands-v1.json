@@ -1,0 +1,46 @@
+{
+  "$schema": "http://json-schema.org/draft-07/schema#",
+  "title": "HughConnectCommandsV1",
+  "description": "Hugh Connect V1 Supported Commands and Expected Responses",
+  "definitions": {
+    "PingCommand": {
+      "type": "object",
+      "required": ["action"],
+      "properties": {
+        "action": { "type": "string", "const": "PING" },
+        "payload": {
+          "type": "object",
+          "properties": {
+            "client_timestamp": { "type": "integer" }
+          }
+        }
+      }
+    },
+    "PlaybackCommand": {
+      "type": "object",
+      "required": ["action", "payload"],
+      "properties": {
+        "action": { "type": "string", "const": "PLAYBACK_CONTROL" },
+        "payload": {
+          "type": "object",
+          "required": ["command"],
+          "properties": {
+            "command": {
+              "type": "string",
+              "enum": ["PLAY", "PAUSE", "PLAY_PAUSE", "NEXT", "PREVIOUS", "STOP"]
+            },
+            "track_id": { "type": ["integer", "null"] }
+          }
+        }
+      }
+    },
+    "GetPlaybackStateCommand": {
+      "type": "object",
+      "required": ["action"],
+      "properties": {
+        "action": { "type": "string", "const": "GET_PLAYBACK_STATE" },
+        "payload": { "type": "object" }
+      }
+    }
+  }
+}

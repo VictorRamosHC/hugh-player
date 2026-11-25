@@ -12,6 +12,8 @@ import androidx.media3.session.MediaSession
 import androidx.media3.session.MediaSessionService
 import com.hughdevelopment.player.MainActivity
 import com.hughdevelopment.player.audio.AudioEffectManager
+import com.hughdevelopment.player.connect.HughConnectContract
+import com.hughdevelopment.player.connect.HughConnectDispatcher
 
 class MusicPlaybackService : MediaSessionService() {
 
@@ -32,6 +34,7 @@ class MusicPlaybackService : MediaSessionService() {
             .setWakeMode(C.WAKE_MODE_LOCAL)
             .build()
         player = exo
+        activePlayer = exo
 
         // Bind native AudioEffectManager to ExoPlayer's audioSessionId
         val audioEffectManager = AudioEffectManager.getInstance(this)
@@ -49,6 +52,65 @@ class MusicPlaybackService : MediaSessionService() {
                 if (audioSessionId > 0) {
                     activeAudioSessionId = audioSessionId
                     AudioEffectManager.getInstance(this@MusicPlaybackService).bindAudioSession(audioSessionId)
+                }
+            }
+        })
+
+        exo.addListener(object : Player.Listener {
+            override fun onIsPlayingChanged(isPlaying: Boolean) {
+                activeIsPlaying = isPlaying
+                val currentItem = exo.currentMediaItem
+                val trackId = currentItem?.mediaId?.toLongOrNull()
+                val metadata = currentItem?.mediaMetadata
+                val title = metadata?.title?.toString()
+                val artist = metadata?.artist?.toString()
+                val durationMs = if (exo.duration > 0) exo.duration else null
+                val positionMs = exo.currentPosition
+
+                HughConnectDispatcher.broadcastPlaybackEvent(
+                    context = this@MusicPlaybackService,
+                    action = if (isPlaying) HughConnectContract.EVENT_PLAYBACK_STARTED else HughConnectContract.EVENT_PLAYBACK_PAUSED,
+                    isPlaying = isPlaying,
+                    trackId = trackId,
+                    title = title,
+                    artist = artist,
+                    durationMs = durationMs,
+                    positionMs = positionMs
+                )
+            }
+
+            override fun onMediaItemTransition(mediaItem: MediaItem?, reason: Int) {
+                val trackId = mediaItem?.mediaId?.toLongOrNull()
+                val metadata = mediaItem?.mediaMetadata
+                val title = metadata?.title?.toString()
+                val artist = metadata?.artist?.toString()
+                val durationMs = if (exo.duration > 0) exo.duration else null
+
+                HughConnectDispatcher.broadcastPlaybackEvent(
+                    context = this@MusicPlaybackService,
+                    action = HughConnectContract.EVENT_TRACK_CHANGED,
+                    isPlaying = exo.isPlaying,
+                    trackId = trackId,
+                    title = title,
+                    artist = artist,
+                    durationMs = durationMs,
+                    positionMs = 0L
+                )
+            }
+
+            override fun onPlaybackStateChanged(playbackState: Int) {
+                if (playbackState == Player.STATE_ENDED) {
+                    activeIsPlaying = false
+                    HughConnectDispatcher.broadcastPlaybackEvent(
+                        context = this@MusicPlaybackService,
+                        action = HughConnectContract.EVENT_PLAYBACK_STOPPED,
+                        isPlaying = false,
+                        trackId = exo.currentMediaItem?.mediaId?.toLongOrNull(),
+                        title = exo.currentMediaItem?.mediaMetadata?.title?.toString(),
+                        artist = exo.currentMediaItem?.mediaMetadata?.artist?.toString(),
+                        durationMs = null,
+                        positionMs = 0L
+                    )
                 }
             }
         })
@@ -73,6 +135,8 @@ class MusicPlaybackService : MediaSessionService() {
     override fun onDestroy() {
         AudioEffectManager.getInstance(this).unbindAudioSession()
         activeAudioSessionId = 0
+        activeIsPlaying = false
+        activePlayer = null
         mediaSession?.run {
             player.release()
             release()
@@ -85,6 +149,14 @@ class MusicPlaybackService : MediaSessionService() {
     companion object {
         @Volatile
         var activeAudioSessionId: Int = 0
+            private set
+
+        @Volatile
+        var activeIsPlaying: Boolean = false
+            private set
+
+        @Volatile
+        var activePlayer: ExoPlayer? = null
             private set
     }
 }

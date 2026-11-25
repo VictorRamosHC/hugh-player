@@ -19,3 +19,11 @@ app/build/
 
 .agents/
 
+# Keystore & signing credentials (OWASP MASVS)
+*.keystore
+*.jks
+
+# Developer tools and logs containing local paths / PII
+tools/agent-bridge/
+docs/logs/
+

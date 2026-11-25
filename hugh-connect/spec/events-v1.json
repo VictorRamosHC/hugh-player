@@ -1,0 +1,35 @@
+{
+  "$schema": "http://json-schema.org/draft-07/schema#",
+  "title": "HughConnectEventsV1",
+  "description": "Hugh Connect V1 Broadcast Events",
+  "definitions": {
+    "PlaybackStateEvent": {
+      "type": "object",
+      "required": ["action", "payload"],
+      "properties": {
+        "action": {
+          "type": "string",
+          "enum": [
+            "PLAYBACK_STATE_CHANGED",
+            "TRACK_CHANGED",
+            "PLAYBACK_STARTED",
+            "PLAYBACK_PAUSED",
+            "PLAYBACK_STOPPED"
+          ]
+        },
+        "payload": {
+          "type": "object",
+          "required": ["is_playing"],
+          "properties": {
+            "is_playing": { "type": "boolean" },
+            "track_id": { "type": ["integer", "null"] },
+            "title": { "type": ["string", "null"] },
+            "artist": { "type": ["string", "null"] },
+            "duration_ms": { "type": ["integer", "null"] },
+            "position_ms": { "type": ["integer", "null"] }
+          }
+        }
+      }
+    }
+  }
+}

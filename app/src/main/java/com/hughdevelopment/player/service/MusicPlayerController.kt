@@ -2,6 +2,7 @@ package com.hughdevelopment.player.service
 
 import android.content.ComponentName
 import android.content.Context
+import android.net.Uri
 import androidx.media3.common.MediaItem
 import androidx.media3.common.MediaMetadata
 import androidx.media3.common.Player
@@ -115,7 +116,31 @@ class MusicPlayerController(
                             _currentSong.value = song
                             _durationMs.value = song.durationMs
                             _playbackPositionMs.value = currentPosition
+                        } else {
+                            val item = currentMediaItem
+                            val metadata = item?.mediaMetadata
+                            val reconstructedSong = Song(
+                                id = activeId,
+                                title = metadata?.title?.toString() ?: "Unknown Title",
+                                artist = metadata?.artist?.toString() ?: "Unknown Artist",
+                                album = metadata?.albumTitle?.toString() ?: "Unknown Album",
+                                durationMs = if (duration > 0) duration else 0L,
+                                contentUri = item?.localConfiguration?.uri ?: Uri.EMPTY,
+                                albumArtUri = metadata?.artworkUri,
+                                dataPath = "",
+                                sizeBytes = 0L,
+                                dateAdded = System.currentTimeMillis()
+                            )
+                            _currentSong.value = reconstructedSong
+                            _durationMs.value = reconstructedSong.durationMs
+                            _playbackPositionMs.value = currentPosition
+                            if (_playlist.value.isEmpty()) {
+                                _playlist.value = listOf(reconstructedSong)
+                            }
                         }
+                    }
+                    if (isPlaying) {
+                        startPositionTracker()
                     }
                 }
             } catch (e: Exception) {
@@ -154,6 +179,28 @@ class MusicPlayerController(
                     _durationMs.value = song.durationMs
                     onSongStarted(song)
                     saveSessionState(song.id, 0L)
+                } else {
+                    val metadata = mediaItem.mediaMetadata
+                    val reconstructed = Song(
+                        id = songId,
+                        title = metadata.title?.toString() ?: "Unknown Title",
+                        artist = metadata.artist?.toString() ?: "Unknown Artist",
+                        album = metadata.albumTitle?.toString() ?: "Unknown Album",
+                        durationMs = mediaController?.duration?.takeIf { it > 0 } ?: 0L,
+                        contentUri = mediaItem.localConfiguration?.uri ?: Uri.EMPTY,
+                        albumArtUri = metadata.artworkUri,
+                        dataPath = "",
+                        sizeBytes = 0L,
+                        dateAdded = System.currentTimeMillis()
+                    )
+                    flushAccumulatedListenStats()
+                    _currentSong.value = reconstructed
+                    _durationMs.value = reconstructed.durationMs
+                    if (_playlist.value.isEmpty()) {
+                        _playlist.value = listOf(reconstructed)
+                    }
+                    onSongStarted(reconstructed)
+                    saveSessionState(reconstructed.id, 0L)
                 }
             }
         }

@@ -108,6 +108,15 @@ object YouTubeExtractorHelper : AudioStreamExtractor {
             return@withContext fetchFromProxy(cleanUrl, videoId)
         } catch (proxyError: Exception) {
             val failureSummary = buildString {
+                val allErrors = listOfNotNull(newPipeError?.message, innerTubeError?.message, proxyError.message)
+                val hasReloadError = allErrors.any { it.contains("reload", ignoreCase = true) || it.contains("bot", ignoreCase = true) }
+                val hasCipherError = allErrors.any { it.contains("cipher", ignoreCase = true) || it.contains("signature", ignoreCase = true) }
+
+                if (hasReloadError) {
+                    append("YouTube solicitou recarregamento/verificação de segurança. ")
+                } else if (hasCipherError) {
+                    append("Assinatura de áudio protegida (SignatureCipher). ")
+                }
                 append("Falha em todas as camadas de extração: ")
                 if (newPipeError != null) append("[Tier 1 NewPipe: ${newPipeError.message}] ")
                 if (innerTubeError != null) append("[Tier 2 InnerTube: ${innerTubeError.message}] ")

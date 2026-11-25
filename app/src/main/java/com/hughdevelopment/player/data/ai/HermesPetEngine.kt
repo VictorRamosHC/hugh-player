@@ -25,13 +25,6 @@ object HermesPetEngine {
         }
 
     /**
-     * Initializes the native offline Android TTS engine via HermesVoiceManager.
-     */
-    fun initializeVoice(context: Context, enabled: Boolean = true) {
-        HermesVoiceManager.init(context, enabled)
-    }
-
-    /**
      * Speaks the provided text offline if voice is enabled.
      */
     fun speak(text: String, utteranceId: String = "hermes_${System.currentTimeMillis()}") {
